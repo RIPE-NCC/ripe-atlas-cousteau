@@ -1,0 +1,7 @@
+*.pyc
+build/
+dist/
+*.swp
+*~
+api-key
+api-server
