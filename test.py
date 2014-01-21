@@ -21,14 +21,14 @@ def main():
     })
     start = datetime.utcnow() + timedelta(minutes=120)
     stop = start + timedelta(minutes=220)
+    key = open("api-key", "r").readlines()[0].rstrip('\n')
+    server = open("api-server", "r").readlines()[0].rstrip('\n')
     ar = AtlasRequest(
         **{
             "start_time": start,
             "stop_time": stop,
-            #"key": "ea512565-fe81-4930-9519-1e34b0ccf388",
-            "key": "ce07b723-c112-4861-889c-3bb7580f1241",
-            #"server": "weir-dev.atlas.ripe.net",
-            "server": "atlas.ripe.net",
+            "key": key,
+            "server": server,
             "measurements": [ping],
             "sources": [source]
         }
