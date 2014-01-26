@@ -9,12 +9,52 @@ import urllib2
 
 class AtlasRequest(object):
     """
-    Class responsible for creating post data and doing the post query.
-    Takes as arguments Atlas API key, a list of Atlas measurement objects and a
-    list of Atlas sources. Additionally start and end time can be specified.
+    Base class for doing Atlas requests. Contains functions that can be used by
+    most Atlas requests.
+    """
+
+    url_path = ''
+
+    def __init__(self, **kwargs):
+        # build the post url.
+        self.key = kwargs["key"]
+        if "server" in kwargs:
+            self.url = "https://%s%s%s" % (
+                kwargs["server"], self.url_path, self.key
+            )
+        else:
+            self.url = "https://atlas.ripe.net%s%s" % (self.url_path, self.key)
+
+    def post(self):
+        """
+        Makes the HTTP POST to the url sending post_data.
+        """
+        self._construct_post_data()
+        post_data = json.dumps(self.post_data)
+        req = urllib2.Request(self.url)
+        req.add_header('Content-Type', 'application/json')
+        req.add_header('Accept', 'application/json')
+        try:
+            response = urllib2.urlopen(req, post_data)
+        except urllib2.HTTPError as exc:
+            log = {
+                "HTTP_MSG": "HTTP ERROR %d: %s" % (exc.code, exc.msg),
+                "ADDITIONAL_MSG": exc.read()
+            }
+            return False, log
+
+        return True, json.load(response)
+
+
+class AtlasCreateRequest(AtlasRequest):
+    """
+    Class responsible for creating a request for creating a new Atlas
+    measurement. Takes as arguments Atlas API key, a list of Atlas measurement
+    objects and a list of Atlas sources. Additionally start and end time can be
+    specified.
     Usage:
-        from ripeatlas import AtlasRequest
-        ar = AtlasRequest(**{
+        from ripeatlas import AtlasCreateRequest
+        ar = AtlasCreateRequest(**{
             "start_time": start,
             "stop_time": stop,
             "key": "path_to_key",
@@ -24,14 +64,10 @@ class AtlasRequest(object):
         ar.create()
     """
 
+    url_path = '/api/v1/measurement/?key='
+
     def __init__(self, **kwargs):
-        # build the post url.
-        url_path = '/api/v1/measurement/?key='
-        self.key = kwargs["key"]
-        if "server" in kwargs:
-            self.url = "https://%s%s%s" % (kwargs["server"], url_path, self.key)
-        else:
-            self.url = "https://atlas.ripe.net%s%s" % (url_path, self.key)
+        super(AtlasCreateRequest, self).__init__(**kwargs)
 
         self.measurements = kwargs["measurements"]
         self.sources = kwargs["sources"]
@@ -62,23 +98,40 @@ class AtlasRequest(object):
             )
 
     def create(self):
-        """
-        Makes the http post that create the UDM(s).
-        """
-        self._construct_post_data()
-        post_data = json.dumps(self.post_data)
-        req = urllib2.Request(self.url)
-        req.add_header('Content-Type', 'application/json')
-        req.add_header('Accept', 'application/json')
-        try:
-            response = urllib2.urlopen(req, post_data)
-        except urllib2.HTTPError as e:
-            log = {
-                "HTTP_MSG": "HTTP ERROR %d: %s" % (e.code, e.msg), 
-                "ADDITIONAL_MSG": e.read()
-            }
-            return False, log
+        """Sends the POST request"""
+        self.post()
 
-        return True, json.load(response)
+
+class AtlasChangeRequest(AtlasRequest):
+    """Atlas reuest for changing probes for a running measurement.
+    post_data = {
+        "msm_id": msm,
+        "probes": [{
+            "action": action,
+            "requested": probe_number,
+            "type": "probes",
+            "value": probe_values
+        }]
+    }
+    """
+
+    url_path = '/api/v1/participation-request/?key='
+
+    def __init__(self, **kwargs):
+        super(AtlasChangeRequest, self).__init__(**kwargs)
+        self.msm_id = kwargs["msm_id"]
+        self.sources = kwargs["sources"]
+
+    def _construct_post_data(self):
+        """
+        Contructs the data structure that is required from the atlas API based
+        on measurement id, and the sources.
+        """
+        probes = [source.build_api_struct() for source in self.sources]
+        self.post_data = {"msm_id": self.msm_id, "probes": probes}
+
+    def create(self):
+        """Sends the POST request"""
+        self.post()
 
 __all__ = ["AtlasRequest"]
