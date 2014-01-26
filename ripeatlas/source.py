@@ -1,4 +1,7 @@
-"""Module containing class responsible for creating an Atlas source object"""
+"""
+Module containing class responsible for creating different Atlas
+source objects
+"""
 
 
 class AtlasSource(object):
@@ -12,36 +15,64 @@ class AtlasSource(object):
         as = AtlasSource(**{"type": "area", "value": "WW", "requested": 5})
     """
 
-    # required options for probes part
-    required_options = ["requested", "type", "value"]
-    required_options_available = {
-        "type": ["area", "country", "prefix", "asn", "probes", "msm"]
-    }
+    # available types
+    types_available = ["area", "country", "prefix", "asn", "probes", "msm"]
 
     def __init__(self, **kwargs):
-        for option in self.required_options:
-            setattr(self, option, kwargs.get(option))
+        self._requested = kwargs.get("requested", None)
+        self._value = kwargs.get("value", None)
+        self._type = kwargs.get("type", None)
+
+    # requested attribute
+    def get_requested(self):
+        """Getter for requested attritube"""
+        return self._requested
+
+    def set_requested(self, value):
+        """Setter for requested attritube"""
+        self._requested = value
+
+    doc_req = "Defines how many probes will be requested."
+    requested = property(get_requested, set_requested, doc=doc_req)
+
+    # value attribute
+    def get_value(self):
+        """Getter for value attritube"""
+        return self._value
+
+    def set_value(self, value):
+        """Setter for value attritube"""
+        self._value = value
+
+    doc_value = "Defines the value of the type of probe's source."
+    value = property(get_value, set_value, doc=doc_value)
+
+    # type attribute
+    def get_type(self):
+        """Getter for type attritube"""
+        return self._type
+
+    def set_type(self, value):
+        """Setter for type attritube"""
+        if value not in self.types_available:
+            log = "Sources field 'type' should be in one of %s" % (
+                self.types_available
+            )
+            raise MalFormattedSource(log)
+        self._type = value
+
+    doc_type = "Defines the type of probe's source."
+    type = property(get_type, set_type, doc=doc_type)
 
     def clean(self):
         """
-        Cleans/checks user entered data making sure required options are at
-        least present. This might save some queries from being sent if
-        they are totally wrong.
+        Cleans/checks user has entered all required attributes. This might save
+        some queries from being sent to server if they are totally wrong.
         """
-        for roption in self.required_options:
-            if not hasattr(self, roption):
-                raise MalFormattedSource(
-                    "Sources field: %s is required" % roption
-                )
-            if (
-                roption in self.required_options_available and
-                getattr(self, roption) not in self.required_options_available[roption]
-            ):
-                log = "Sources field: %s should be in one of %s" % (
-                    roption,
-                    self.required_options_available[roption]
-                )
-                raise MalFormattedSource(log)
+        if not all([self._requested, self._value, self._type]):
+            raise MalFormattedSource(
+                "<requested, value, type> fields are required."
+            )
 
     def build_api_struct(self):
         """
@@ -50,13 +81,77 @@ class AtlasSource(object):
         """
         self.clean()
         return {
-            "type": self.type,
-            "requested": self.requested,
-            "value": self.value
+            "type": self._type,
+            "requested": self._requested,
+            "value": self._value
         }
 
 
+class AtlasChangeSource(AtlasSource):
+    """
+    Class responsible for creating an Atlas source object for changing
+    participants probes for a measurement.
+    Usage:
+        from ripeatlas import AtlasChangeSource
+        as = AtlasChangeSource(**{"value": "WW", "requested": 5})
+    """
+    def __init__(self, **kwargs):
+        super(AtlasChangeSource, self).__init__(**kwargs)
+        self._type = "probes"
+        self._action = kwargs.get("action", None)
+
+    # type attribute
+    def get_type(self):
+        """Getter for type attritube"""
+        return self._type
+
+    def set_type(self, value):
+        """Setter for type attritube"""
+        if value != "probes":
+            log = "Sources field 'type' should be 'probes'."
+            raise MalFormattedSource(log)
+        self._type = value
+
+    doc_type = "Defines the type of probe's source."
+    type = property(get_type, set_type, doc=doc_type)
+
+    # action attribute
+    def get_action(self):
+        """Getter for action attritube"""
+        return self._action
+
+    def set_action(self, value):
+        """Setter for action attritube"""
+        if value not in ("remove", "add"):
+            log = "Sources field 'action' should be 'remove' or 'add'."
+            raise MalFormattedSource(log)
+        self._action = value
+
+    doc_action = "Defines the action (remove/add if the change source)."
+    action = property(get_action, set_action, doc=doc_action)
+
+    def clean(self):
+        """
+        Cleans/checks user has entered all required attributes. This might save
+        some queries from being sent to server if they are totally wrong.
+        """
+        if not all([self._requested, self._value, self._action]):
+            raise MalFormattedSource(
+                "<requested, value, action> fields are required."
+            )
+
+    def build_api_struct(self):
+        """
+        Calls parent's method and just adds the addtional field 'action', that
+        is required to form the structure that Atlas API is accepting.
+        """
+        data = super(AtlasChangeSource, self).build_api_struct()
+        data.update({"action": self._action})
+        return data
+
+
 class MalFormattedSource(Exception):
+    """Custom Exception class for malformed sources"""
     pass
 
-__all__ = ["AtlasSource"]
+__all__ = ["AtlasSource", "AtlasChangeSource"]
