@@ -19,9 +19,18 @@ class AtlasSource(object):
     types_available = ["area", "country", "prefix", "asn", "probes", "msm"]
 
     def __init__(self, **kwargs):
-        self._requested = kwargs.get("requested", None)
-        self._value = kwargs.get("value", None)
-        self._type = kwargs.get("type", None)
+        if "requested" in kwargs:
+            self.requested = kwargs["requested"]
+        else:
+            self._requested = None
+        if "value" in kwargs:
+            self.value = kwargs["value"]
+        else:
+            self._value = None
+        if "type" in kwargs:
+            self.type = kwargs["type"]
+        else:
+            self._type = None
 
     # requested attribute
     def get_requested(self):
@@ -97,8 +106,12 @@ class AtlasChangeSource(AtlasSource):
     """
     def __init__(self, **kwargs):
         super(AtlasChangeSource, self).__init__(**kwargs)
+        # type is always probes for change sources
         self._type = "probes"
-        self._action = kwargs.get("action", None)
+        if "action" in kwargs:
+            self.action = kwargs["action"]
+        else:
+            self._action = None
 
     # type attribute
     def get_type(self):
