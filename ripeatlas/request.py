@@ -99,7 +99,7 @@ class AtlasCreateRequest(AtlasRequest):
 
     def create(self):
         """Sends the POST request"""
-        self.post()
+        return self.post()
 
 
 class AtlasChangeRequest(AtlasRequest):
@@ -132,6 +132,6 @@ class AtlasChangeRequest(AtlasRequest):
 
     def create(self):
         """Sends the POST request"""
-        self.post()
+        return self.post()
 
 __all__ = ["AtlasRequest"]
