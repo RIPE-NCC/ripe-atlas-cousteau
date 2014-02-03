@@ -134,4 +134,4 @@ class AtlasChangeRequest(AtlasRequest):
         """Sends the POST request"""
         return self.post()
 
-__all__ = ["AtlasRequest"]
+__all__ = ["AtlasCreateRequest", "AtlasChangeRequest"]
