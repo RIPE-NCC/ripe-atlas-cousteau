@@ -3,5 +3,6 @@ build/
 dist/
 *.swp
 *~
+*.tar.gz
 api-key
 api-server
