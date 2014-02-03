@@ -4,5 +4,6 @@ dist/
 *.swp
 *~
 *.tar.gz
+python/
 api-key
 api-server
