@@ -99,7 +99,7 @@ def test_create_request():
         }
     )
     result = namedtuple('Result', 'success response')
-    (result.success, result.response) = ar.create()
+    (result.success, result.response) = request.create()
     assert (result.success)
 
 
@@ -123,5 +123,5 @@ def test_change_request():
         }
     )
     result = namedtuple('Result', 'success response')
-    (result.success, result.response) = ar.create()
+    (result.success, result.response) = request.create()
     assert (result.success)
