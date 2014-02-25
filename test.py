@@ -125,3 +125,18 @@ def test_change_request():
     result = namedtuple('Result', 'success response')
     (result.success, result.response) = request.create()
     assert (result.success)
+
+
+def test_get_request():
+    """Unittest for Atlas get request"""
+    raise SkipTest("Skip change request")
+    server = open("api-server", "r").readlines()[0].rstrip('\n')
+    request = AtlasRequest(
+        **{
+            "server": server,
+            "url_path": "/api/v1/measurement/1019083/?fields=probes&format=json"
+        }
+    )
+    result = namedtuple('Result', 'success response')
+    (result.success, result.response) = request.get()
+    assert (result.success)

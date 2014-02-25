@@ -16,14 +16,20 @@ class AtlasRequest(object):
     url_path = ''
 
     def __init__(self, **kwargs):
-        # build the post url.
-        self.key = kwargs["key"]
+        # build the url.
+        self.key = kwargs.get("key", "")
+        if "url_path" in kwargs:
+            self.url_path = kwargs["url_path"]
         if "server" in kwargs:
-            self.url = "https://%s%s%s" % (
-                kwargs["server"], self.url_path, self.key
+            server = kwargs["server"]
+        else:
+            server = "atlas.ripe.net"
+        if self.key:
+            self.url = "https://%s%s?key=%s" % (
+                server, self.url_path, self.key
             )
         else:
-            self.url = "https://atlas.ripe.net%s%s" % (self.url_path, self.key)
+            self.url = "https://%s%s" % (server, self.url_path)
 
     def post(self):
         """
@@ -36,6 +42,25 @@ class AtlasRequest(object):
         req.add_header('Accept', 'application/json')
         try:
             response = urllib2.urlopen(req, post_data)
+        except urllib2.HTTPError as exc:
+            log = {
+                "HTTP_MSG": "HTTP ERROR %d: %s" % (exc.code, exc.msg),
+                "ADDITIONAL_MSG": exc.read()
+            }
+            return False, log
+
+        return True, json.load(response)
+
+    def get(self):
+        """
+        Makes the HTTP GET to the url.
+        """
+        print self.url
+        req = urllib2.Request(self.url)
+        req.add_header('Content-Type', 'application/json')
+        req.add_header('Accept', 'application/json')
+        try:
+            response = urllib2.urlopen(req)
         except urllib2.HTTPError as exc:
             log = {
                 "HTTP_MSG": "HTTP ERROR %d: %s" % (exc.code, exc.msg),
@@ -64,7 +89,7 @@ class AtlasCreateRequest(AtlasRequest):
         ar.create()
     """
 
-    url_path = '/api/v1/measurement/?key='
+    url_path = '/api/v1/measurement/'
 
     def __init__(self, **kwargs):
         super(AtlasCreateRequest, self).__init__(**kwargs)
@@ -115,7 +140,7 @@ class AtlasChangeRequest(AtlasRequest):
     }
     """
 
-    url_path = '/api/v1/participation-request/?key='
+    url_path = '/api/v1/participation-request/'
 
     def __init__(self, **kwargs):
         super(AtlasChangeRequest, self).__init__(**kwargs)
@@ -134,4 +159,4 @@ class AtlasChangeRequest(AtlasRequest):
         """Sends the POST request"""
         return self.post()
 
-__all__ = ["AtlasCreateRequest", "AtlasChangeRequest"]
+__all__ = ["AtlasCreateRequest", "AtlasChangeRequest", "AtlasRequest"]
