@@ -1,9 +1,12 @@
+v<0.4>, < 2014-03-31> -- 0.4 release.
+NEW FEATURES:
+- add support for stopping a measurement.
 v<0.3>, < 2014-02-25> -- 0.3 release.
 NEW FEATURES:
-- add simple support for HTTP GET queries
+- add simple support for HTTP GET queries.
 v<0.2>, < 2014-02-03> -- 0.2 release.
 NEW FEATURES:
-- add support for adding/removing probes API request
+- add support for adding/removing probes API request.
 CHANGES:
 - use AtlasCreateRequest instead of AtlasRequest for creating a new measurement.
 v<0.1>, < 2014-01-21> -- Initial release.
