@@ -4,6 +4,7 @@ dist/
 *.swp
 *~
 *.tar.gz
+*egg-info/
 python/
 api-key
 api-server
