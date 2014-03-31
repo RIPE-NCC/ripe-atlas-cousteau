@@ -55,7 +55,6 @@ class AtlasRequest(object):
         """
         Makes the HTTP GET to the url.
         """
-        print self.url
         req = urllib2.Request(self.url)
         req.add_header('Content-Type', 'application/json')
         req.add_header('Accept', 'application/json')
@@ -70,25 +69,7 @@ class AtlasRequest(object):
 
         return True, json.load(response)
 
-    def delete(self):
-        """
-        Makes the HTTP DELETE to the url.
-        """
-        print self.url
-        req = urllib2.Request(self.url)
-        req.add_header('Content-Type', 'application/json')
-        req.add_header('Accept', 'application/json')
-        req.get_method = lambda: 'DELETE'
-        try:
-            response = urllib2.urlopen(req)
-        except urllib2.HTTPError as exc:
-            log = {
-                "HTTP_MSG": "HTTP ERROR %d: %s" % (exc.code, exc.msg),
-                "ADDITIONAL_MSG": exc.read()
-            }
-            return False, log
-
-        return True, json.load(response)
+    
 
 
 class AtlasCreateRequest(AtlasRequest):
@@ -148,7 +129,7 @@ class AtlasCreateRequest(AtlasRequest):
 
 
 class AtlasChangeRequest(AtlasRequest):
-    """Atlas reuest for changing probes for a running measurement.
+    """Atlas request for changing probes for a running measurement.
     post_data = {
         "msm_id": msm,
         "probes": [{
@@ -179,4 +160,40 @@ class AtlasChangeRequest(AtlasRequest):
         """Sends the POST request"""
         return self.post()
 
-__all__ = ["AtlasCreateRequest", "AtlasChangeRequest", "AtlasRequest"]
+class AtlasStopRequest(AtlasRequest):
+    """Atlas request for stopping a measurement."""
+
+    url_path = '/api/v1/measurement/'
+
+    def __init__(self, **kwargs):
+        self.msm_id = kwargs["msm_id"]
+        self.url_path += "%d/" % self.msm_id
+        super(AtlasStopRequest, self).__init__(**kwargs)
+
+    def delete(self):
+        """
+        Makes the HTTP DELETE to the url.
+        """
+        req = urllib2.Request(self.url)
+        req.add_header('Content-Type', 'application/json')
+        req.add_header('Accept', 'application/json')
+        req.get_method = lambda: 'DELETE'
+        try:
+            response = urllib2.urlopen(req)
+        except urllib2.HTTPError as exc:
+            log = {
+                "HTTP_MSG": "HTTP ERROR %d: %s" % (exc.code, exc.msg),
+                "ADDITIONAL_MSG": exc.read()
+            }
+            return False, log
+
+        return True, response
+
+    def create(self):
+        """Sends the DELETE request"""
+        return self.delete()
+
+__all__ = [
+    "AtlasStopRequest", "AtlasCreateRequest",
+    "AtlasChangeRequest", "AtlasRequest"
+]
