@@ -1,5 +1,5 @@
-"""File containing the nose tests"""
 #!/usr/bin/env python
+"""File containing the nose tests"""
 from datetime import datetime, timedelta
 from nose.exc import SkipTest
 from collections import namedtuple
