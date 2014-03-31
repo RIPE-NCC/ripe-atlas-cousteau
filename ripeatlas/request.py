@@ -70,6 +70,26 @@ class AtlasRequest(object):
 
         return True, json.load(response)
 
+    def delete(self):
+        """
+        Makes the HTTP DELETE to the url.
+        """
+        print self.url
+        req = urllib2.Request(self.url)
+        req.add_header('Content-Type', 'application/json')
+        req.add_header('Accept', 'application/json')
+        req.get_method = lambda: 'DELETE'
+        try:
+            response = urllib2.urlopen(req)
+        except urllib2.HTTPError as exc:
+            log = {
+                "HTTP_MSG": "HTTP ERROR %d: %s" % (exc.code, exc.msg),
+                "ADDITIONAL_MSG": exc.read()
+            }
+            return False, log
+
+        return True, json.load(response)
+
 
 class AtlasCreateRequest(AtlasRequest):
     """
