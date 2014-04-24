@@ -55,8 +55,8 @@ class AtlasMeasurement(object):
         """
         Initialize the required option as class members. The value will be
         either None or the specified value in the kwargs or __init__. The logic
-        here is to make the required options only accesible
-        to edit after a class instance has been created.
+        here is to make the required options accesible to edit after a class
+        instance has been created.
         """
         for field in self.required_options:
             setattr(self, field, kwargs.get(field))
@@ -76,7 +76,7 @@ class AtlasMeasurement(object):
 
         # make sure the required fields are set.
         for roption in self.required_options:
-            if getattr(self, roption) is None:
+            if getattr(self, roption, None) is None:
                 log = "%s Measurement field: <%s> is required" % (
                     self.__class__.__name__, roption
                 )
