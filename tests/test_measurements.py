@@ -6,6 +6,7 @@ from ripeatlas.measurement import (
     AtlasMeasurement,
     MalFormattedMeasurement,
 )
+from . import definitions_schema
 
 
 class TestAtlasMeasurement(unittest.TestCase):
@@ -48,11 +49,12 @@ class TestAtlasMeasurement(unittest.TestCase):
 
     def test_build_api_struct(self):
         output = {
-            "type": "test",
+            "type": "ping",
             "target": "www.google.gr",
             "af": 4,
             "description": "test"
         }
         self.measurement.description = "test"
-        self.measurement.measurement_type = "test"
+        self.measurement.measurement_type = "ping"
         self.assertEqual(self.measurement.build_api_struct(), output)
+        validate(self.measurement.build_api_struct(), definitions_schema)

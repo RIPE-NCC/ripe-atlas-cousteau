@@ -1,10 +1,13 @@
 import unittest
 
+from jsonschema import validate
+
 from ripeatlas.source import (
     AtlasSource,
     AtlasChangeSource,
     MalFormattedSource
 )
+from . import probes_create_schema, probes_change_schema
 
 
 class TestAtlasSource(unittest.TestCase):
@@ -33,6 +36,7 @@ class TestAtlasSource(unittest.TestCase):
 
     def test_build_api_struct(self):
         self.assertEqual(self.source.build_api_struct(), self.kwargs)
+        validate(self.source.build_api_struct(), probes_create_schema)
 
 
 class TestAtlasChangeSource(unittest.TestCase):
@@ -78,3 +82,4 @@ class TestAtlasChangeSource(unittest.TestCase):
     def test_build_api_struct(self):
         self.kwargs.update({"type": "probes"})
         self.assertEqual(self.source.build_api_struct(), self.kwargs)
+        validate(self.source.build_api_struct(), probes_create_schema)
