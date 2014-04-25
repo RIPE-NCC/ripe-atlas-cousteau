@@ -69,8 +69,6 @@ class AtlasRequest(object):
 
         return True, json.load(response)
 
-    
-
 
 class AtlasCreateRequest(AtlasRequest):
     """
@@ -159,6 +157,7 @@ class AtlasChangeRequest(AtlasRequest):
     def create(self):
         """Sends the POST request"""
         return self.post()
+
 
 class AtlasStopRequest(AtlasRequest):
     """Atlas request for stopping a measurement."""
