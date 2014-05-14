@@ -91,13 +91,11 @@ def test_create_request():
         "query_class": "IN", "query_argument": "nl", "retry": 6
     })
     stop = datetime.utcnow() + timedelta(minutes=220)
-    key = open("api-key", "r").readlines()[0].rstrip('\n')
-    server = open("api-server", "r").readlines()[0].rstrip('\n')
     request = AtlasCreateRequest(
         **{
             "stop_time": stop,
-            "key": key,
-            "server": server,
+            "key": "testing",
+            "server": "testing",
             "measurements": [ping, dns],
             "sources": [source]
         }
@@ -116,12 +114,10 @@ def test_change_request():
     add = AtlasChangeSource(**{
         "value": "28", "requested": 1, "action": "add", "type": "probes"
     })
-    key = open("api-key", "r").readlines()[0].rstrip('\n')
-    server = open("api-server", "r").readlines()[0].rstrip('\n')
     request = AtlasChangeRequest(
         **{
-            "key": key,
-            "server": server,
+            "key": "testing",
+            "server": "testing",
             "msm_id": 1019016,
             "sources": [add, remove]
         }
@@ -134,10 +130,9 @@ def test_change_request():
 def test_get_request():
     """Unittest for Atlas get request"""
     raise SkipTest("Skip change request")
-    server = open("api-server", "r").readlines()[0].rstrip('\n')
     request = AtlasRequest(
         **{
-            "server": server,
+            "server": "testing",
             "url_path": (
                 "/api/v1/measurement/1019083/"
                 "?fields=probes&format=json"
