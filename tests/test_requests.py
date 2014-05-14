@@ -1,11 +1,13 @@
 import unittest
-
-from jsonschema import validate
 from datetime import datetime, timedelta
 
-from ripeatlas.measurement import Ping
-from ripeatlas.source import AtlasSource, AtlasChangeSource
-from ripeatlas.request import AtlasCreateRequest, AtlasChangeRequest
+from jsonschema import validate
+
+from ripe.atlas.cousteau import (
+    AtlasSource, AtlasChangeSource,
+    AtlasCreateRequest, AtlasChangeRequest,
+    Ping
+)
 from . import post_data_create_schema, post_data_change_schema
 
 

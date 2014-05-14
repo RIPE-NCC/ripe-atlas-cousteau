@@ -5,6 +5,7 @@ dist/
 *~
 *.tar.gz
 *egg-info/
+*egg/
 python/
 api-key
 api-server

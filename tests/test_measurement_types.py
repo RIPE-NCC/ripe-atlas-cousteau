@@ -1,11 +1,15 @@
 #!/usr/bin/env python
 """File containing the nose tests"""
 from datetime import datetime, timedelta
-from nose.exc import SkipTest
 from collections import namedtuple
-from ripeatlas.source import AtlasSource, AtlasChangeSource
-from ripeatlas.request import AtlasCreateRequest, AtlasChangeRequest
-from ripeatlas.measurement import Ping, Traceroute, Dns, Sslcert
+
+from nose.exc import SkipTest
+
+from ripe.atlas.cousteau import (
+    AtlasSource, AtlasChangeSource,
+    AtlasRequest, AtlasCreateRequest, AtlasChangeRequest,
+    Ping, Traceroute, Dns, Sslcert
+)
 
 
 def test_create_source():
@@ -134,7 +138,10 @@ def test_get_request():
     request = AtlasRequest(
         **{
             "server": server,
-            "url_path": "/api/v1/measurement/1019083/?fields=probes&format=json"
+            "url_path": (
+                "/api/v1/measurement/1019083/"
+                "?fields=probes&format=json"
+            )
         }
     )
     result = namedtuple('Result', 'success response')

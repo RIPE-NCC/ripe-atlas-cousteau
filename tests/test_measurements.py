@@ -2,9 +2,9 @@ import unittest
 
 from jsonschema import validate
 
-from ripeatlas.measurement import (
-    AtlasMeasurement,
+from ripe.atlas.cousteau.measurement import (
     MalFormattedMeasurement,
+    AtlasMeasurement
 )
 from . import definitions_schema
 

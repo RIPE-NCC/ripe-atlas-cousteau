@@ -2,11 +2,11 @@ import unittest
 
 from jsonschema import validate
 
-from ripeatlas.source import (
+from ripe.atlas.cousteau import (
     AtlasSource,
-    AtlasChangeSource,
-    MalFormattedSource
+    AtlasChangeSource
 )
+from ripe.atlas.cousteau.source import MalFormattedSource
 from . import probes_create_schema, probes_change_schema
 
 
@@ -82,4 +82,4 @@ class TestAtlasChangeSource(unittest.TestCase):
     def test_build_api_struct(self):
         self.kwargs.update({"type": "probes"})
         self.assertEqual(self.source.build_api_struct(), self.kwargs)
-        validate(self.source.build_api_struct(), probes_create_schema)
+        validate(self.source.build_api_struct(), probes_change_schema)
