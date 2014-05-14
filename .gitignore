@@ -1,11 +1,33 @@
-*.pyc
-build/
-dist/
-*.swp
-*~
-*.tar.gz
-*egg-info/
-*egg/
+*.py[cod]
+
+# C extensions
+*.so
+
+# Packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+lib
+lib64
+
+# Unit test / coverage reports
+.coverage
+.tox
+nosetests.xml
+
+# Mr Developer
+.idea/
+
+# virtualenvs
 python/
-api-key
-api-server
+
+# vim swp files
+*.swp
