@@ -11,7 +11,7 @@ class AtlasMeasurement(object):
     specified as child classes. These objects can be passed as measurement
     arguments later on when we call AtlasRequest.
     Usage:
-        from ripeatlas.measurement import Ping
+        from ripe.atlas.cousteau import Ping
         ping = Ping(**{
             "target": "www.google.gr", "af": 4,
             "description": "testing new wrapper"

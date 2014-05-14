@@ -11,7 +11,7 @@ class AtlasSource(object):
     the value of the source. This object can be passed as source argument
     later on when we call AtlasRequest.
     Usage:
-        from ripeatlas import AtlasSource
+        from ripe.atlas.cousteau import AtlasSource
         as = AtlasSource(**{"type": "area", "value": "WW", "requested": 5})
     """
 
