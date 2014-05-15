@@ -7,7 +7,7 @@ A python wrapper around RIPE ATLAS API.
 You can install by either cloning the repo and run the following inside the repo:
 
 ```bash
-$ python setupe.py install
+$ python setup.py install
 ```
 
 or via pip using:
