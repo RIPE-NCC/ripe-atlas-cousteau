@@ -96,3 +96,7 @@ atlas_request = AtlasStopRequest(**{
 
 In order to be able to successfully create most of the above you need to create an [API key](https://atlas.ripe.net/docs/keys/).
 Also keep in mind that this library is trying to comply with what is stated in the [documentation pages](https://atlas.ripe.net/docs/measurement-creation-api/). This means that if you try to create a request that is missing a field stated as required, the library won't go ahead and do the HTTP query. On the contrary, it will raise an exception with some info in it.
+
+## Colophon
+
+But why [Cousteau](http://en.wikipedia.org/wiki/Jacques_Cousteau)? The RIPE Atlas team decided to name all of its modules after explorers, and this is not an exception :)
