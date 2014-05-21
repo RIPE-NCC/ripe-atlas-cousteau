@@ -1,6 +1,8 @@
 # RIPE Atlas Cousteau
-[![Build Status](https://travis-ci.org/RIPE-NCC/ripe-atlas-cousteau.png?branch=master)](https://travis-ci.org/RIPE-NCC/ripe-atlas-cousteau) [![Code Health](https://landscape.io/github/RIPE-NCC/ripe-atlas-cousteau/master/landscape.png)](https://landscape.io/github/RIPE-NCC/ripe-atlas-cousteau/master)
+
 A python wrapper around RIPE ATLAS API.
+
+[![Build Status](https://travis-ci.org/RIPE-NCC/ripe-atlas-cousteau.png?branch=master)](https://travis-ci.org/RIPE-NCC/ripe-atlas-cousteau) [![Code Health](https://landscape.io/github/RIPE-NCC/ripe-atlas-cousteau/master/landscape.png)](https://landscape.io/github/RIPE-NCC/ripe-atlas-cousteau/master)
 
 ## Installation
 
