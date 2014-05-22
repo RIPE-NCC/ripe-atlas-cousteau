@@ -6,6 +6,8 @@ request according to the ATLAS API.
 import json
 import urllib2
 
+from version import __version__
+
 
 class AtlasRequest(object):
     """
@@ -31,6 +33,8 @@ class AtlasRequest(object):
         else:
             self.url = "https://%s%s" % (server, self.url_path)
 
+        self.http_agent = "RIPE ATLAS Cousteau v%s" % __version__
+
     def post(self):
         """
         Makes the HTTP POST to the url sending post_data.
@@ -40,6 +44,7 @@ class AtlasRequest(object):
         req = urllib2.Request(self.url)
         req.add_header('Content-Type', 'application/json')
         req.add_header('Accept', 'application/json')
+        req.add_header('User-Agent', self.http_agent)
         try:
             response = urllib2.urlopen(req, post_data)
         except urllib2.HTTPError as exc:
@@ -58,6 +63,7 @@ class AtlasRequest(object):
         req = urllib2.Request(self.url)
         req.add_header('Content-Type', 'application/json')
         req.add_header('Accept', 'application/json')
+        req.add_header('User-Agent', self.http_agent)
         try:
             response = urllib2.urlopen(req)
         except urllib2.HTTPError as exc:
@@ -176,6 +182,7 @@ class AtlasStopRequest(AtlasRequest):
         req = urllib2.Request(self.url)
         req.add_header('Content-Type', 'application/json')
         req.add_header('Accept', 'application/json')
+        req.add_header('User-Agent', self.http_agent)
         req.get_method = lambda: 'DELETE'
         try:
             response = urllib2.urlopen(req)
