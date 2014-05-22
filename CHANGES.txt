@@ -1,3 +1,11 @@
+v<0.5>, < 2014-05-22> -- 0.5 release.
+CHANGES:
+- change package structure to comply with the new structure of atlas packages
+- add continuous intergration supoport
+  - add tests
+  - enable travis
+  - enable code health checks
+- add required files for uploading to github
 v<0.4>, < 2014-03-31> -- 0.4 release.
 NEW FEATURES:
 - add support for stopping a measurement.
