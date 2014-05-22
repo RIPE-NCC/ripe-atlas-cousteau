@@ -2,7 +2,7 @@
 
 from setuptools import setup
 
-from ripe.atlas.cousteau import __version__
+from ripe.atlas.cousteau.version import __version__
 
 tests_require = [
     'nose',
