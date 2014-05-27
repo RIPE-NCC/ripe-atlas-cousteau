@@ -5,6 +5,9 @@ request according to the ATLAS API.
 
 import json
 import urllib2
+import time
+from dateutil import parser
+from datetime import datetime
 
 from version import __version__
 
@@ -23,22 +26,29 @@ class AtlasRequest(object):
         if "url_path" in kwargs:
             self.url_path = kwargs["url_path"]
         if "server" in kwargs:
-            server = kwargs["server"]
+            self. server = kwargs["server"]
         else:
-            server = "atlas.ripe.net"
-        if self.key:
-            self.url = "https://%s%s?key=%s" % (
-                server, self.url_path, self.key
-            )
-        else:
-            self.url = "https://%s%s" % (server, self.url_path)
+            self.server = "atlas.ripe.net"
 
         self.http_agent = "RIPE ATLAS Cousteau v%s" % __version__
+
+    def build_url(self):
+        """
+        Builds the request's url combining server, url_path, key
+        classes attributes.
+        """
+        if self.key:
+            self.url = "https://%s%s?key=%s" % (
+                self.server, self.url_path, self.key
+            )
+        else:
+            self.url = "https://%s%s" % (self.server, self.url_path)
 
     def post(self):
         """
         Makes the HTTP POST to the url sending post_data.
         """
+        self.build_url()
         self._construct_post_data()
         post_data = json.dumps(self.post_data)
         req = urllib2.Request(self.url)
@@ -60,6 +70,7 @@ class AtlasRequest(object):
         """
         Makes the HTTP GET to the url.
         """
+        self.build_url()
         req = urllib2.Request(self.url)
         req.add_header('Content-Type', 'application/json')
         req.add_header('Accept', 'application/json')
@@ -179,6 +190,7 @@ class AtlasStopRequest(AtlasRequest):
         """
         Makes the HTTP DELETE to the url.
         """
+        self.build_url()
         req = urllib2.Request(self.url)
         req.add_header('Content-Type', 'application/json')
         req.add_header('Accept', 'application/json')
@@ -199,7 +211,78 @@ class AtlasStopRequest(AtlasRequest):
         """Sends the DELETE request"""
         return self.delete()
 
+
+class AtlasResultsRequest(AtlasRequest):
+    """Atlas request for fetching results of a measurement."""
+
+    url_path = '/api/v1/measurement/%d/result/'
+
+    def __init__(self, **kwargs):
+        self.msm_id = kwargs["msm_id"]
+        start = kwargs.get("start")
+        stop = kwargs.get("stop")
+        self.probe_ids = kwargs.get("probe_ids")
+        self.clean_start_time(start)
+        self.clean_stop_time(stop)
+        self.construct_url_path()
+        super(AtlasResultsRequest, self).__init__(**kwargs)
+
+    def clean_start_time(self, start):
+        """
+        Transform start time filter to datetime object if there is any.
+        """
+        if isinstance(start, datetime):
+            self.start = start
+        elif isinstance(start, int):
+            self.start = datetime.utcfromtimestamp(start)
+        elif isinstance(start, str):
+            self.start = parser.parse(start)
+
+    def clean_stop_time(self, stop):
+        """
+        Transform stop time filter to datetime object if there is any.
+        """
+        if isinstance(stop, datetime):
+            self.stop = stop
+        elif isinstance(stop, int):
+            self.stop = datetime.utcfromtimestamp(stop)
+        elif isinstance(stop, str):
+            self.stop = parser.parse(stop)
+
+    def construct_url_path(self):
+        """
+        Construct url path based on base url_path, msm_id and query filters if
+        there are any.
+        """
+        self.url_path = self.url_path % self.msm_id
+
+        if any([self.start, self.stop, self.probe_ids]):
+            self.url_path += "?"
+
+        # variable that helps adding '&' in url in case of multiple filters
+        filter_exists = False
+
+        if self.start:
+            filter_exists = True
+            self.url_path += "start=%d" % time.mktime(self.start.timetuple())
+
+        if self.stop:
+            filter_exists = True
+            if filter_exists:
+                self.url_path += "&"
+            self.url_path += "stop=%d" % time.mktime(self.stop.timetuple())
+
+        if self.probe_ids:
+            if filter_exists:
+                self.url_path += "&"
+            self.url_path += "prb_id=%s" % ",".join(map(str, self.probe_ids))
+
+    def create(self):
+        """Sends the GET request."""
+        return self.get()
+
 __all__ = [
     "AtlasStopRequest", "AtlasCreateRequest",
-    "AtlasChangeRequest", "AtlasRequest"
+    "AtlasChangeRequest", "AtlasRequest",
+    "AtlasResultsRequest"
 ]

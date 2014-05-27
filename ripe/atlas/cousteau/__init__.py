@@ -4,7 +4,8 @@ from request import (
     AtlasRequest,
     AtlasCreateRequest,
     AtlasChangeRequest,
-    AtlasStopRequest
+    AtlasStopRequest,
+    AtlasResultsRequest
 )
 
 
@@ -17,6 +18,7 @@ __all__ = [
     "AtlasChangeRequest",
     "AtlasCreateRequest",
     "AtlasStopRequest",
+    "AtlasResultsRequest",
     "AtlasSource",
     "AtlasChangeSource"
 ]
