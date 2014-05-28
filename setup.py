@@ -2,9 +2,10 @@
 
 from setuptools import setup
 
-from ripe.atlas.cousteau.version import __version__
+# import manually __version__ variable
+exec(open('ripe/atlas/cousteau/version.py').read())
 
-install_requires = ["python-dateutil"],
+install_requires = ["python-dateutil"]
 
 tests_require = [
     "nose",
