@@ -1,3 +1,8 @@
+v<0.6>, < 2014-06-17> -- 0.6 release.
+NEW FEATURES:
+- add support for quering results based on start/end time, msm_id and probe id.
+CHANGES:
+- add http agent according to package version to all requests.
 v<0.5>, < 2014-05-22> -- 0.5 release.
 CHANGES:
 - change package structure to comply with the new structure of atlas packages
