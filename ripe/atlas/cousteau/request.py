@@ -9,7 +9,8 @@ import time
 from dateutil import parser
 from datetime import datetime
 
-from version import __version__
+
+from .version import __version__
 
 
 class AtlasRequest(object):

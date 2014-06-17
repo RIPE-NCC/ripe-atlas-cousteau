@@ -1,6 +1,6 @@
-from measurement import Ping, Traceroute, Dns, Sslcert
-from source import AtlasSource, AtlasChangeSource
-from request import (
+from .measurement import Ping, Traceroute, Dns, Sslcert
+from .source import AtlasSource, AtlasChangeSource
+from .request import (
     AtlasRequest,
     AtlasCreateRequest,
     AtlasChangeRequest,
