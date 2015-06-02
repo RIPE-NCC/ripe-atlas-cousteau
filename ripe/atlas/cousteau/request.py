@@ -9,7 +9,6 @@ import time
 from dateutil import parser
 from datetime import datetime
 
-
 from .version import __version__
 
 
@@ -281,6 +280,7 @@ class AtlasResultsRequest(AtlasRequest):
     def create(self):
         """Sends the GET request."""
         return self.get()
+
 
 __all__ = [
     "AtlasStopRequest", "AtlasCreateRequest",
