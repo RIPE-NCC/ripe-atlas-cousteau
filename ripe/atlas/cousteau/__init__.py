@@ -63,10 +63,13 @@ class RequestGenerator(object):
             self.current_batch = results.get("objects", [])
 
     def next(self):
-        if not self.current_batch:
-            if not self.atlas_url and not self.current_batch:  # Batch is empty and API next is null
+        if not self.current_batch:  # If first time or current batch was all given
+            if not self.atlas_url:  # We don't have any next url any more, exit
                 raise StopIteration()
             self.next_batch()
+            if not self.current_batch:  # Server request gaves empty batch, exit
+                raise StopIteration()
+
         return self.current_batch.pop(0)
 
 
