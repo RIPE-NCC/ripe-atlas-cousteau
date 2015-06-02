@@ -13,8 +13,8 @@ class RequestGenerator(object):
     """
     Python generator class that yields results for meta APIs like
     probes/measurements as single objects. It supports any filter APIs support
-    in a dummy way, which means it will take accept whatever it passed and build
-    url_path from this.
+    in a dummy way, which means it will take accept whatever it passed and
+    build url_path from this.
     """
 
     API_LIMIT = "300"
