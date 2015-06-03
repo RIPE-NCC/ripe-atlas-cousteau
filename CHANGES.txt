@@ -1,3 +1,6 @@
+v<0.7>, < 2015-06-03> -- 0.7 release.
+NEW FEATURES:
+- add support for fetching probes/measurements meta data using python generators.
 v<0.6>, < 2014-06-17> -- 0.6 release.
 NEW FEATURES:
 - add support for quering results based on start/end time, msm_id and probe id.
