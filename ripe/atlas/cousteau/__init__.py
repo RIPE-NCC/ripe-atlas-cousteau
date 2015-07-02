@@ -1,4 +1,4 @@
-from .measurement import Ping, Traceroute, Dns, Sslcert
+from .measurement import Ping, Traceroute, Dns, Sslcert, Ntp
 from .source import AtlasSource, AtlasChangeSource
 from .request import (
     AtlasRequest,
@@ -98,6 +98,7 @@ __all__ = [
     "Traceroute",
     "Dns",
     "Sslcert",
+    "Ntp",
     "AtlasRequest",
     "AtlasChangeRequest",
     "AtlasCreateRequest",

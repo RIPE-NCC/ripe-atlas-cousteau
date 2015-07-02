@@ -118,7 +118,7 @@ class Traceroute(AtlasMeasurement):
 
 
 class Dns(AtlasMeasurement):
-    """Class for creating a dns measurement"""
+    """Class for creating a DNS measurement"""
 
     def __init__(self, **kwargs):
         super(Dns, self).__init__(**kwargs)
@@ -130,11 +130,21 @@ class Dns(AtlasMeasurement):
 
 
 class Sslcert(AtlasMeasurement):
-    """Class for creating a sslcert measurement"""
+    """Class for creating an SSL certificate measurement"""
 
     def __init__(self, **kwargs):
         super(Sslcert, self).__init__(**kwargs)
         self.measurement_type = "sslcert"
+        self.required_options.extend(["target"])
+        self._init(**kwargs)
+
+
+class Ntp(AtlasMeasurement):
+    """Class for creating an NTP measurement"""
+
+    def __init__(self, **kwargs):
+        super(Ntp, self).__init__(**kwargs)
+        self.measurement_type = "ntp"
         self.required_options.extend(["target"])
         self._init(**kwargs)
 
