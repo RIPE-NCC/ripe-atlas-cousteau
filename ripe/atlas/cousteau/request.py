@@ -26,7 +26,7 @@ class AtlasRequest(object):
         if "url_path" in kwargs:
             self.url_path = kwargs["url_path"]
         if "server" in kwargs:
-            self. server = kwargs["server"]
+            self.server = kwargs["server"]
         else:
             self.server = "atlas.ripe.net"
 
