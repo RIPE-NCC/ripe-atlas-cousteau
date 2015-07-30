@@ -34,11 +34,11 @@ class AtlasSource(object):
 
     # requested attribute
     def get_requested(self):
-        """Getter for requested attritube"""
+        """Getter for requested attribute"""
         return self._requested
 
     def set_requested(self, value):
-        """Setter for requested attritube"""
+        """Setter for requested attribute"""
         self._requested = value
 
     doc_req = "Defines how many probes will be requested."
@@ -46,11 +46,11 @@ class AtlasSource(object):
 
     # value attribute
     def get_value(self):
-        """Getter for value attritube"""
+        """Getter for value attribute"""
         return self._value
 
     def set_value(self, value):
-        """Setter for value attritube"""
+        """Setter for value attribute"""
         self._value = value
 
     doc_value = "Defines the value of the type of probe's source."
@@ -58,11 +58,11 @@ class AtlasSource(object):
 
     # type attribute
     def get_type(self):
-        """Getter for type attritube"""
+        """Getter for type attribute"""
         return self._type
 
     def set_type(self, value):
-        """Setter for type attritube"""
+        """Setter for type attribute"""
         if value not in self.types_available:
             log = "Sources field 'type' should be in one of %s" % (
                 self.types_available
@@ -115,11 +115,11 @@ class AtlasChangeSource(AtlasSource):
 
     # type attribute
     def get_type(self):
-        """Getter for type attritube"""
+        """Getter for type attribute"""
         return self._type
 
     def set_type(self, value):
-        """Setter for type attritube"""
+        """Setter for type attribute"""
         if value != "probes":
             log = "Sources field 'type' should be 'probes'."
             raise MalFormattedSource(log)
@@ -130,11 +130,11 @@ class AtlasChangeSource(AtlasSource):
 
     # action attribute
     def get_action(self):
-        """Getter for action attritube"""
+        """Getter for action attribute"""
         return self._action
 
     def set_action(self, value):
-        """Setter for action attritube"""
+        """Setter for action attribute"""
         if value not in ("remove", "add"):
             log = "Sources field 'action' should be 'remove' or 'add'."
             raise MalFormattedSource(log)
