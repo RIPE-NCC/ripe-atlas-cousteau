@@ -1,3 +1,10 @@
+v<0.9>, < 2015-09-01> -- 0.9 release.
+NEW FEATURES:
+- add support for fetching real time results using RIPE Atlas stream server.
+- this version and on will be available on PYPI.
+v<0.8>, < 2015-08-31> -- 0.8 release.
+NEW FEATURES:
+- add support for NTP measurements.
 v<0.7>, < 2015-06-03> -- 0.7 release.
 NEW FEATURES:
 - add support for fetching probes/measurements meta data using python generators.
