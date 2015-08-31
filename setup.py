@@ -22,7 +22,6 @@ setup(
     include_package_data=True,
     license="GPLv3",
     url="https://github.com/RIPE-NCC/ripe-atlas-cousteau",
-    download_url="https://github.com/RIPE-NCC/ripe-atlas-cousteau/tarball/%s" % __version__,
     description="Python wrapper for RIPE Atlas API",
     author="RIPE Atlas Development Team",
     author_email="atlas-dev@ripe.net",
