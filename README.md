@@ -155,6 +155,41 @@ if is_success:
 
 ```
 
+#### Fetch real time results
+
+Besides fetching results from main API it is possible to get results though [streaming API](https://atlas.ripe.net/docs/result-streaming/). 
+
+```python
+from ripe.atlas.cousteau import AtlasStream
+
+def on_result_response(*args):
+    """
+    Function that will be called every time we receive a new result. 
+    Args is a tuple, so you should use args[0] to access the real message.
+    """
+    print args[0]
+
+atlas_stream = AtlasStream()
+atlas_stream.connect()
+# Measurement results
+# Bind function we want to run with every result message received
+atlas_stream.bind_result_stream(on_result_response)
+# Subscribe to new stream for 1001 measurement results
+stream_parameters = {"msm": 1001}
+atlas_stream.start_result_stream(**stream_parameters)
+
+# Probe's connection status results
+atlas_stream.bind_probe_stream(on_result_response)
+stream_parameters = {"enrichProbes": True}
+atlas_stream.start_probe_stream(**stream_parameters)
+
+# Timeout all subscriptions after 5 secs. Leave seconds empty for no timeout.
+# Make sure you have this line after you start *all* your streams
+atlas_stream.timeout(seconds=5)
+# Shut down everything
+atlas_stream.disconnect()
+```
+The available stream parameters for every stream type are described in the (streaming results docs)[https://atlas.ripe.net/docs/result-streaming/]
 
 ### Fetch Probes/Measurements Meta data
 

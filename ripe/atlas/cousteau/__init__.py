@@ -7,6 +7,7 @@ from .request import (
     AtlasStopRequest,
     AtlasResultsRequest
 )
+from .stream import AtlasStream
 
 
 class RequestGenerator(object):
@@ -105,5 +106,6 @@ __all__ = [
     "AtlasStopRequest",
     "AtlasResultsRequest",
     "AtlasSource",
-    "AtlasChangeSource"
+    "AtlasChangeSource",
+    "AtlasStream",
 ]
