@@ -1,9 +1,8 @@
-RIPE Atlas Cousteau
-===================
+RIPE Atlas Cousteau |Build Status| |Code Health|
+================================================
 
 A python wrapper around RIPE ATLAS API.
 
-|Build Status| |Code Health|
 
 Installation
 ------------
