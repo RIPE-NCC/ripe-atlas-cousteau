@@ -1,3 +1,5 @@
+Releases History
+================
 0.9 (released 2015-09-01)
 -------------------------
 New features:
@@ -33,9 +35,11 @@ Changes:
 ~~~~~~~~
 - change package structure to comply with the new structure of atlas packages
 - add continuous integration support
+
  - add tests
  - enable travis
  - enable code health checks
+
 - add required files for uploading to github
 
 0.4 (released 2014-03-31)
