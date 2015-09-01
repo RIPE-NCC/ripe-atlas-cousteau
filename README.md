@@ -67,6 +67,8 @@ request that is missing a field stated as required, the library won’t go
 ahead and do the HTTP query. On the contrary, it will raise an exception
 with some info in it.
 
+.. _documentation pages: https://atlas.ripe.net/docs/measurement-creation-api/
+
 Changing Measurement Sources
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -96,6 +98,8 @@ for an existing measurement you can do:
 Same applies if you want to add a list of probes, you just have to
 change “action” key to “add” as stated on the `docs`_.
 
+.. _docs: https://atlas.ripe.net/docs/rest/#participation-request
+
 Stopping Measurement
 ~~~~~~~~~~~~~~~~~~~~
 
@@ -114,8 +118,10 @@ You can stop a measurement with:
 In order to be able to successfully create most of the above you need to
 create an `API key`_.
 
+.. _API key: https://atlas.ripe.net/docs/keys/
+
 Make Any API Get Requests
-=========================
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you know the url path you can make any request easily towards ATLAS
 API.
@@ -138,7 +144,7 @@ API.
     return result.response["participant_count"]
 
 Fetch Results
-=============
+~~~~~~~~~~~~~
 
 You can fetch results for any measurements using cousteau. In the
 following example we are getting all results for measurement ID 2016892
@@ -163,7 +169,7 @@ dates.
         print(results)
 
 Fetch real time results
------------------------
+~~~~~~~~~~~~~~~~~~~~~~~
 
 Besides fetching results from main API it is possible to get results
 though `streaming API`_.
@@ -208,7 +214,7 @@ the `streaming results docs`_
 .. _streaming results docs: https://atlas.ripe.net/docs/result-streaming/
 
 Fetch Probes/Measurements Meta data
-===================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This is a helpful feature that hides all the complexity of traversing
 the API using the next url each time there are more objects. It returns
@@ -251,3 +257,5 @@ But why `Cousteau`_? The RIPE Atlas team decided to name all of its
 modules after explorers, and this is not an exception :)
 
 .. _Cousteau: http://en.wikipedia.org/wiki/Jacques_Cousteau
+.. |Build Status| image:: https://travis-ci.org/RIPE-NCC/ripe-atlas-cousteau.png?branch=master :target: https://travis-ci.org/RIPE-NCC/ripe-atlas-cousteau
+.. |Code Health| image:: https://landscape.io/github/RIPE-NCC/ripe-atlas-cousteau/master/landscape.png :target: https://landscape.io/github/RIPE-NCC/ripe-atlas-cousteau/master
