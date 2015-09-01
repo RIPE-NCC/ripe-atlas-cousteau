@@ -5,7 +5,7 @@ class AtlasStream(object):
     def __init__(self, **kwargs):
         """Initialize stream"""
         self.iosocket_server = "atlas-stream.ripe.net"
-        self.iosocker_resource = "/stream/socket.io"
+        self.iosocket_resource = "/stream/socket.io"
         self.result_channel = "atlas_result"
         self.probe_channel = "atlas_probestatus"
         self.result_stream_type = "result"
@@ -16,7 +16,7 @@ class AtlasStream(object):
         self.socketIO = SocketIO(
             host=self.iosocket_server,
             port=80,
-            resource=self.iosocker_resource
+            resource=self.iosocket_resource
         )
 
     def disconnect(self):
@@ -24,21 +24,23 @@ class AtlasStream(object):
         self.socketIO.disconnect()
         self.socketIO.__exit__([])
 
-    def bind_probe_stream(self, callback):
-        """Bind probes stream with the given callback"""
-        self.socketIO.on(self.probe_channel, callback)
+    def bind_stream(self, stream_type, callback):
+        """Bind given type stream with the given callback"""
+        if stream_type == "result":
+            self.socketIO.on(self.probe_channel, callback)
+        elif stream_type == "probestatus":
+            self.socketIO.on(self.result_channel, callback)
+        else:
+            print "Given stream type: <%s> is not valid" % stream_type
 
-    def bind_result_stream(self, callback):
-        """Bind results stream with the given callback"""
-        self.socketIO.on(self.result_channel, callback)
-
-    def start_result_stream(self, **stream_parameters):
-        """Starts new result stream with given parameters"""
-        self.subscribe(self.result_stream_type, **stream_parameters)
-
-    def start_probe_stream(self, **stream_parameters):
-        """Starts new probe stream with given parameters"""
-        self.subscribe(self.probe_stream_type, **stream_parameters)
+    def start_stream(self, stream_type, **stream_parameters):
+        """Starts new stream for given type with given parameters"""
+        if stream_type == "result":
+            self.subscribe(self.result_stream_type, **stream_parameters)
+        elif stream_type == "probestatus":
+            self.subscribe(self.probe_stream_type, **stream_parameters)
+        else:
+            print "Given stream type: <%s> is not valid" % stream_type
 
     def subscribe(self, stream_type, **parameters):
         """Subscribe to stream with give parameters."""
