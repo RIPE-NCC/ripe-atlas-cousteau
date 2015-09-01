@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+from os.path import abspath, dirname, join
 from setuptools import setup
 
 # import manually __version__ variable
@@ -14,6 +14,13 @@ tests_require = [
     "jsonschema"
 ]
 
+
+# Get proper long description for package
+current_dir = dirname(abspath(__file__))
+description = open(join(current_dir, "README.rst")).read()
+changes = open(join(current_dir, "CHANGES.rst")).read()
+long_description = '\n\n'.join([description, changes])
+
 setup(
     name="ripe.atlas.cousteau",
     version=__version__,
@@ -23,6 +30,7 @@ setup(
     license="GPLv3",
     url="https://github.com/RIPE-NCC/ripe-atlas-cousteau",
     description="Python wrapper for RIPE Atlas API",
+    long_description=long_description,
     author="RIPE Atlas Development Team",
     author_email="atlas-dev@ripe.net",
     maintainer="Andreas Strikos",
