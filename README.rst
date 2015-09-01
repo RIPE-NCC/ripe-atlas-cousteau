@@ -3,7 +3,6 @@ RIPE Atlas Cousteau |Build Status| |Code Health|
 
 A python wrapper around RIPE ATLAS API.
 
-
 Installation
 ------------
 
@@ -132,9 +131,7 @@ API.
         "api/v1/measurement/{0}/?fields=participant_count&"
         "format=json"
     ).format(msm_id)
-    request = AtlasRequest(**{
-        "url_path": url_path
-    })
+    request = AtlasRequest(**{"url_path": url_path})
     result = namedtuple('Result', 'success response')
     (is_success, response) = request.get()
     if not is_success:
