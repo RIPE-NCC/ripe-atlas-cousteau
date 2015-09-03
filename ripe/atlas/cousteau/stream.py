@@ -27,9 +27,9 @@ class AtlasStream(object):
     def bind_stream(self, stream_type, callback):
         """Bind given type stream with the given callback"""
         if stream_type == "result":
-            self.socketIO.on(self.probe_channel, callback)
-        elif stream_type == "probestatus":
             self.socketIO.on(self.result_channel, callback)
+        elif stream_type == "probestatus":
+            self.socketIO.on(self.probe_channel, callback)
         else:
             print "Given stream type: <%s> is not valid" % stream_type
 

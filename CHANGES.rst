@@ -1,5 +1,11 @@
 Releases History
 ================
+0.9.1 (released 2015-09-03)
+-------------------------
+Bug fix:
+~~~~~~~~~~~~~
+- Fix bug related to binding result atlas stream.
+
 0.9 (released 2015-09-01)
 -------------------------
 New features:
