@@ -17,7 +17,7 @@ or via pip using:
 
 .. code:: bash
 
-    $ pip install https://github.com/RIPE-NCC/ripe-atlas-cousteau/zipball/latest
+    $ pip install ripe.atlas.cousteau
 
 Usage
 -----
