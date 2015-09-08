@@ -31,9 +31,9 @@ Creating two new RIPE Atlas UDMs is as easy as:
 
     from datetime import datetime
     from ripe.atlas.cousteau import (
-      Ping, 
+      Ping,
       Traceroute,
-      AtlasSource, 
+      AtlasSource,
       AtlasCreateRequest
     )
 
@@ -176,7 +176,7 @@ though `streaming API`_.
 
     def on_result_response(*args):
         """
-        Function that will be called every time we receive a new result. 
+        Function that will be called every time we receive a new result.
         Args is a tuple, so you should use args[0] to access the real message.
         """
         print args[0]
@@ -186,7 +186,7 @@ though `streaming API`_.
     # Measurement results
     stream_type = "result"
     # Bind function we want to run with every result message received
-    atlas_stream.bind_stream(stream_type=stream_type, on_result_response)
+    atlas_stream.bind_stream(stream_type, on_result_response)
     # Subscribe to new stream for 1001 measurement results
     stream_parameters = {"msm": 1001}
     atlas_stream.start_stream(stream_type=stream_type, **stream_parameters)
@@ -253,7 +253,7 @@ But why `Cousteau`_? The RIPE Atlas team decided to name all of its
 modules after explorers, and this is not an exception :)
 
 .. _Cousteau: http://en.wikipedia.org/wiki/Jacques_Cousteau
-.. |Build Status| image:: https://travis-ci.org/RIPE-NCC/ripe-atlas-cousteau.png?branch=master 
+.. |Build Status| image:: https://travis-ci.org/RIPE-NCC/ripe-atlas-cousteau.png?branch=master
    :target: https://travis-ci.org/RIPE-NCC/ripe-atlas-cousteau
-.. |Code Health| image:: https://landscape.io/github/RIPE-NCC/ripe-atlas-cousteau/master/landscape.png 
+.. |Code Health| image:: https://landscape.io/github/RIPE-NCC/ripe-atlas-cousteau/master/landscape.png
    :target: https://landscape.io/github/RIPE-NCC/ripe-atlas-cousteau/master
