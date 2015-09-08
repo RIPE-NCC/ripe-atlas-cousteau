@@ -16,7 +16,8 @@ class AtlasStream(object):
         self.socketIO = SocketIO(
             host=self.iosocket_server,
             port=80,
-            resource=self.iosocket_resource
+            resource=self.iosocket_resource,
+            transports=["websocket"]
         )
 
     def disconnect(self):
