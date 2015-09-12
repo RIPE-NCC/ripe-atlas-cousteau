@@ -2,14 +2,23 @@ from socketIO_client import SocketIO
 
 
 class AtlasStream(object):
+
+    CHANNEL_RESULT = "atlas_result"
+    CHANNEL_PROBE = "atlas_probe"
+    CHANNEL_ERROR = "atlas_error"
+    CHANNELS = {
+        "result": CHANNEL_RESULT,
+        "probe": CHANNEL_PROBE,
+        "error": CHANNEL_ERROR,
+    }
+
     def __init__(self, **kwargs):
         """Initialize stream"""
+
         self.iosocket_server = "atlas-stream.ripe.net"
         self.iosocket_resource = "/stream/socket.io"
-        self.result_channel = "atlas_result"
-        self.probe_channel = "atlas_probestatus"
-        self.result_stream_type = "result"
-        self.probe_stream_type = "probestatus"
+
+        self.socketIO = None
 
     def connect(self):
         """Initiate the channel we want to start streams from."""
@@ -27,19 +36,15 @@ class AtlasStream(object):
 
     def bind_stream(self, stream_type, callback):
         """Bind given type stream with the given callback"""
-        if stream_type == "result":
-            self.socketIO.on(self.result_channel, callback)
-        elif stream_type == "probestatus":
-            self.socketIO.on(self.probe_channel, callback)
-        else:
-            print "Given stream type: <%s> is not valid" % stream_type
+        try:
+            self.socketIO.on(self.CHANNELS[stream_type], callback)
+        except KeyError:
+            print "The given stream type: <{}> is not valid".format(stream_type)
 
     def start_stream(self, stream_type, **stream_parameters):
         """Starts new stream for given type with given parameters"""
-        if stream_type == "result":
-            self.subscribe(self.result_stream_type, **stream_parameters)
-        elif stream_type == "probestatus":
-            self.subscribe(self.probe_stream_type, **stream_parameters)
+        if stream_type in ("result", "probestatus"):
+            self.subscribe(stream_type, **stream_parameters)
         else:
             print "Given stream type: <%s> is not valid" % stream_type
 
@@ -49,7 +54,10 @@ class AtlasStream(object):
         self.socketIO.emit('atlas_subscribe', parameters)
 
     def timeout(self, seconds=None):
-        "Times out all streams after X seconds or wait for ever if seconds is None"""
+        """
+        Times out all streams after n seconds or wait forever if seconds is
+        None
+        """
         if seconds is None:
             self.socketIO.wait()
         else:
