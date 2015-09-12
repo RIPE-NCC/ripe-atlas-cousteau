@@ -8,6 +8,7 @@ exec(open('ripe/atlas/cousteau/version.py').read())
 install_requires = ["python-dateutil", "socketIO-client>=0.6.5"]
 
 tests_require = [
+    "pbr<=1.6",
     "nose",
     "coverage",
     "mock",
@@ -45,6 +46,6 @@ setup(
         "Programming Language :: Python",
         "Programming Language :: Python :: 2.6",
         "Programming Language :: Python :: 2.7",
-        "Topic :: Internet :: WWW/HTTP",
+        "Topic :: Internet :: WWW/HTTP"
     ]
 )
