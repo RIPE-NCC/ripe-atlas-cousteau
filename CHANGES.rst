@@ -1,5 +1,11 @@
 Releases History
 ================
+0.9.2 (released 2015-09-21)
+---------------------------
+Changes:
+~~~~~~~~
+- Small refactor of Stream class and manually enforce websockets in SocketIO client
+
 0.9.1 (released 2015-09-03)
 ---------------------------
 Bug fix:
