@@ -5,7 +5,8 @@ from setuptools import setup
 # import manually __version__ variable
 exec(open('ripe/atlas/cousteau/version.py').read())
 
-install_requires = ["python-dateutil", "socketIO-client>=0.6.5"]
+install_requires = [
+    "python-dateutil", "socketIO-client>=0.6.5", "requests>=2.7.0"]
 
 tests_require = [
     "nose",
