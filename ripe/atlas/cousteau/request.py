@@ -91,8 +91,8 @@ class AtlasCreateRequest(AtlasRequest):
     """
     Class responsible for creating a request for creating a new Atlas
     measurement. Takes as arguments Atlas API key, a list of Atlas measurement
-    objects and a list of Atlas sources. Additionally start and end time can be
-    specified.
+    objects and a list of Atlas sources. Optionally the start and end time and
+    whether the measurement is a oneoff can be specified.
     Usage:
         from ripeatlas import AtlasCreateRequest
         ar = AtlasCreateRequest(**{
@@ -100,12 +100,13 @@ class AtlasCreateRequest(AtlasRequest):
             "stop_time": stop,
             "key": "path_to_key",
             "measurements":[measurement1, ...],
-            "sources": [source1, ...]
+            "sources": [source1, ...],
+            "is_oneoff": True/False
         })
         ar.create()
     """
 
-    url_path = '/api/v1/measurement/'
+    url_path = '/api/v2/measurement/'
 
     def __init__(self, **kwargs):
         super(AtlasCreateRequest, self).__init__(**kwargs)
@@ -120,6 +121,10 @@ class AtlasCreateRequest(AtlasRequest):
             self.stop_time = kwargs["stop_time"]
         else:
             self.stop_time = ""
+        if kwargs.get("is_oneoff"):
+            self.is_oneoff = kwargs["is_oneoff"]
+        else:
+            self.is_oneoff = False
 
     def _construct_post_data(self):
         """
@@ -128,7 +133,7 @@ class AtlasCreateRequest(AtlasRequest):
         """
         definitions = [msm.build_api_struct() for msm in self.measurements]
         probes = [source.build_api_struct() for source in self.sources]
-        self.post_data = {"definitions": definitions, "probes": probes}
+        self.post_data = {"definitions": definitions, "probes": probes, "is_oneoff": self.is_oneoff}
         if self.start_time:
             self.post_data.update(
                 {"start_time": int(self.start_time.strftime("%s"))}
