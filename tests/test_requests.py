@@ -51,7 +51,7 @@ class TestAtlasCreateRequest(unittest.TestCase):
             "key": "path_to_key",
             "measurements": [measurement],
             "sources": [create_source],
-	    "is_oneoff": True,
+            "is_oneoff": True,
         })
 
     def test_construct_post_data(self):

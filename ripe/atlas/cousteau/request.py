@@ -91,7 +91,8 @@ class AtlasCreateRequest(AtlasRequest):
     """
     Class responsible for creating a request for creating a new Atlas
     measurement. Takes as arguments Atlas API key, a list of Atlas measurement
-    objects and a list of Atlas sources. Optionally the start and end time and whether the measurement is a oneoff can be specified.
+    objects and a list of Atlas sources. Optionally the start and end time and
+    whether the measurement is a oneoff can be specified.
     Usage:
         from ripeatlas import AtlasCreateRequest
         ar = AtlasCreateRequest(**{
@@ -100,7 +101,7 @@ class AtlasCreateRequest(AtlasRequest):
             "key": "path_to_key",
             "measurements":[measurement1, ...],
             "sources": [source1, ...],
-	    "is_oneoff": True/False
+            "is_oneoff": True/False
         })
         ar.create()
     """
