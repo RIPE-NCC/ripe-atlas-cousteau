@@ -209,10 +209,34 @@ the `streaming results docs`_
 .. _streaming API: https://atlas.ripe.net/docs/result-streaming/
 .. _streaming results docs: https://atlas.ripe.net/docs/result-streaming/
 
-Fetch Probes/Measurements Meta data
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Represent Probes/Measurements Meta data
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Fetches the meta data of a probe or meausurement and creates a python object with
+properties based on the API meta data.
 
-This is a helpful feature that hides all the complexity of traversing
+.. code:: python
+
+    from ripe.atlas.cousteau import Probe, Measurement
+
+    probe = Probe(id=3)
+    print(probe.country_code)
+    print(probe.is_anchor)
+    print(probe.is_public)
+    print(probe.address_v4)
+    print(dir(probe)) # Full list of properties
+
+    measurement = Measurement(id=1000002)
+    print(measurement.protocol)
+    print(measurement.description)
+    print(measurement.is_oneoff)
+    print(measurement.type)
+    print(dir(measurement)) # Full list of properties
+
+Filter Probes/Measurements
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This feature queries API for probes/measurements based on specified filters. Filters 
+should be as specified in `filter_api`_. It hides all the complexity of traversing
 the API using the next url each time there are more objects. It returns
 a python generator that you can use to access each object.
 
@@ -245,6 +269,8 @@ Fetches all specified measurements.
 
     # Print total count of found measurements
     print(measurements.total_count)
+
+.. _filter_api: https://atlas.ripe.net/docs/rest/
 
 Colophon
 ========
