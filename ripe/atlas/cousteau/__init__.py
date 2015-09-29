@@ -1,3 +1,9 @@
+try:
+    # Python 3
+    from urllib.parse import urlparse
+except ImportError:
+    # Python 2
+    from urlparse import urlparse
 from datetime import datetime
 
 from .measurement import Ping, Traceroute, Dns, Sslcert, Ntp
@@ -28,14 +34,11 @@ class RequestGenerator(object):
         self.api_filters = filters
         self.atlas_url = self.build_url()
         self.current_batch = []
-        self.total_count = None
+        self.count = None
 
     def build_url(self):
         """Build the url path based on the filter options."""
         basis_url = self.url
-        # Add a limit if user hasn't specified one.
-        if "limit" not in self.api_filters:
-            basis_url = "%s?limit=%s" % (self.url, self.API_LIMIT)
 
         if not self.api_filters:
             return basis_url
@@ -54,18 +57,6 @@ class RequestGenerator(object):
     def __next__(self):
         return self.next()
 
-    def next_batch(self):
-        """
-        Quering API for the next batch of objects and store next url and
-        batch of objects.
-        """
-        is_success, results = AtlasRequest(**{"url_path": self.atlas_url}).get()
-        if is_success:
-            if self.total_count is None:
-                self.total_count = results["meta"].get("total_count")
-            self.atlas_url = results["meta"].get("next")
-            self.current_batch = results.get("objects", [])
-
     def next(self):
         if not self.current_batch:  # If first time or current batch was all given
             if not self.atlas_url:  # We don't have any next url any more, exit
@@ -76,6 +67,26 @@ class RequestGenerator(object):
 
         return self.current_batch.pop(0)
 
+    def next_batch(self):
+        """
+        Quering API for the next batch of objects and store next url and
+        batch of objects.
+        """
+        is_success, results = AtlasRequest(**{"url_path": self.atlas_url}).get()
+        if is_success:
+            if self.count is None:
+                self.count = results.get("count")
+            self.atlas_url = self.build_next_url(results.get("next"))
+            self.current_batch = results.get("results", [])
+
+    def build_next_url(self, url):
+        """Builds next url in a format compatible with cousteau. Path + query"""
+        if not url:
+            return None
+
+        parsed_url = urlparse(url)
+        return "{0}?{1}".format(parsed_url.path, parsed_url.query)
+
 
 class ProbeRequest(RequestGenerator):
     """
@@ -84,7 +95,7 @@ class ProbeRequest(RequestGenerator):
     for probe in ProbeRequest(**{"limit":200, "country_code": "GR"}):
         print probe["id"]
     """
-    url = "/api/v1/probe/"
+    url = "/api/v2/probes/"
 
 
 class MeasurementRequest(RequestGenerator):
@@ -94,7 +105,7 @@ class MeasurementRequest(RequestGenerator):
     for measurement in MeasurementRequest(**{"status": 1}):
         print measurement["msm_id"]
     """
-    url = "/api/v1/measurement/"
+    url = "/api/v2/measurements/"
 
 
 class EntityRepresentation(object):
