@@ -50,7 +50,8 @@ class TestAtlasCreateRequest(unittest.TestCase):
             "stop_time": datetime.utcnow() + timedelta(hours=2),
             "key": "path_to_key",
             "measurements": [measurement],
-            "sources": [create_source]
+            "sources": [create_source],
+	    "is_oneoff": True,
         })
 
     def test_construct_post_data(self):

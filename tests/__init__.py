@@ -52,6 +52,7 @@ post_data_create_schema = {
         },
         "start_time": {"type": "integer"},
         "end_time": {"type": "integer"},
+	"is_oneoff": {"type": "boolean"},
         "probes": {
             "type": "array",
             "items": probes_create_schema
