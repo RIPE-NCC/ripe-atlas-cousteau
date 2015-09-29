@@ -10,8 +10,10 @@ from ripe.atlas.cousteau import (
     Ping,
     AtlasSource, AtlasChangeSource,
     AtlasCreateRequest, AtlasChangeRequest,
-    AtlasResultsRequest, RequestGenerator, ProbeRequest
+    AtlasResultsRequest, RequestGenerator, ProbeRequest,
+    Probe, Measurement
 )
+from ripe.atlas.cousteau.exceptions import APIResponseError
 from . import post_data_create_schema, post_data_change_schema
 
 
@@ -227,3 +229,92 @@ class TestRequestGenerator(unittest.TestCase):
 
     def tearDown(self):
         mock.patch.stopall()
+
+
+class TestProbeRepresentation(unittest.TestCase):
+    def test_sane_response(self):
+        with mock.patch('ripe.atlas.cousteau.request.AtlasRequest.get') as request_mock:
+            resp = {
+                "address_v4": "62.194",
+                "address_v6": None,
+                "asn_v4": 68,
+                "asn_v6": None,
+                "country_code": "ND",
+                "id": 1,
+                "is_anchor": False,
+                "is_public": False,
+                "prefix_v4": "62.194.0.0/16",
+                "prefix_v6": None,
+                "status": 1,
+                "tags": ["cable"],
+                "latitude": 52.3875,
+                "longitude": 4.8875,
+                "status_name": "Connected",
+                "status_since": 1443446716
+            }
+            request_mock.return_value = True, resp
+            probe = Probe(id=1)
+            self.assertEqual(probe.meta_data, resp)
+            self.assertEqual(probe.country_code, "ND")
+            self.assertEqual(probe.address_v4, "62.194")
+            self.assertEqual(probe.address_v6, None)
+            self.assertEqual(probe.asn_v4, 68)
+            self.assertEqual(probe.asn_v6, None)
+            self.assertEqual(probe.is_anchor, False)
+            self.assertEqual(probe.is_public, False)
+            self.assertEqual(probe.prefix_v4, "62.194.0.0/16")
+            self.assertEqual(probe.prefix_v6, None)
+            self.assertEqual(probe.status, "Connected")
+            self.assertEqual(probe.prefix_v6, None)
+            self.assertEqual(probe.geometry, (52.3875, 4.8875))
+
+    def test_error_response(self):
+        with mock.patch('ripe.atlas.cousteau.request.AtlasRequest.get') as request_mock:
+            request_mock.return_value = False, {}
+            self.assertRaises(APIResponseError, lambda: Probe(id=1))
+
+
+class TestMeasurementRepresentation(unittest.TestCase):
+    def test_sane_response(self):
+        with mock.patch('ripe.atlas.cousteau.request.AtlasRequest.get') as request_mock:
+            resp = {
+                "af": 4,
+                "dst_addr": "202.73.56.70",
+                "dst_asn": 9255,
+                "dst_name": "blaaaah",
+                "msm_id": 2310448,
+                "description": "Blaaaaaaaaaah",
+                "is_oneoff": True,
+                "is_public": True,
+                "interval": 1800,
+                "creation_time": 1439379910,
+                "resolve_on_probe": False,
+                "start_time": 1439379910,
+                "stop_time": 1439380502,
+                "status": {"id": 4, "name": "Stopped"},
+                "resolved_ips": ["202.73.56.70"],
+                "type": {"id": 8, "name": "http", "af": 4},
+                "result": "/api/v1/measurement/2310448/result/"
+            }
+            request_mock.return_value = True, resp
+            measurement = Measurement(id=1)
+            self.assertEqual(measurement.meta_data, resp)
+            self.assertEqual(measurement.protocol, 4)
+            self.assertEqual(measurement.destination_address, "202.73.56.70")
+            self.assertEqual(measurement.destination_asn, 9255)
+            self.assertEqual(measurement.destination_name, "blaaaah")
+            self.assertEqual(measurement.description, "Blaaaaaaaaaah")
+            self.assertEqual(measurement.is_oneoff, True)
+            self.assertEqual(measurement.is_public, True)
+            self.assertEqual(measurement.interval, 1800)
+            self.assertEqual(measurement.status, "Stopped")
+            self.assertEqual(measurement.creation_time, datetime.fromtimestamp(1439379910))
+            self.assertEqual(measurement.start_time, datetime.fromtimestamp(1439379910))
+            self.assertEqual(measurement.stop_time, datetime.fromtimestamp(1439380502))
+            self.assertEqual(measurement.type, "HTTP")
+            self.assertEqual(measurement.result_url, "/api/v1/measurement/2310448/result/")
+
+    def test_error_response(self):
+        with mock.patch('ripe.atlas.cousteau.request.AtlasRequest.get') as request_mock:
+            request_mock.return_value = False, {}
+            self.assertRaises(APIResponseError, lambda: Measurement(id=1))

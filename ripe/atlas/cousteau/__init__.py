@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from .measurement import Ping, Traceroute, Dns, Sslcert, Ntp
 from .source import AtlasSource, AtlasChangeSource
 from .request import (
@@ -8,6 +10,7 @@ from .request import (
     AtlasResultsRequest
 )
 from .stream import AtlasStream
+from .exceptions import APIResponseError
 
 
 class RequestGenerator(object):
@@ -93,6 +96,91 @@ class MeasurementRequest(RequestGenerator):
     """
     url = "/api/v1/measurement/"
 
+
+class EntityRepresentation(object):
+    """
+    A crude representation of entity's meta data as we get it from the API.
+    """
+
+    API_META_URL = "/api/v1/probe/{0}/"
+
+    def __init__(self, **kwargs):
+
+        self.id = kwargs.get("id")
+        self.api_key = kwargs.get("key", "")
+        self.meta_data = None
+        if not self._fetch_meta_data():
+            raise APIResponseError(self.meta_data)
+        self._populate_data()
+
+    def _fetch_meta_data(self):
+        """Makes an API call to fetch meta data for the given probe and stores the raw data."""
+        is_success, meta_data = AtlasRequest(
+            **{"url_path": self.API_META_URL.format(self.id), "key": self.api_key}
+        ).get()
+
+        self.meta_data = meta_data
+        if not is_success:
+            return False
+
+        return True
+
+    def _populate_data(self):
+        """Assing some raw meta data from API response to instance properties"""
+        raise NotImplementedError()
+
+    def __str__(self):
+        return "Probe #{}".format(self.id)
+
+    def __repr__(self):
+        return str(self)
+
+
+class Probe(EntityRepresentation):
+    """
+    A crude representation of probe's meta data as we get it from the API.
+    """
+    API_META_URL = "/api/v1/probe/{0}/"
+
+    def _populate_data(self):
+        """Assing some probe's raw meta data from API response to instance properties"""
+        self.is_anchor = self.meta_data.get("is_anchor")
+        self.country_code = self.meta_data.get("country_code")
+        self.description = self.meta_data.get("description")
+        self.is_public = self.meta_data.get("is_public")
+        self.asn_v4 = self.meta_data.get("asn_v4")
+        self.asn_v6 = self.meta_data.get("asn_v6")
+        self.address_v4 = self.meta_data.get("address_v4")
+        self.address_v6 = self.meta_data.get("address_v6")
+        self.prefix_v4 = self.meta_data.get("prefix_v4")
+        self.prefix_v6 = self.meta_data.get("prefix_v6")
+        self.geometry = (self.meta_data.get("latitude"), self.meta_data.get("longitude"))
+        self.status = self.meta_data.get("status_name")
+
+
+class Measurement(EntityRepresentation):
+    """
+    A crude representation of measurement's meta data as we get it from the API.
+    """
+    API_META_URL = "/api/v1/measurement/{0}/"
+
+    def _populate_data(self):
+        """Assing some measurement's raw meta data from API response to instance properties"""
+        self.protocol = self.meta_data.get("af")
+        self.destination_address = self.meta_data.get("dst_addr")
+        self.destination_asn = self.meta_data.get("dst_asn")
+        self.destination_name = self.meta_data.get("dst_name")
+        self.description = self.meta_data.get("description")
+        self.is_oneoff = self.meta_data.get("is_oneoff")
+        self.is_public = self.meta_data.get("is_public")
+        self.interval = self.meta_data.get("interval")
+        self.resolve_on_probe = self.meta_data.get("resolve_on_probe")
+        self.creation_time = datetime.fromtimestamp(self.meta_data.get("creation_time"))
+        self.start_time = datetime.fromtimestamp(self.meta_data.get("start_time"))
+        self.stop_time = datetime.fromtimestamp(self.meta_data.get("stop_time"))
+        self.status = self.meta_data.get("status", {}).get("name")
+        self.type = self.meta_data.get("type", {}).get("name").upper()
+        self.result_url = self.meta_data.get("result")
 
 __all__ = [
     "Ping",
