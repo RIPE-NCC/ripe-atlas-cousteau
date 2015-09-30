@@ -27,28 +27,57 @@ class RequestGenerator(object):
     build url_path from this.
     """
 
-    API_LIMIT = "300"
     url = ""
+    id_filter = ""
+    URL_LENGTH_LIMIT = 5000
 
     def __init__(self, **filters):
         self.api_filters = filters
-        self.atlas_url = self.build_url()
+        self.split_urls = []
+        self.total_count_flag = False
         self.current_batch = []
-        self.count = None
+        self._count = []
+        self.atlas_url = self.build_url()
 
     def build_url(self):
         """Build the url path based on the filter options."""
-        basis_url = self.url
 
         if not self.api_filters:
-            return basis_url
+            return self.url
+
+        if (
+            self.id_filter in self.api_filters and
+            len(str(self.api_filters[self.id_filter])) > self.URL_LENGTH_LIMIT
+        ):
+            self.build_url_chunks()
+            return self.split_urls.pop(0)
 
         filters = '&'.join("%s=%s" % (k, v) for (k, v) in self.api_filters.iteritems())
 
-        if "?" in basis_url:
-            return "%s&%s" % (basis_url, filters)
-        else:
-            return "%s?%s" % (basis_url, filters)
+        return "%s?%s" % (self.url, filters)
+
+    def build_url_chunks(self):
+        """
+        If url is too big because of id filter is huge, break id and construct
+        several urls to call them in order to abstract this complexity from user.
+        """
+        CHUNK_SIZE = 500
+
+        id_filter = str(self.api_filters.pop(self.id_filter)).split(',')
+        chuncks = list(self.chunks(id_filter, CHUNK_SIZE))
+        filters = '&'.join("%s=%s" % (k, v) for (k, v) in self.api_filters.iteritems())
+
+        for chunk in chuncks:
+            if filters:
+                url = "{0}?{1}&{2}={3}".format(self.url, filters, self.id_filter, ','.join(chunk))
+            else:
+                url = "{0}?{1}={2}".format(self.url, self.id_filter, ','.join(chunk))
+            self.split_urls.append(url)
+
+    def chunks(self, l, n):
+        """Yield successive n-sized chunks from l."""
+        for i in xrange(0, len(l), n):
+            yield l[i:i + n]
 
     def __iter__(self):
         return self
@@ -73,19 +102,42 @@ class RequestGenerator(object):
         batch of objects.
         """
         is_success, results = AtlasRequest(**{"url_path": self.atlas_url}).get()
-        if is_success:
-            if self.count is None:
-                self.count = results.get("count")
-            self.atlas_url = self.build_next_url(results.get("next"))
-            self.current_batch = results.get("results", [])
+
+        if not is_success:
+            raise APIResponseError(results)
+
+        self.total_count = results.get("count")
+        self.atlas_url = self.build_next_url(results.get("next"))
+        self.current_batch = results.get("results", [])
 
     def build_next_url(self, url):
         """Builds next url in a format compatible with cousteau. Path + query"""
         if not url:
-            return None
+            if self.split_urls:  # If we had a long request give the next part
+                self.total_count_flag = False  # Reset flag for count
+                return self.split_urls.pop(0)
+            else:
+                return None
 
         parsed_url = urlparse(url)
         return "{0}?{1}".format(parsed_url.path, parsed_url.query)
+
+    # count attribute to deal with splitted urls and total count
+    def get_total_count(self):
+        """Getter for count attribute"""
+        if not self._count:
+            return 0
+        else:
+            return sum(self._count)
+
+    def set_total_count(self, value):
+        """Setter for count attribute. Set should append only one count per splitted url."""
+        if not self.total_count_flag and value:
+            self._count.append(int(value))
+            self.total_count_flag = True
+
+    doc_count = "Defines how many objects returned."
+    total_count = property(get_total_count, set_total_count, doc=doc_count)
 
 
 class ProbeRequest(RequestGenerator):
@@ -96,6 +148,7 @@ class ProbeRequest(RequestGenerator):
         print probe["id"]
     """
     url = "/api/v2/probes/"
+    id_filter = "id__in"
 
 
 class MeasurementRequest(RequestGenerator):
@@ -106,6 +159,7 @@ class MeasurementRequest(RequestGenerator):
         print measurement["msm_id"]
     """
     url = "/api/v2/measurements/"
+    id_filter = "msm_id__in"
 
 
 class EntityRepresentation(object):
