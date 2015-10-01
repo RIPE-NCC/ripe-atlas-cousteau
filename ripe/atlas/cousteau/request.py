@@ -22,6 +22,7 @@ class AtlasRequest(object):
 
     def __init__(self, **kwargs):
         # build the url.
+        self.url = ""
         self.key = kwargs.get("key", "")
         if "url_path" in kwargs:
             self.url_path = kwargs["url_path"]
@@ -31,6 +32,7 @@ class AtlasRequest(object):
             self.server = "atlas.ripe.net"
 
         self.http_agent = "RIPE ATLAS Cousteau v%s" % __version__
+        self.post_data = {}
 
     def build_url(self):
         """
@@ -86,6 +88,9 @@ class AtlasRequest(object):
 
         return True, json.load(response)
 
+    def _construct_post_data(self):
+        pass
+
 
 class AtlasCreateRequest(AtlasRequest):
     """
@@ -94,7 +99,7 @@ class AtlasCreateRequest(AtlasRequest):
     objects and a list of Atlas sources. Additionally start and end time can be
     specified.
     Usage:
-        from ripeatlas import AtlasCreateRequest
+        from ripe.atlas import AtlasCreateRequest
         ar = AtlasCreateRequest(**{
             "start_time": start,
             "stop_time": stop,
@@ -123,7 +128,7 @@ class AtlasCreateRequest(AtlasRequest):
 
     def _construct_post_data(self):
         """
-        Contructs the data structure that is required from the atlas API based
+        Constructs the data structure that is required from the atlas API based
         on measurements, sources and times user has specified.
         """
         definitions = [msm.build_api_struct() for msm in self.measurements]
@@ -222,7 +227,11 @@ class AtlasResultsRequest(AtlasRequest):
         start = kwargs.get("start")
         stop = kwargs.get("stop")
         self.probe_ids = kwargs.get("probe_ids")
+
+        self.start = None
+        self.stop = None
         self.clean_start_time(start)
+
         self.clean_stop_time(stop)
         self.construct_url_path()
         super(AtlasResultsRequest, self).__init__(**kwargs)
