@@ -82,15 +82,8 @@ probes_change_schema = {
 }
 
 post_data_change_schema = {
-    "type": "object",
-    "required": ["msm_id", "probes"],
-    "properties": {
-        "msm_id": {"type": "integer"},
-        "probes": {
-            "type": "array",
-            "items": probes_change_schema
-        }
-    }
+    "type": "array",
+    "items": probes_change_schema
 }
 
 __all__ = [

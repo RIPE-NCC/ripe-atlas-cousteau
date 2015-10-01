@@ -12,74 +12,113 @@ from . import probes_create_schema, probes_change_schema
 
 class TestAtlasSource(unittest.TestCase):
 
-    def setUp(self):
-        self.kwargs = {"requested": 5, "value": "test", "type": "country"}
-        self.source = AtlasSource(**self.kwargs)
+    def test_sane_type_attribute(self):
+        """Test sane input for type attribute"""
+        for t in ("country", "probes", "area", "asn", "prefix"):
+            kwargs = {"requested": 5, "value": "test", "type": t}
+            AtlasSource(**kwargs)
 
-    def test_setting_type(self):
+    def test_wrong_type_attribute(self):
+        """Test wrong input for type attribute"""
+        kwargs = {"requested": 5, "value": "test", "type": "blaaaaaaa"}
         self.assertRaises(
-            MalFormattedSource, lambda: setattr(self.source, "type", "testing")
+            MalFormattedSource, lambda: AtlasSource(**kwargs)
         )
 
     def test_clean(self):
-        self.assertEqual(self.source.clean(), None)
-        self.source.type = "msm"
-        self.source.value = None
+        # all ok
+        kwargs = {"requested": 5, "value": "test", "type": "msm"}
+        source = AtlasSource(**kwargs)
+        self.assertEqual(source.clean(), None)
+        # value missing
+        source.value = None
         self.assertRaises(
-            MalFormattedSource, lambda: self.source.clean()
+            MalFormattedSource, lambda: source.clean()
         )
-        self.source.value = "test"
-        self.source.requested = None
+        # type missing
+        kwargs = {"requested": 5, "value": "test"}
         self.assertRaises(
-            MalFormattedSource, lambda: self.source.clean()
+            MalFormattedSource, lambda: AtlasSource(**kwargs).clean()
+        )
+        # requested missing
+        source.value = "test"
+        source.requested = None
+        self.assertRaises(
+            MalFormattedSource, lambda: source.clean()
         )
 
     def test_build_api_struct(self):
-        self.assertEqual(self.source.build_api_struct(), self.kwargs)
-        validate(self.source.build_api_struct(), probes_create_schema)
+        kwargs = {"requested": 5, "value": "test", "type": "msm"}
+        source = AtlasSource(**kwargs)
+        self.assertEqual(source.build_api_struct(), kwargs)
+        validate(source.build_api_struct(), probes_create_schema)
 
 
 class TestAtlasChangeSource(unittest.TestCase):
 
-    def setUp(self):
-        self.kwargs = {
+    def test_setting_type(self):
+        kwargs = {
             "requested": 5, "value": "test", "action": "add"
         }
-        self.source = AtlasChangeSource(**self.kwargs)
+        source = AtlasChangeSource(**kwargs)
+        for source_type in ["area", "country", "prefix", "asn", "msm", "probes"]:
+            self.assertEqual(setattr(source, "type", source_type), None)
 
-    def test_setting_type(self):
+        kwargs = {
+            "requested": 5, "value": "test", "action": "remove"
+        }
+        source = AtlasChangeSource(**kwargs)
         for source_type in ["area", "country", "prefix", "asn", "msm"]:
             self.assertRaises(
                 MalFormattedSource,
-                lambda: setattr(self.source, "type", source_type)
+                lambda: setattr(source, "type", source_type)
             )
-
-        self.assertEqual(setattr(self.source, "type", "probes"), None)
+        self.assertEqual(setattr(source, "type", "probes"), None)
 
     def test_setting_action(self):
+        kwargs = {
+            "requested": 5, "value": "test", "type": "probes"
+        }
+        source = AtlasChangeSource(**kwargs)
         for source_action in ["remove", "add"]:
             self.assertEqual(
-                setattr(self.source, "action", source_action), None
+                setattr(source, "action", source_action), None
             )
 
         self.assertRaises(
             MalFormattedSource,
-            lambda: setattr(self.source, "action", "test")
+            lambda: setattr(source, "action", "test")
         )
 
     def test_clean(self):
-        self.assertEqual(self.source.clean(), None)
-        self.source.value = None
+        # all ok
+        kwargs = {"requested": 5, "value": "test", "type": "msm", "action": "add"}
+        source = AtlasChangeSource(**kwargs)
+        self.assertEqual(source.clean(), None)
+        # value missing
+        source.value = None
         self.assertRaises(
-            MalFormattedSource, lambda: self.source.clean()
+            MalFormattedSource, lambda: source.clean()
         )
-        self.source.value = "test"
-        self.source.requested = None
+        # type missing
+        kwargs = {"requested": 5, "value": "test", "action": "add"}
         self.assertRaises(
-            MalFormattedSource, lambda: self.source.clean()
+            MalFormattedSource, lambda: AtlasChangeSource(**kwargs).clean()
+        )
+        # action missing
+        kwargs = {"requested": 5, "value": "test", "type": "probes"}
+        self.assertRaises(
+            MalFormattedSource, lambda: AtlasChangeSource(**kwargs).clean()
+        )
+        # requested missing
+        source.value = "test"
+        source.requested = None
+        self.assertRaises(
+            MalFormattedSource, lambda: source.clean()
         )
 
     def test_build_api_struct(self):
-        self.kwargs.update({"type": "probes"})
-        self.assertEqual(self.source.build_api_struct(), self.kwargs)
-        validate(self.source.build_api_struct(), probes_change_schema)
+        kwargs = {"requested": 5, "value": "test", "type": "msm", "action": "add"}
+        source = AtlasChangeSource(**kwargs)
+        self.assertEqual(source.build_api_struct(), kwargs)
+        validate(source.build_api_struct(), probes_change_schema)

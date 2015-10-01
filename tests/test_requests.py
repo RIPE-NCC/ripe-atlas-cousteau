@@ -87,14 +87,14 @@ class TestAtlasResultsRequest(unittest.TestCase):
     def test_url_path(self):
         parsed_url = urlparse.urlparse(self.request.url_path)
         self.assertEqual(
-            parsed_url.path, "/api/v1/measurement/1000002/result/"
+            parsed_url.path, "/api/v2/measurements/1000002/results"
         )
         query_filters = urlparse.parse_qs(parsed_url.query)
         self.assertTrue(set(
             query_filters.keys()
         ).issubset(["start", "stop", "prb_id"]))
-        self.assertTrue(re.match(r"^\d+$", query_filters["start"][0]))
-        self.assertTrue(re.match(r"^\d+$", query_filters["stop"][0]))
+        self.assertTrue(re.match(r"^\d+.\d+$", query_filters["start"][0]))
+        self.assertTrue(re.match(r"^\d+.\d+$", query_filters["stop"][0]))
         self.assertTrue(
             re.match(r"^(\d+,)+\d+$", query_filters["prb_id"][0])
         )

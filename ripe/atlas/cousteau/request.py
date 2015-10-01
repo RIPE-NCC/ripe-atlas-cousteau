@@ -4,6 +4,7 @@ request according to the ATLAS API.
 """
 
 import json
+import urllib
 import urllib2
 import time
 from dateutil import parser
@@ -150,31 +151,28 @@ class AtlasCreateRequest(AtlasRequest):
 
 class AtlasChangeRequest(AtlasRequest):
     """Atlas request for changing probes for a running measurement.
-    post_data = {
-        "msm_id": msm,
-        "probes": [{
-            "action": action,
-            "requested": probe_number,
-            "type": "probes",
-            "value": probe_values
-        }]
-    }
+    post_data = [{
+        "action": "add|remove",
+        "requested": probe_number,
+        "type": "area|country|asn|prefix|msm|probes",  # when action=remove only probes is supported
+        "value": probe_values
+    }]
     """
 
-    url_path = '/api/v1/participation-request/'
+    url_path = '/api/v2/measurements/{0}/participation-requests/'
 
     def __init__(self, **kwargs):
         super(AtlasChangeRequest, self).__init__(**kwargs)
         self.msm_id = kwargs["msm_id"]
         self.sources = kwargs["sources"]
+        self.url_path = "{0}{1}".format(self.url_path, self.msm_id)
 
     def _construct_post_data(self):
         """
         Contructs the data structure that is required from the atlas API based
         on measurement id, and the sources.
         """
-        probes = [source.build_api_struct() for source in self.sources]
-        self.post_data = {"msm_id": self.msm_id, "probes": probes}
+        self.post_data = [source.build_api_struct() for source in self.sources]
 
     def create(self):
         """Sends the POST request"""
@@ -184,11 +182,11 @@ class AtlasChangeRequest(AtlasRequest):
 class AtlasStopRequest(AtlasRequest):
     """Atlas request for stopping a measurement."""
 
-    url_path = '/api/v1/measurement/'
+    url_path = '/api/v2/measurements/'
 
     def __init__(self, **kwargs):
         self.msm_id = kwargs["msm_id"]
-        self.url_path += "%d/" % self.msm_id
+        self.url_path = "{0}{1}".format(self.url_path, self.msm_id)
         super(AtlasStopRequest, self).__init__(**kwargs)
 
     def delete(self):
@@ -220,7 +218,7 @@ class AtlasStopRequest(AtlasRequest):
 class AtlasResultsRequest(AtlasRequest):
     """Atlas request for fetching results of a measurement."""
 
-    url_path = '/api/v1/measurement/%d/result/'
+    url_path = '/api/v2/measurements/{0}/results'
 
     def __init__(self, **kwargs):
         self.msm_id = kwargs["msm_id"]
@@ -259,28 +257,24 @@ class AtlasResultsRequest(AtlasRequest):
         Construct url path based on base url_path, msm_id and query filters if
         there are any.
         """
-        self.url_path = self.url_path % self.msm_id
+        self.url_path = self.url_path.format(self.msm_id)
 
         if any([self.start, self.stop, self.probe_ids]):
             self.url_path += "?"
 
-        # variable that helps adding '&' in url in case of multiple filters
-        filter_exists = False
+        url_params = {}
 
         if self.start:
-            filter_exists = True
-            self.url_path += "start=%d" % time.mktime(self.start.timetuple())
+            url_params.update({"start": time.mktime(self.start.timetuple())})
 
         if self.stop:
-            filter_exists = True
-            if filter_exists:
-                self.url_path += "&"
-            self.url_path += "stop=%d" % time.mktime(self.stop.timetuple())
+            url_params.update({"stop": time.mktime(self.stop.timetuple())})
 
         if self.probe_ids:
-            if filter_exists:
-                self.url_path += "&"
-            self.url_path += "prb_id=%s" % ",".join(map(str, self.probe_ids))
+            url_params.update({"prb_id": ",".join(map(str, self.probe_ids))})
+
+        if url_params:
+            self.url_path = "{0}{1}".format(self.url_path, urllib.urlencode(url_params))
 
     def create(self):
         """Sends the GET request."""
