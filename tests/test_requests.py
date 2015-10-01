@@ -64,7 +64,7 @@ class TestAtlasCreateRequest(unittest.TestCase):
 class TestAtlasChangeRequest(unittest.TestCase):
     def setUp(self):
         change_source = AtlasChangeSource(
-            **{"value": "3,4", "requested": 3, "action": "add"}
+            **{"value": "WW", "requested": 3, "action": "add", "type": "area"}
         )
         self.request = AtlasChangeRequest(**{
             "msm_id": 1, "sources": [change_source]

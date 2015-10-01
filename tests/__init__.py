@@ -69,7 +69,7 @@ probes_change_schema = {
         },
         "type": {
             "type": "string",
-            "enum": ["probes"]
+            "enum": ["area", "country", "prefix", "asn", "probes", "msm"]
         },
         "value": {
             "type": "string",

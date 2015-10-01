@@ -101,17 +101,16 @@ class AtlasChangeSource(AtlasSource):
     Class responsible for creating an Atlas source object for changing
     participants probes for a measurement.
     Usage:
-        from ripeatlas import AtlasChangeSource
-        as = AtlasChangeSource(**{"value": "WW", "requested": 5})
+        from ripe.atlas.cousteau import AtlasChangeSource
+        as = AtlasChangeSource(**{"type":"area", "value": "WW", "requested": 5})
     """
     def __init__(self, **kwargs):
-        super(AtlasChangeSource, self).__init__(**kwargs)
-        # type is always probes for change sources
-        self._type = "probes"
         if "action" in kwargs:
             self.action = kwargs["action"]
         else:
             self._action = None
+
+        super(AtlasChangeSource, self).__init__(**kwargs)
 
     # type attribute
     def get_type(self):
@@ -120,8 +119,8 @@ class AtlasChangeSource(AtlasSource):
 
     def set_type(self, value):
         """Setter for type attribute"""
-        if value != "probes":
-            log = "Sources field 'type' should be 'probes'."
+        if self.action == "remove" and value != "probes":
+            log = "Sources field 'type' when action is remove should always be 'probes'."
             raise MalFormattedSource(log)
         self._type = value
 
@@ -148,9 +147,9 @@ class AtlasChangeSource(AtlasSource):
         Cleans/checks user has entered all required attributes. This might save
         some queries from being sent to server if they are totally wrong.
         """
-        if not all([self._requested, self._value, self._action]):
+        if not all([self._type, self._requested, self._value, self._action]):
             raise MalFormattedSource(
-                "<requested, value, action> fields are required."
+                "<type, requested, value, action> fields are required."
             )
 
     def build_api_struct(self):

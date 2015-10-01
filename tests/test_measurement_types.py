@@ -22,10 +22,10 @@ def test_create_source():
 def test_change_source():
     """Unittest for sources for change request"""
     AtlasChangeSource(**{
-        "value": "59", "requested": 1, "action": "remove"
+        "value": "59", "requested": 1, "action": "remove", "type": "probes"
     }).build_api_struct()
     AtlasChangeSource(**{
-        "value": "28", "requested": 1, "action": "add", "type": "probes"
+        "value": "28", "requested": 1, "action": "add", "type": "area"
     }).build_api_struct()
 
 
