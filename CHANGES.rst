@@ -1,5 +1,18 @@
 Releases History
 ================
+0.10 (released 2015-10-01)
+--------------------------
+New features:
+~~~~~~~~~~~~~
+- add object representation of meta data for a probe or a measurement.
+Changes:
+~~~~~~~~
+- Abandon v1 RIPE ATLAS API and use only v2.
+Bug fix:
+~~~~~~~~
+- Fix bug that prevented users from specifying all possible source types when they tried to add more probes to existing measurements.
+- Cover case where a user specified really long list of probes/measurements in the ProbeRequest/MeasurementRequest that was causing 'HTTP ERROR 414: Request-URI Too Long'. Additionally, now if API returns error raise an exception instead of stopping iteration.
+
 0.9.2 (released 2015-09-21)
 ---------------------------
 Changes:

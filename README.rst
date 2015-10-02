@@ -2,7 +2,7 @@ RIPE Atlas Cousteau |Build Status| |Code Health|
 ================================================
 
 A python wrapper around RIPE ATLAS API.
-
+(Until version 0.9.* this wrapper supported v1 API. After version 0.10 and above v2 RIPE ATLAS API is only supported.)
 Installation
 ------------
 
@@ -54,7 +54,8 @@ Creating two new RIPE Atlas UDMs is as easy as:
         start_time=datetime.utcnow(),
         key=ATLAS_API_KEY,
         measurements=[ping, traceroute],
-        sources=[source]
+        sources=[source],
+        is_oneoff=True
     )
 
     (is_success, response) = atlas_request.create()
@@ -70,7 +71,7 @@ with some info in it.
 Changing Measurement Sources
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Similarly if you want to change (remove in the following example) probes
+Similarly if you want to change (add in the following example) probes
 for an existing measurement you can do:
 
 .. code:: python
@@ -80,9 +81,10 @@ for an existing measurement you can do:
     ATLAS_MODIFY_API_KEY = ""
 
     source = AtlasChangeSource(
-        value="1,2,3",
+        value="GR",
         requested=3,
-        action="remove"
+        type="country",
+        action="add"
     )
 
     atlas_request = AtlasChangeRequest(
@@ -93,8 +95,10 @@ for an existing measurement you can do:
 
     (is_success, response) = atlas_request.create()
 
-Same applies if you want to add a list of probes, you just have to
-change “action” key to “add” as stated on the `docs`_.
+Same applies if you want to remove probes, you just have to
+change “action” key to “remove” and specify probes you want to remove.
+Keep in mind remove action supports only a list of probes and not the rest of the source types.
+For more info check the appropriate `docs`_.
 
 .. _docs: https://atlas.ripe.net/docs/rest/#participation-request
 
@@ -271,6 +275,30 @@ Fetches all specified measurements.
     print(measurements.total_count)
 
 .. _filter_api: https://atlas.ripe.net/docs/rest/
+
+Python representation of probe/measurement meta data
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This will allow you to have a python object with attributes populated from probes/measurements meta data.
+Every time you create a new instance it will fetch meta data from API and return an object with selected attributes.
+
+.. code:: python
+
+    from ripe.atlas.cousteau import Probe, Measurement
+
+    probe = Probe(id=1)
+    print(probe.country_code)
+    print(probe.is_public)
+    print(probe.asn_v4)
+    print(dir(probe))
+
+    measurement = Measurement(id=1000002)
+    print(measurement.protocol)
+    print(measurement.destination_address)
+    print(measurement.destination_asn)
+    print(measurement.is_oneoff)
+    print(measurement.is_public)
+    print(measurement.interval)
+    print(dir(measurement))
 
 Colophon
 ========
