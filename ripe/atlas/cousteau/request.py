@@ -274,10 +274,10 @@ class AtlasResultsRequest(AtlasRequest):
         url_params = {}
 
         if self.start:
-            url_params.update({"start": time.mktime(self.start.timetuple())})
+            url_params.update({"start": int(time.mktime(self.start.timetuple()))})
 
         if self.stop:
-            url_params.update({"stop": time.mktime(self.stop.timetuple())})
+            url_params.update({"stop": int(time.mktime(self.stop.timetuple()))})
 
         if self.probe_ids:
             url_params.update({"prb_id": ",".join(map(str, self.probe_ids))})
