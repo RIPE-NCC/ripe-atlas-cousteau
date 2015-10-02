@@ -215,29 +215,6 @@ the `streaming results docs`_
 .. _streaming API: https://atlas.ripe.net/docs/result-streaming/
 .. _streaming results docs: https://atlas.ripe.net/docs/result-streaming/
 
-Represent Probes/Measurements Meta data
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Fetches the meta data of a probe or meausurement and creates a python object with
-properties based on the API meta data.
-
-.. code:: python
-
-    from ripe.atlas.cousteau import Probe, Measurement
-
-    probe = Probe(id=3)
-    print(probe.country_code)
-    print(probe.is_anchor)
-    print(probe.is_public)
-    print(probe.address_v4)
-    print(dir(probe)) # Full list of properties
-
-    measurement = Measurement(id=1000002)
-    print(measurement.protocol)
-    print(measurement.description)
-    print(measurement.is_oneoff)
-    print(measurement.type)
-    print(dir(measurement)) # Full list of properties
-
 Filter Probes/Measurements
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -278,8 +255,8 @@ Fetches all specified measurements.
 
 .. _filter_api: https://atlas.ripe.net/docs/rest/
 
-Python representation of probe/measurement meta data
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Represent Probes/Measurements Meta data in python
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This will allow you to have a python object with attributes populated from probes/measurements meta data.
 Every time you create a new instance it will fetch meta data from API and return an object with selected attributes.
 
@@ -287,20 +264,23 @@ Every time you create a new instance it will fetch meta data from API and return
 
     from ripe.atlas.cousteau import Probe, Measurement
 
-    probe = Probe(id=1)
+    probe = Probe(id=3)
     print(probe.country_code)
+    print(probe.is_anchor)
     print(probe.is_public)
-    print(probe.asn_v4)
-    print(dir(probe))
+    print(probe.address_v4)
+    print(dir(probe)) # Full list of properties
 
     measurement = Measurement(id=1000002)
     print(measurement.protocol)
-    print(measurement.destination_address)
-    print(measurement.destination_asn)
+    print(measurement.description)
     print(measurement.is_oneoff)
     print(measurement.is_public)
+    print(measurement.destination_address)
+    print(measurement.destination_asn)
+    print(measurement.type)
     print(measurement.interval)
-    print(dir(measurement))
+    print(dir(measurement)) # Full list of properties
 
 Colophon
 ========
