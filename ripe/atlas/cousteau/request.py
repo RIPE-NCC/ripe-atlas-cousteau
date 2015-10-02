@@ -107,7 +107,7 @@ class AtlasCreateRequest(AtlasRequest):
         ar.create()
     """
 
-    url_path = '/api/v2/measurement/'
+    url_path = '/api/v2/measurements/'
 
     def __init__(self, **kwargs):
         super(AtlasCreateRequest, self).__init__(**kwargs)
