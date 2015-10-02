@@ -2,7 +2,9 @@ RIPE Atlas Cousteau |Build Status| |Code Health|
 ================================================
 
 A python wrapper around RIPE ATLAS API.
+
 (Until version 0.9.* this wrapper supported v1 API. After version 0.10 and above v2 RIPE ATLAS API is only supported.)
+
 Installation
 ------------
 
