@@ -170,7 +170,7 @@ class AtlasChangeRequest(AtlasRequest):
         super(AtlasChangeRequest, self).__init__(**kwargs)
         self.msm_id = kwargs["msm_id"]
         self.sources = kwargs["sources"]
-        self.url_path = "{0}{1}".format(self.url_path, self.msm_id)
+        self.url_path = self.url_path.format(self.msm_id)
 
     def _construct_post_data(self):
         """
