@@ -5,9 +5,11 @@ Releases History
 New features:
 ~~~~~~~~~~~~~
 - add object representation of meta data for a probe or a measurement.
+
 Changes:
 ~~~~~~~~
 - Abandon v1 RIPE ATLAS API and use only v2.
+
 Bug fix:
 ~~~~~~~~
 - Fix bug that prevented users from specifying all possible source types when they tried to add more probes to existing measurements.
