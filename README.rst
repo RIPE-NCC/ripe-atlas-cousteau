@@ -132,11 +132,7 @@ API.
 
 .. code:: python
 
-    msm_id = 2016892
-    url_path = (
-        "api/v1/measurement/{0}/?fields=participant_count&"
-        "format=json"
-    ).format(msm_id)
+    url_path = "/api/v2/anchors"
     request = AtlasRequest(**{"url_path": url_path})
     result = namedtuple('Result', 'success response')
     (is_success, response) = request.get()
