@@ -24,7 +24,7 @@ class EntityRepresentation(object):
     A crude representation of entity's meta data as we get it from the API.
     """
 
-    API_META_URL = "/api/v1/probe/{0}/"
+    API_META_URL = ""
 
     def __init__(self, **kwargs):
 
@@ -70,7 +70,7 @@ class Probe(EntityRepresentation):
     """
     A crude representation of probe's meta data as we get it from the API.
     """
-    API_META_URL = "/api/v1/probe/{0}/"
+    API_META_URL = "/api/v2/probes/{0}/"
 
     def _populate_data(self):
         """Assing some probe's raw meta data from API response to instance properties"""
@@ -86,15 +86,15 @@ class Probe(EntityRepresentation):
         self.address_v6 = self.meta_data.get("address_v6")
         self.prefix_v4 = self.meta_data.get("prefix_v4")
         self.prefix_v6 = self.meta_data.get("prefix_v6")
-        self.geometry = (self.meta_data.get("latitude"), self.meta_data.get("longitude"))
-        self.status = self.meta_data.get("status_name")
+        self.geometry = self.meta_data.get("geometry")
+        self.status = self.meta_data.get("status", {}).get("name")
 
 
 class Measurement(EntityRepresentation):
     """
     A crude representation of measurement's meta data as we get it from the API.
     """
-    API_META_URL = "/api/v1/measurement/{0}/"
+    API_META_URL = "/api/v2/measurements/{0}/"
 
     def _populate_data(self):
         """Assing some measurement's raw meta data from API response to instance properties"""
