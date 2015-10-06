@@ -1,5 +1,15 @@
 Releases History
 ================
+0.10.1 (released 2015-10-06)
+--------------------------
+New features:
+~~~~~~~~~~~~~
+- Implement support for object return in the request generators for probe/measurement.
+
+Changes:
+~~~~~~~~
+- Probe/Measurement python representation takes meta data from v2 API as well. Now everything should point to v2 API.
+
 0.10 (released 2015-10-01)
 --------------------------
 New features:
