@@ -442,12 +442,16 @@ class TestProbeRepresentation(unittest.TestCase):
                 "is_public": False,
                 "prefix_v4": "62.194.0.0/16",
                 "prefix_v6": None,
-                "status": 1,
                 "tags": ["cable"],
-                "latitude": 52.3875,
-                "longitude": 4.8875,
-                "status_name": "Connected",
-                "status_since": 1443446716
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [4.8875, 52.3875]
+                },
+                "status": {
+                    "since": "2015-09-28T13:25:16",
+                    "id": 1,
+                    "name": "Connected"
+                }
             }
             request_mock.return_value = True, resp
             probe = Probe(id=1)
@@ -462,8 +466,9 @@ class TestProbeRepresentation(unittest.TestCase):
             self.assertEqual(probe.prefix_v4, "62.194.0.0/16")
             self.assertEqual(probe.prefix_v6, None)
             self.assertEqual(probe.status, "Connected")
+            self.assertEqual(probe.tags, ["cable"])
             self.assertEqual(probe.prefix_v6, None)
-            self.assertEqual(probe.geometry, (52.3875, 4.8875))
+            self.assertEqual(probe.geometry, {"type": "Point", "coordinates": [4.8875, 52.3875]})
 
     def test_error_response(self):
         with mock.patch('ripe.atlas.cousteau.request.AtlasRequest.get') as request_mock:

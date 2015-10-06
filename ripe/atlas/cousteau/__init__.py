@@ -87,6 +87,7 @@ class Probe(EntityRepresentation):
         self.prefix_v4 = self.meta_data.get("prefix_v4")
         self.prefix_v6 = self.meta_data.get("prefix_v6")
         self.geometry = self.meta_data.get("geometry")
+        self.tags = self.meta_data.get("tags")
         self.status = self.meta_data.get("status", {}).get("name")
 
 
