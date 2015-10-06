@@ -1,7 +1,7 @@
 Releases History
 ================
 0.10.1 (released 2015-10-06)
---------------------------
+----------------------------
 New features:
 ~~~~~~~~~~~~~
 - Implement support for object return in the request generators for probe/measurement.

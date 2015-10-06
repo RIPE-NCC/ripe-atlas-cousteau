@@ -1,5 +1,5 @@
 RIPE Atlas Cousteau |Build Status| |Code Health| |PYPI Version|
-================================================
+===============================================================
 
 A python wrapper around RIPE ATLAS API.
 
@@ -290,4 +290,4 @@ modules after explorers, and this is not an exception :)
 .. |Code Health| image:: https://landscape.io/github/RIPE-NCC/ripe-atlas-cousteau/master/landscape.png
    :target: https://landscape.io/github/RIPE-NCC/ripe-atlas-cousteau/master
 .. |PYPI Version| image:: https://badge.fury.io/py/ripe-atlas-cousteau.png
-    :target: http://badge.fury.io/py/ripe-atlas-cousteau
+   :target: http://badge.fury.io/py/ripe-atlas-cousteau
