@@ -84,29 +84,27 @@ class AtlasSource(object):
 
     def set_tags(self, value):
         """Setter for tags attribute"""
-        log = "Sources fields 'tags' should be a dict in the format " \
-              "{ \"include\": [ \"tag1\", \"tag2\", \"tagN\" ], " \
-              "\"exclude\": [ \"tag1\", \"tag2\", \"tagN\" ] }"
+        log = (
+            'Sources fields "tags" should be a dict in the format '
+            '{ "include": [ "tag1", "tag2", "tagN" ], '
+            '"exclude": [ "tag1", "tag2", "tagN" ] }' )
 
         if not isinstance(value, dict):
             raise MalFormattedSource(log)
 
-        for e in value:
-            if e not in ["include", "exclude"]:
-                raise MalFormattedSource(log)
+        if set(value.keys()) != set(["include", "exclude"]):
+            raise MalFormattedSource(log)
 
-        for inc_exl in ["include", "exclude"]:
-            if inc_exl not in value:
+        for tag_list in value.values():
+            if not isinstance(tag_list, list):
                 raise MalFormattedSource(log)
-            if not isinstance(value[inc_exl], list):
-                raise MalFormattedSource(log)
-            if [e for e in value[inc_exl] if not isinstance(e, str)]:
+            if [tag for tag in tag_list if not isinstance(tag, str)]:
                 raise MalFormattedSource(log)
 
         self._tags = value
 
-    doc_type = "Defines optional tags to filter probes."
-    tags = property(get_tags, set_tags, doc=doc_type)
+    doc_tags = "Defines optional tags to filter probes."
+    tags = property(get_tags, set_tags, doc=doc_tags)
 
     def clean(self):
         """
@@ -178,8 +176,8 @@ class AtlasChangeSource(AtlasSource):
                   "participants probes for a measurement."
             raise MalFormattedSource(log)
 
-    doc_type = "Defines optional tags to filter probes."
-    tags = property(get_tags, set_tags, doc=doc_type)
+    doc_tags = "Defines optional tags to filter probes."
+    tags = property(get_tags, set_tags, doc=doc_tags)
 
     # action attribute
     def get_action(self):
