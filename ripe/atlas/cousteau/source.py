@@ -87,7 +87,8 @@ class AtlasSource(object):
         log = (
             'Sources fields "tags" should be a dict in the format '
             '{ "include": [ "tag1", "tag2", "tagN" ], '
-            '"exclude": [ "tag1", "tag2", "tagN" ] }' )
+            '"exclude": [ "tag1", "tag2", "tagN" ] }'
+        )
 
         if not isinstance(value, dict):
             raise MalFormattedSource(log)
