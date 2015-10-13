@@ -92,10 +92,10 @@ class AtlasSource(object):
             raise MalFormattedSource(log)
 
         for e in value:
-            if e not in ["include","exclude"]:
+            if e not in ["include", "exclude"]:
                 raise MalFormattedSource(log)
 
-        for inc_exl in ["include","exclude"]:
+        for inc_exl in ["include", "exclude"]:
             if inc_exl not in value:
                 raise MalFormattedSource(log)
             if not isinstance(value[inc_exl], list):
