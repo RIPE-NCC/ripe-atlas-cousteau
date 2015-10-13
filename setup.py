@@ -3,6 +3,7 @@ from os.path import abspath, dirname, join
 from setuptools import setup
 
 # import manually __version__ variable
+__version__ = None
 exec(open('ripe/atlas/cousteau/version.py').read())
 
 install_requires = [
