@@ -231,7 +231,7 @@ class AtlasLatestRequest(AtlasRequest):
 
         self.url_path = self.url_path.format(self.msm_id)
         if self.probe_ids:
-            self.url_path += "?probe_ids={}".format(
+            self.url_path += "?probe_ids={0}".format(
                 ",".join([str(_) for _ in self.probe_ids])
             )
 

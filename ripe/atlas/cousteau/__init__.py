@@ -279,6 +279,7 @@ __all__ = [
     "AtlasChangeRequest",
     "AtlasCreateRequest",
     "AtlasStopRequest",
+    "AtlasLatestRequest",
     "AtlasResultsRequest",
     "AtlasSource",
     "AtlasChangeSource",
