@@ -220,6 +220,24 @@ class AtlasStopRequest(AtlasRequest):
         return self.delete()
 
 
+class AtlasLatestRequest(AtlasRequest):
+
+    url_path = "/api/v2/measurements/{0}/latest"
+
+    def __init__(self, msm_id=None, probe_ids=(), **kwargs):
+
+        self.msm_id = msm_id
+        self.probe_ids = probe_ids
+
+        self.url_path = self.url_path.format(self.msm_id)
+        if self.probe_ids:
+            self.url_path += "?probe_ids={0}".format(
+                ",".join([str(_) for _ in self.probe_ids])
+            )
+
+        super(AtlasLatestRequest, self).__init__(**kwargs)
+
+
 class AtlasResultsRequest(AtlasRequest):
     """Atlas request for fetching results of a measurement."""
 

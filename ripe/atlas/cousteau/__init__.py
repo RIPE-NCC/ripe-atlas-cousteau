@@ -13,6 +13,7 @@ from .request import (
     AtlasCreateRequest,
     AtlasChangeRequest,
     AtlasStopRequest,
+    AtlasLatestRequest,
     AtlasResultsRequest
 )
 from .stream import AtlasStream
@@ -278,6 +279,7 @@ __all__ = [
     "AtlasChangeRequest",
     "AtlasCreateRequest",
     "AtlasStopRequest",
+    "AtlasLatestRequest",
     "AtlasResultsRequest",
     "AtlasSource",
     "AtlasChangeSource",

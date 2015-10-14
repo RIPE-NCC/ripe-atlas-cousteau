@@ -10,7 +10,7 @@ from ripe.atlas.cousteau import (
     Ping,
     AtlasSource, AtlasChangeSource,
     AtlasCreateRequest, AtlasChangeRequest,
-    AtlasResultsRequest, RequestGenerator, ProbeRequest,
+    AtlasLatestRequest, AtlasResultsRequest, RequestGenerator, ProbeRequest,
     Probe, Measurement
 )
 from ripe.atlas.cousteau.exceptions import APIResponseError
@@ -97,6 +97,25 @@ class TestAtlasResultsRequest(unittest.TestCase):
         self.assertTrue(re.match(r"^\d+.\d+$", query_filters["stop"][0]))
         self.assertTrue(
             re.match(r"^(\d+,)+\d+$", query_filters["prb_id"][0])
+        )
+
+
+class TestAtlasLatestRequest(unittest.TestCase):
+
+    def setUp(self):
+        self.request = AtlasResultsRequest(**{
+            "msm_id": 1000002,
+            "probe_ids": [1, 2, 3]
+        })
+
+    def test_url_path_permutations(self):
+        self.assertEqual(
+            AtlasLatestRequest(msm_id=1001).url_path,
+            "/api/v2/measurements/1001/latest"
+        )
+        self.assertEqual(
+            AtlasLatestRequest(msm_id=1001, probe_ids=(1, 2, 3)).url_path,
+            "/api/v2/measurements/1001/latest?probe_ids=1,2,3"
         )
 
 
