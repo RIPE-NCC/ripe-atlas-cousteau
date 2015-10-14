@@ -110,11 +110,11 @@ class TestAtlasLatestRequest(unittest.TestCase):
 
     def test_url_path_permutations(self):
         self.assertEqual(
-            AtlasLatestRequest(msm_id=1001),
+            AtlasLatestRequest(msm_id=1001).url_path,
             "/api/v2/measurements/1001/latest"
         )
         self.assertEqual(
-            AtlasLatestRequest(msm_id=1001, probe_ids=(1, 2, 3)),
+            AtlasLatestRequest(msm_id=1001, probe_ids=(1, 2, 3)).url_path,
             "/api/v2/measurements/1001/latest?probe_ids=1,2,3"
         )
 
