@@ -171,11 +171,11 @@ class AtlasChangeSource(AtlasSource):
 
     def set_tags(self, value):
         """Setter for tags attribute"""
-        super(AtlasChangeSource, self).set_tags(value)
-        if self.tags:
-            log = "Tag-based filtering can't be used when changing " \
-                  "participants probes for a measurement."
-            raise MalFormattedSource(log)
+        log = (
+            'Tag-based filtering can\'t be used when changing '
+            'participant probes for a measurement.'
+        )
+        raise MalFormattedSource(log)
 
     doc_tags = "Defines optional tags to filter probes."
     tags = property(get_tags, set_tags, doc=doc_tags)
