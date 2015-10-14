@@ -13,6 +13,7 @@ from .request import (
     AtlasCreateRequest,
     AtlasChangeRequest,
     AtlasStopRequest,
+    AtlasLatestRequest,
     AtlasResultsRequest
 )
 from .stream import AtlasStream
