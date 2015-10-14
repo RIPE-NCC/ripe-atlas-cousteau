@@ -64,7 +64,7 @@ Creating two new RIPE Atlas UDMs is as easy as:
 
 Keep in mind that this library is trying to comply with what is stated
 in the `documentation pages`_. This means that if you try to create a
-request that is missing a field stated as required, the library won’t go
+request that is missing a field stated as required, the library won't go
 ahead and do the HTTP query. On the contrary, it will raise an exception
 with some info in it.
 
@@ -98,7 +98,7 @@ for an existing measurement you can do:
     (is_success, response) = atlas_request.create()
 
 Same applies if you want to remove probes, you just have to
-change “action” key to “remove” and specify probes you want to remove.
+change "action" key to "remove" and specify probes you want to remove.
 Keep in mind remove action supports only a list of probes and not the rest of the source types.
 For more info check the appropriate `docs`_.
 
