@@ -53,6 +53,39 @@ class TestAtlasSource(unittest.TestCase):
         self.assertEqual(source.build_api_struct(), kwargs)
         validate(source.build_api_struct(), probes_create_schema)
 
+    def test_set_tags(self):
+        # all ok
+        kwargs = {"requested": 5, "value": "test", "type": "msm", "tags": {
+                  "include": ["one", "two"], "exclude": ["one", "two"] } }
+        source = AtlasSource(**kwargs)
+        self.assertEqual(source.clean(), None)
+        self.assertEqual(source.tags,
+                         {"include": ["one", "two"], "exclude": ["one", "two"]})
+        # include missing
+        kwargs = {"requested": 5, "value": "test", "type": "msm", "tags": {
+                  "exclude": ["one", "two"] } }
+        self.assertRaises(MalFormattedSource, lambda: AtlasSource(**kwargs))
+        # exclude missing
+        kwargs = {"requested": 5, "value": "test", "type": "msm", "tags": {
+                  "include": ["one", "two"] } }
+        self.assertRaises(MalFormattedSource, lambda: AtlasSource(**kwargs))
+        # invalid tag type
+        kwargs = {"requested": 5, "value": "test", "type": "msm", "tags": {
+                  "include": ["one", 2], "exclude": ["one", "two"] } }
+        self.assertRaises(MalFormattedSource, lambda: AtlasSource(**kwargs))
+        # unknown element
+        kwargs = {"requested": 5, "value": "test", "type": "msm", "tags": {
+                  "include": ["one", 2], "exclude": ["one", "two"],
+                  "unknown": "?" } }
+        self.assertRaises(MalFormattedSource, lambda: AtlasSource(**kwargs))
+
+    def test_build_api_struct_with_tags(self):
+        kwargs = {"requested": 5, "value": "test", "type": "msm", "tags": {
+                  "include": ["one", "two"], "exclude": ["one", "two"] } }
+        source = AtlasSource(**kwargs)
+        self.assertEqual(source.build_api_struct(), kwargs)
+        validate(source.build_api_struct(), probes_create_schema)
+
 
 class TestAtlasChangeSource(unittest.TestCase):
 
@@ -122,3 +155,9 @@ class TestAtlasChangeSource(unittest.TestCase):
         source = AtlasChangeSource(**kwargs)
         self.assertEqual(source.build_api_struct(), kwargs)
         validate(source.build_api_struct(), probes_change_schema)
+
+    def test_set_tags(self):
+        kwargs = {"requested": 5, "value": "test", "type": "msm", "tags": {
+                  "include": ["one", "two"], "exclude": ["one", "two"] } }
+        self.assertRaises(MalFormattedSource,
+                          lambda: AtlasChangeSource(**kwargs))

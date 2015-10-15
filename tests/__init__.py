@@ -40,6 +40,20 @@ probes_create_schema = {
         "value": {
             "type": "string",
         },
+        "tags": {
+            "type": "object",
+            "required": ["include", "exclude"],
+            "properties": {
+                "include": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                },
+                "exclude": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                }
+            }
+        }
     }
 }
 post_data_create_schema = {
