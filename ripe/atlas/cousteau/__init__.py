@@ -262,10 +262,10 @@ class MeasurementRequest(RequestGenerator):
     Python generator for Measurement meta api.
     e.g.
     for measurement in MeasurementRequest(**{"status": 1}):
-        print(measurement["msm_id"])
+        print(measurement["id"])
     """
     url = "/api/v2/measurements/"
-    id_filter = "msm_id__in"
+    id_filter = "id__in"
     object_class = Measurement
 
 
