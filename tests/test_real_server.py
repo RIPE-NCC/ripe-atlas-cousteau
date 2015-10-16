@@ -52,7 +52,7 @@ class TestRealServer(unittest.TestCase):
         result = namedtuple('Result', 'success response')
         (result.success, result.response) = request.create()
         self.delete_msm = result.response["measurements"][0]
-        print result.response
+        print(result.response)
         self.assertTrue(result.success)
 
         # Unittest for Atlas delete request
@@ -63,7 +63,7 @@ class TestRealServer(unittest.TestCase):
         request = AtlasStopRequest(**kwargs)
         result = namedtuple('Result', 'success response')
         (result.success, result.response) = request.create()
-        print result.response
+        print(result.response)
         self.assertTrue(result.success)
 
     def test_change_request(self):
@@ -103,7 +103,7 @@ class TestRealServer(unittest.TestCase):
 
         result = namedtuple('Result', 'success response')
         (result.success, result.response) = AtlasResultsRequest(**kwargs).create()
-        print result.success, result.response
+        print(result.success, result.response)
         self.assertTrue(result.response)
         self.assertTrue(result.success)
 
@@ -179,6 +179,6 @@ class TestRealServer(unittest.TestCase):
         )
         result = namedtuple('Result', 'success response')
         (result.success, result.response) = request.get()
-        print result.success, result.response
+        print(result.success, result.response)
         self.assertTrue(result.response["results"])
         self.assertTrue(result.success)

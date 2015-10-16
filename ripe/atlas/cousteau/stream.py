@@ -39,14 +39,14 @@ class AtlasStream(object):
         try:
             self.socketIO.on(self.CHANNELS[stream_type], callback)
         except KeyError:
-            print "The given stream type: <{}> is not valid".format(stream_type)
+            print("The given stream type: <{0}> is not valid".format(stream_type))
 
     def start_stream(self, stream_type, **stream_parameters):
         """Starts new stream for given type with given parameters"""
         if stream_type in ("result", "probestatus"):
             self.subscribe(stream_type, **stream_parameters)
         else:
-            print "Given stream type: <%s> is not valid" % stream_type
+            print("Given stream type: <{0}> is not valid".format(stream_type))
 
     def subscribe(self, stream_type, **parameters):
         """Subscribe to stream with give parameters."""

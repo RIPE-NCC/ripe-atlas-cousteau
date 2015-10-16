@@ -61,7 +61,7 @@ class EntityRepresentation(object):
         raise NotImplementedError()
 
     def __str__(self):
-        return "Probe #{}".format(self.id)
+        return "Probe #{0}".format(self.id)
 
     def __repr__(self):
         return str(self)
@@ -153,7 +153,7 @@ class RequestGenerator(object):
             self.build_url_chunks()
             return self.split_urls.pop(0)
 
-        filters = '&'.join("%s=%s" % (k, v) for (k, v) in self.api_filters.iteritems())
+        filters = '&'.join("%s=%s" % (k, v) for (k, v) in self.api_filters.items())
 
         return "%s?%s" % (self.url, filters)
 
@@ -166,7 +166,7 @@ class RequestGenerator(object):
 
         id_filter = str(self.api_filters.pop(self.id_filter)).split(',')
         chuncks = list(self.chunks(id_filter, CHUNK_SIZE))
-        filters = '&'.join("%s=%s" % (k, v) for (k, v) in self.api_filters.iteritems())
+        filters = '&'.join("%s=%s" % (k, v) for (k, v) in self.api_filters.items())
 
         for chunk in chuncks:
             if filters:
@@ -177,7 +177,7 @@ class RequestGenerator(object):
 
     def chunks(self, l, n):
         """Yield successive n-sized chunks from l."""
-        for i in xrange(0, len(l), n):
+        for i in range(0, len(l), n):
             yield l[i:i + n]
 
     def __iter__(self):
@@ -250,7 +250,7 @@ class ProbeRequest(RequestGenerator):
     Python generator for Probes meta api.
     e.g.
     for probe in ProbeRequest(**{"limit":200, "country_code": "GR"}):
-        print probe["id"]
+        print(probe["id"])
     """
     url = "/api/v2/probes/"
     id_filter = "id__in"
@@ -262,7 +262,7 @@ class MeasurementRequest(RequestGenerator):
     Python generator for Measurement meta api.
     e.g.
     for measurement in MeasurementRequest(**{"status": 1}):
-        print measurement["msm_id"]
+        print(measurement["msm_id"])
     """
     url = "/api/v2/measurements/"
     id_filter = "msm_id__in"
