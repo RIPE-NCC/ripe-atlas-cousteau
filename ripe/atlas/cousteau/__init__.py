@@ -102,6 +102,11 @@ class Measurement(EntityRepresentation):
         """Assing some measurement's raw meta data from API response to instance properties"""
         if self.id is None:
             self.id = self.meta_data.get("id")
+
+        stop_time = self.meta_data.get("stop_time")
+        if stop_time:
+            stop_time = datetime.fromtimestamp(stop_time)
+
         self.protocol = self.meta_data.get("af")
         self.destination_address = self.meta_data.get("dst_addr")
         self.destination_asn = self.meta_data.get("dst_asn")
@@ -113,7 +118,7 @@ class Measurement(EntityRepresentation):
         self.resolve_on_probe = self.meta_data.get("resolve_on_probe")
         self.creation_time = datetime.fromtimestamp(self.meta_data.get("creation_time"))
         self.start_time = datetime.fromtimestamp(self.meta_data.get("start_time"))
-        self.stop_time = datetime.fromtimestamp(self.meta_data.get("stop_time"))
+        self.stop_time = stop_time
         self.status = self.meta_data.get("status", {}).get("name")
         self.type = self.meta_data.get("type", {}).get("name").upper()
         self.result_url = self.meta_data.get("result")
