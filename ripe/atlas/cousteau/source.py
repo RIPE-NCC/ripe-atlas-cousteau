@@ -31,6 +31,10 @@ class AtlasSource(object):
             self.type = kwargs["type"]
         else:
             self._type = None
+        if "tags" in kwargs:
+            self.tags = kwargs["tags"]
+        else:
+            self._tags = None
 
     # requested attribute
     def get_requested(self):
@@ -73,6 +77,36 @@ class AtlasSource(object):
     doc_type = "Defines the type of probe's source."
     type = property(get_type, set_type, doc=doc_type)
 
+    # tags attribute
+    def get_tags(self):
+        """Getter for tags attribute"""
+        return self._tags
+
+    def set_tags(self, value):
+        """Setter for tags attribute"""
+        log = (
+            'Sources fields "tags" should be a dict in the format '
+            '{ "include": [ "tag1", "tag2", "tagN" ], '
+            '"exclude": [ "tag1", "tag2", "tagN" ] }'
+        )
+
+        if not isinstance(value, dict):
+            raise MalFormattedSource(log)
+
+        if set(value.keys()) != set(["include", "exclude"]):
+            raise MalFormattedSource(log)
+
+        for tag_list in value.values():
+            if not isinstance(tag_list, list):
+                raise MalFormattedSource(log)
+            if [tag for tag in tag_list if not isinstance(tag, str)]:
+                raise MalFormattedSource(log)
+
+        self._tags = value
+
+    doc_tags = "Defines optional tags to filter probes."
+    tags = property(get_tags, set_tags, doc=doc_tags)
+
     def clean(self):
         """
         Cleans/checks user has entered all required attributes. This might save
@@ -89,11 +123,14 @@ class AtlasSource(object):
         that Atlas API is accepting.
         """
         self.clean()
-        return {
+        r = {
             "type": self._type,
             "requested": self._requested,
             "value": self._value
         }
+        if self._tags:
+            r["tags"] = self._tags
+        return r
 
 
 class AtlasChangeSource(AtlasSource):
@@ -126,6 +163,22 @@ class AtlasChangeSource(AtlasSource):
 
     doc_type = "Defines the type of probe's source."
     type = property(get_type, set_type, doc=doc_type)
+
+    # tags attribute
+    def get_tags(self):
+        """Getter for tags attribute"""
+        return self._tags
+
+    def set_tags(self, value):
+        """Setter for tags attribute"""
+        log = (
+            'Tag-based filtering can\'t be used when changing '
+            'participant probes for a measurement.'
+        )
+        raise MalFormattedSource(log)
+
+    doc_tags = "Defines optional tags to filter probes."
+    tags = property(get_tags, set_tags, doc=doc_tags)
 
     # action attribute
     def get_action(self):
