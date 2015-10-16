@@ -142,8 +142,8 @@ class TestAtlasCreateRequest(unittest.TestCase):
                 }],
                 "is_oneoff": True,
                 "probes": [{"requested": 3, "type": "area", "value": "WW"}],
-                "start_time": 1444946400,
-                "stop_time": 1445032800
+                "start_time": 1444953600,
+                "stop_time": 1445040000
             },
             "params": {"key": "path_to_key"},
             "headers": {
@@ -190,8 +190,8 @@ class TestAtlasResultsRequest(unittest.TestCase):
         self.assertEqual(
             set(query_filters.keys()), set(["key", "stop", "start", "prb_id"])
         )
-        self.assertEqual(query_filters["start"], 1322348400)
-        self.assertEqual(query_filters["stop"], 1322352000)
+        self.assertEqual(query_filters["start"], 1322352000)
+        self.assertEqual(query_filters["stop"], 1322355600)
         self.assertEqual(
             query_filters["prb_id"], "1,2,3"
         )
