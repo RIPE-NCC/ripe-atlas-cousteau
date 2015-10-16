@@ -2,6 +2,7 @@ language: python
 env:
   - TOXENV=py26
   - TOXENV=py27
+  - TOXENV=py34
   - TOXENV=py27-pyflakes
   - TOXENV=py27-pep8
   - TOXENV=py27-coverage
