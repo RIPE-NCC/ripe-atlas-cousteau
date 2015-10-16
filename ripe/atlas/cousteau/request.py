@@ -3,7 +3,7 @@ Module containing the main class that create the post data and makes the HTTP
 request according to the ATLAS API.
 """
 
-import time
+import calendar
 import requests
 from dateutil import parser
 from datetime import datetime
@@ -159,11 +159,11 @@ class AtlasCreateRequest(AtlasRequest):
         }
         if self.start_time:
             self.post_data.update(
-                {"start_time": int(self.start_time.strftime("%s"))}
+                {"start_time": int(calendar.timegm(self.start_time.timetuple()))}
             )
         if self.stop_time:
             self.post_data.update(
-                {"stop_time": int(self.stop_time.strftime("%s"))}
+                {"stop_time": int(calendar.timegm(self.stop_time.timetuple()))}
             )
 
     def create(self):
@@ -292,12 +292,12 @@ class AtlasResultsRequest(AtlasRequest):
 
         if self.start:
             url_params.update(
-                {"start": int(time.mktime(self.start.timetuple()))}
+                {"start": int(calendar.timegm(self.start.timetuple()))}
             )
 
         if self.stop:
             url_params.update(
-                {"stop": int(time.mktime(self.stop.timetuple()))}
+                {"stop": int(calendar.timegm(self.stop.timetuple()))}
             )
 
         if self.probe_ids:
