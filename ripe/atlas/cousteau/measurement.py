@@ -149,7 +149,17 @@ class Ntp(AtlasMeasurement):
         self._init(**kwargs)
 
 
+class Http(AtlasMeasurement):
+    """Class for creating an HTTP measurement"""
+
+    def __init__(self, **kwargs):
+        super(Http, self).__init__(**kwargs)
+        self.measurement_type = "http"
+        self.required_options.extend(["target"])
+        self._init(**kwargs)
+
+
 class MalFormattedMeasurement(Exception):
     pass
 
-__all__ = ["Ping", "Traceroute", "Dns", "Sslcert"]
+__all__ = ["Ping", "Traceroute", "Dns", "Sslcert", "Ntp", "Http"]

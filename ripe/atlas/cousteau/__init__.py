@@ -280,6 +280,7 @@ __all__ = [
     "Dns",
     "Sslcert",
     "Ntp",
+    "Http",
     "AtlasRequest",
     "AtlasChangeRequest",
     "AtlasCreateRequest",
