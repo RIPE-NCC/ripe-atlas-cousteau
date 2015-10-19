@@ -4,6 +4,9 @@ try:
 except ImportError:
     # Python 2
     from urlparse import urlparse
+
+import time
+
 from datetime import datetime
 
 from .measurement import Ping, Traceroute, Dns, Sslcert, Ntp
@@ -152,6 +155,11 @@ class RequestGenerator(object):
         ):
             self.build_url_chunks()
             return self.split_urls.pop(0)
+
+        # Reduce datetimes to UNIX timestamps
+        for k, v in self.api_filters.items():
+            if isinstance(v, datetime):
+                self.api_filters[k] = int(time.mktime(v.timetuple()))
 
         filters = '&'.join("%s=%s" % (k, v) for (k, v) in self.api_filters.items())
 
