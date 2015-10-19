@@ -1,5 +1,7 @@
-RIPE Atlas Cousteau |Build Status| |Code Health| |PYPI Version|
-===============================================================
+RIPE Atlas Cousteau
+===================
+
+|Build Status| |Code Health| |PYPI Version| |Python Versions| |Python Implementations| |Python Format|
 
 A python wrapper around RIPE ATLAS API.
 
@@ -289,5 +291,7 @@ modules after explorers, and this is not an exception :)
    :target: https://travis-ci.org/RIPE-NCC/ripe-atlas-cousteau
 .. |Code Health| image:: https://landscape.io/github/RIPE-NCC/ripe-atlas-cousteau/master/landscape.png
    :target: https://landscape.io/github/RIPE-NCC/ripe-atlas-cousteau/master
-.. |PYPI Version| image:: https://badge.fury.io/py/ripe-atlas-cousteau.png
-   :target: http://badge.fury.io/py/ripe-atlas-cousteau
+.. |PYPI Version| image:: https://img.shields.io/pypi/v/ripe.atlas.cousteau.svg
+.. |Python Versions| image:: https://img.shields.io/pypi/pyversions/ripe.atlas.cousteau.svg
+.. |Python Implementations| image:: https://img.shields.io/pypi/implementation/ripe.atlas.cousteau.svg
+.. |Python Format| image:: https://img.shields.io/pypi/format/ripe.atlas.cousteau.svg

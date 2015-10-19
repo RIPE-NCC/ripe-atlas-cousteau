@@ -12,7 +12,7 @@ class AtlasStream(object):
         "error": CHANNEL_ERROR,
     }
 
-    def __init__(self, **kwargs):
+    def __init__(self):
         """Initialize stream"""
 
         self.iosocket_server = "atlas-stream.ripe.net"
