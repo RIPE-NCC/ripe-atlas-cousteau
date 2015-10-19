@@ -5,7 +5,7 @@ except ImportError:
     # Python 2
     from urlparse import urlparse
 
-import time
+import calendar
 
 from datetime import datetime
 
@@ -164,7 +164,7 @@ class RequestGenerator(object):
         # Reduce datetimes to UNIX timestamps
         for k, v in self.api_filters.items():
             if isinstance(v, datetime):
-                self.api_filters[k] = int(time.mktime(v.timetuple()))
+                self.api_filters[k] = int(calendar.timegm(v.timetuple()))
 
         filters = '&'.join("%s=%s" % (k, v) for (k, v) in self.api_filters.items())
 
