@@ -122,6 +122,7 @@ class Measurement(EntityRepresentation):
         self.creation_time = datetime.fromtimestamp(self.meta_data.get("creation_time"))
         self.start_time = datetime.fromtimestamp(self.meta_data.get("start_time"))
         self.stop_time = stop_time
+        self.status_id = self.meta_data.get("status", {}).get("id")
         self.status = self.meta_data.get("status", {}).get("name")
         self.type = self.meta_data.get("type", {}).get("name").upper()
         self.result_url = self.meta_data.get("result")
@@ -165,6 +166,8 @@ class RequestGenerator(object):
         for k, v in self.api_filters.items():
             if isinstance(v, datetime):
                 self.api_filters[k] = int(calendar.timegm(v.timetuple()))
+            if isinstance(v, (tuple, list)):
+                self.api_filters[k] = ",".join([str(_) for _ in v])
 
         filters = '&'.join("%s=%s" % (k, v) for (k, v) in self.api_filters.items())
 
@@ -205,7 +208,7 @@ class RequestGenerator(object):
             if not self.atlas_url:  # We don't have any next url any more, exit
                 raise StopIteration()
             self.next_batch()
-            if not self.current_batch:  # Server request gaves empty batch, exit
+            if not self.current_batch:  # Server request gives empty batch, exit
                 raise StopIteration()
 
         current_object = self.current_batch.pop(0)
