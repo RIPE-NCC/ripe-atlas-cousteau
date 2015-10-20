@@ -69,6 +69,7 @@ in the `documentation pages`_. This means that if you try to create a
 request that is missing a field stated as required, the library won't go
 ahead and do the HTTP query. On the contrary, it will raise an exception
 with some info in it.
+The available measurements types are Ping, Traceroute, Dns, Sslcert, Ntp, Http.
 
 .. _documentation pages: https://atlas.ripe.net/docs/measurement-creation-api/
 
