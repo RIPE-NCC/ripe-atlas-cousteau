@@ -219,7 +219,7 @@ class RequestGenerator(object):
 
     def next_batch(self):
         """
-        Quering API for the next batch of objects and store next url and
+        Querying API for the next batch of objects and store next url and
         batch of objects.
         """
         is_success, results = AtlasRequest(**{"url_path": self.atlas_url}).get()
@@ -243,7 +243,7 @@ class RequestGenerator(object):
         parsed_url = urlparse(url)
         return "{0}?{1}".format(parsed_url.path, parsed_url.query)
 
-    # count attribute to deal with splitted urls and total count
+    # count attribute to deal with split-up urls and total count
     def get_total_count(self):
         """Getter for count attribute"""
         if not self._count:
