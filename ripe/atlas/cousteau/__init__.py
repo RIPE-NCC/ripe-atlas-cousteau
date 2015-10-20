@@ -155,19 +155,19 @@ class RequestGenerator(object):
         if not self.api_filters:
             return self.url
 
+        # Reduce complex objects to simpler strings
+        for k, v in self.api_filters.items():
+            if isinstance(v, datetime):  # datetime > UNIX timestamp
+                self.api_filters[k] = int(calendar.timegm(v.timetuple()))
+            if isinstance(v, (tuple, list)):  # tuples & lists > x,y,z
+                self.api_filters[k] = ",".join([str(_) for _ in v])
+
         if (
             self.id_filter in self.api_filters and
             len(str(self.api_filters[self.id_filter])) > self.URL_LENGTH_LIMIT
         ):
             self.build_url_chunks()
             return self.split_urls.pop(0)
-
-        # Reduce datetimes to UNIX timestamps
-        for k, v in self.api_filters.items():
-            if isinstance(v, datetime):
-                self.api_filters[k] = int(calendar.timegm(v.timetuple()))
-            if isinstance(v, (tuple, list)):
-                self.api_filters[k] = ",".join([str(_) for _ in v])
 
         filters = '&'.join("%s=%s" % (k, v) for (k, v) in self.api_filters.items())
 
