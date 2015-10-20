@@ -235,9 +235,11 @@ class AtlasLatestRequest(AtlasRequest):
 
         self.url_path = self.url_path.format(self.msm_id)
         if self.probe_ids:
-            self.url_path += "?probe_ids={0}".format(
-                ",".join([str(_) for _ in self.probe_ids])
-            )
+            additional_params = {
+                "probe_ids": ",".join(map(str, self.probe_ids))
+            }
+
+            self.http_method_args["params"].update(additional_params)
 
 
 class AtlasResultsRequest(AtlasRequest):
@@ -301,7 +303,7 @@ class AtlasResultsRequest(AtlasRequest):
             )
 
         if self.probe_ids:
-            url_params.update({"prb_id": ",".join(map(str, self.probe_ids))})
+            url_params.update({"probe_ids": ",".join(map(str, self.probe_ids))})
 
         self.http_method_args["params"].update(url_params)
 

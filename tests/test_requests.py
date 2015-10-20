@@ -188,22 +188,16 @@ class TestAtlasResultsRequest(unittest.TestCase):
         )
         query_filters = self.request.http_method_args["params"]
         self.assertEqual(
-            set(query_filters.keys()), set(["key", "stop", "start", "prb_id"])
+            set(query_filters.keys()), set(["key", "stop", "start", "probe_ids"])
         )
         self.assertEqual(query_filters["start"], 1322352000)
         self.assertEqual(query_filters["stop"], 1322355600)
         self.assertEqual(
-            query_filters["prb_id"], "1,2,3"
+            query_filters["probe_ids"], "1,2,3"
         )
 
 
 class TestAtlasLatestRequest(unittest.TestCase):
-
-    def setUp(self):
-        self.request = AtlasResultsRequest(**{
-            "msm_id": 1000002,
-            "probe_ids": [1, 2, 3]
-        })
 
     def test_url_path_permutations(self):
         self.assertEqual(
@@ -211,8 +205,10 @@ class TestAtlasLatestRequest(unittest.TestCase):
             "/api/v2/measurements/1001/latest"
         )
         self.assertEqual(
-            AtlasLatestRequest(msm_id=1001, probe_ids=(1, 2, 3)).url_path,
-            "/api/v2/measurements/1001/latest?probe_ids=1,2,3"
+            AtlasLatestRequest(
+                msm_id=1001, probe_ids=(1, 2, 3)
+            ).http_method_args["params"],
+            {"key": "", "probe_ids": "1,2,3"}
         )
 
 
