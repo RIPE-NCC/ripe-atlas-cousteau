@@ -9,7 +9,7 @@ import calendar
 
 from datetime import datetime
 
-from .measurement import Ping, Traceroute, Dns, Sslcert, Ntp
+from .measurement import Ping, Traceroute, Dns, Sslcert, Ntp, Http
 from .source import AtlasSource, AtlasChangeSource
 from .request import (
     AtlasRequest,
