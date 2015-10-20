@@ -122,6 +122,7 @@ class Measurement(EntityRepresentation):
         self.creation_time = datetime.fromtimestamp(self.meta_data.get("creation_time"))
         self.start_time = datetime.fromtimestamp(self.meta_data.get("start_time"))
         self.stop_time = stop_time
+        self.status_id = self.meta_data.get("status", {}).get("id")
         self.status = self.meta_data.get("status", {}).get("name")
         self.type = self.meta_data.get("type", {}).get("name").upper()
         self.result_url = self.meta_data.get("result")
@@ -154,17 +155,19 @@ class RequestGenerator(object):
         if not self.api_filters:
             return self.url
 
+        # Reduce complex objects to simpler strings
+        for k, v in self.api_filters.items():
+            if isinstance(v, datetime):  # datetime > UNIX timestamp
+                self.api_filters[k] = int(calendar.timegm(v.timetuple()))
+            if isinstance(v, (tuple, list)):  # tuples & lists > x,y,z
+                self.api_filters[k] = ",".join([str(_) for _ in v])
+
         if (
             self.id_filter in self.api_filters and
             len(str(self.api_filters[self.id_filter])) > self.URL_LENGTH_LIMIT
         ):
             self.build_url_chunks()
             return self.split_urls.pop(0)
-
-        # Reduce datetimes to UNIX timestamps
-        for k, v in self.api_filters.items():
-            if isinstance(v, datetime):
-                self.api_filters[k] = int(calendar.timegm(v.timetuple()))
 
         filters = '&'.join("%s=%s" % (k, v) for (k, v) in self.api_filters.items())
 
@@ -205,7 +208,7 @@ class RequestGenerator(object):
             if not self.atlas_url:  # We don't have any next url any more, exit
                 raise StopIteration()
             self.next_batch()
-            if not self.current_batch:  # Server request gaves empty batch, exit
+            if not self.current_batch:  # Server request gives empty batch, exit
                 raise StopIteration()
 
         current_object = self.current_batch.pop(0)
@@ -216,7 +219,7 @@ class RequestGenerator(object):
 
     def next_batch(self):
         """
-        Quering API for the next batch of objects and store next url and
+        Querying API for the next batch of objects and store next url and
         batch of objects.
         """
         is_success, results = AtlasRequest(**{"url_path": self.atlas_url}).get()
@@ -240,7 +243,7 @@ class RequestGenerator(object):
         parsed_url = urlparse(url)
         return "{0}?{1}".format(parsed_url.path, parsed_url.query)
 
-    # count attribute to deal with splitted urls and total count
+    # count attribute to deal with split-up urls and total count
     def get_total_count(self):
         """Getter for count attribute"""
         if not self._count:
