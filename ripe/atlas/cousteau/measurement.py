@@ -82,6 +82,40 @@ class AtlasMeasurement(object):
                 )
                 raise MalFormattedMeasurement(log)
 
+    def v2_translator(self, option):
+        """
+        This is a temporary function that helps move from v1 API to v2 without
+        breaking already running script and keep backwards compatibility.
+        Translates option name from API v1 to renamed one of v2 API.
+        """
+        new_option = option
+        new_value = getattr(self, option)
+
+        renaming_pairs = {
+            "dontfrag": "dont_fragment",
+            "maxhops": "max_hops",
+            "firsthop": "first_hop",
+            "use_NSID": "set_nsid_bit",
+            "cd": "set_cd_bit",
+            "do": "set_do_bit",
+            "qbuf": "include_qbuf",
+            "recursion_desired": "set_rd_bit",
+            "noabuf": "include_abuf"
+        }
+        if option in renaming_pairs.keys():
+            warninglog = (
+                "DeprecationWarning: {0} option has been deprecated and "
+                "renamed to {1}."
+            ).format(option, renaming_pairs[option])
+            print(warninglog)
+            new_option = renaming_pairs[option]
+
+        # noabuf was changed to include_abuf so we need a double-negative
+        if option == "noabuf":
+            new_value = not new_value
+
+        return new_option, new_value
+
     def build_api_struct(self):
         """
         Calls the clean method of the class and returns the info in a
@@ -92,7 +126,8 @@ class AtlasMeasurement(object):
 
         # add all options
         for option in self.used_options:
-            data.update({option: getattr(self, option)})
+            option_key, option_value = self.v2_translator(option)
+            data.update({option_key: option_value})
 
         return data
 
