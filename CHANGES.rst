@@ -7,7 +7,7 @@ New features:
 - Add support for include/exclude tags in changing sources requests.
 - Add support for latest results API call.
 - Implement HTTP measurement creation.
-- Support for python 3 (<3.4).
+- Support for python 3 (<=3.4).
 - Support for pypy/pypy3.
 - Support for wheels format.
 
