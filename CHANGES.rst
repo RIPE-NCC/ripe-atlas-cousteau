@@ -1,5 +1,26 @@
 Releases History
 ================
+1.0 (released 2015-10-20)
+-------------------------
+New features:
+~~~~~~~~~~~~~
+- Add support for include/exclude tags in changing sources requests.
+- Add support for latest results API call.
+- Implement HTTP measurement creation.
+- Support for python 3 (<3.4).
+- Support for pypy/pypy3.
+- Support for wheels format.
+
+Changes:
+~~~~~~~~
+- Migrate all Atlas requests to use requests library and refactor a lot of code to have a cleaner version.
+- Create an API v2 translator to address several option name changing. A deprecation warning will be given.
+
+Bug fix:
+~~~~~~~~
+- Fix bug where python representation of measurements without a stop time was exploding. 
+- Make sure start/stop timestamps in measurement create request are always in UTC.
+
 0.10.1 (released 2015-10-06)
 ----------------------------
 New features:
