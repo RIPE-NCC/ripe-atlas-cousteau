@@ -11,7 +11,7 @@ from ripe.atlas.cousteau import (
     AtlasRequest, AtlasCreateRequest, AtlasChangeRequest,
     Ping, Dns, AtlasStopRequest, AtlasResultsRequest,
     ProbeRequest, MeasurementRequest, Probe, Measurement,
-    AtlasStream
+    AtlasStream, Ntp, Sslcert, Http, Traceroute
 )
 
 
@@ -29,15 +29,37 @@ class TestRealServer(unittest.TestCase):
             raise SkipTest
         source = AtlasSource(**{"type": "area", "value": "WW", "requested": 38})
         ping = Ping(**{
-            "target": "www.google.fr",
+            "target": "www.ripe.net",
             "af": 4,
-            "description": "testing",
+            "description": "Cousteau testing",
             "prefer_anchors": True
+        })
+        traceroute = Traceroute(**{
+            "target": "www.google.fr",
+            "af": 4, "protocol": "UDP",
+            "description": "Cousteau testing",
+            "dont_fragment": True
         })
         dns = Dns(**{
             "target": "k.root-servers.net", "af": 4,
-            "description": "testing new wrapper", "query_type": "SOA",
+            "description": "Cousteau testing", "query_type": "SOA",
             "query_class": "IN", "query_argument": "nl", "retry": 6
+        })
+        ntp = Ntp(**{
+            "target": "www.ripe.net",
+            "af": 4,
+            "description": "Cousteau testing",
+            "timeout": 1000
+        })
+        ssl = Sslcert(**{
+            "target": "www.ripe.net",
+            "af": 4,
+            "description": "Cousteau testing",
+        })
+        http = Http(**{
+            "target": "www.ripe.net",
+            "af": 4,
+            "description": "Cousteau testing",
         })
         stop = datetime.utcnow() + timedelta(minutes=220)
         request = AtlasCreateRequest(
@@ -45,14 +67,14 @@ class TestRealServer(unittest.TestCase):
                 "stop_time": stop,
                 "key": self.create_key,
                 "server": self.server,
-                "measurements": [ping, dns],
+                "measurements": [ping, traceroute, dns, ntp, ssl, http],
                 "sources": [source]
             }
         )
         result = namedtuple('Result', 'success response')
         (result.success, result.response) = request.create()
-        self.delete_msm = result.response["measurements"][0]
         print(result.response)
+        self.delete_msm = result.response["measurements"][0]
         self.assertTrue(result.success)
 
         # Unittest for Atlas delete request
@@ -87,6 +109,7 @@ class TestRealServer(unittest.TestCase):
         )
         result = namedtuple('Result', 'success response')
         (result.success, result.response) = request.create()
+        print(result.response)
         self.assertTrue(result.success)
 
     def test_result_request(self):
@@ -123,7 +146,7 @@ class TestRealServer(unittest.TestCase):
         if self.server == "":
             raise SkipTest
 
-        filters = {"status": 6}
+        filters = {"id__lt": 1000010, "id__gt": 1000002}
         measurements = MeasurementRequest(**filters)
         measurements_list = list(measurements)
         self.assertTrue(measurements_list)
