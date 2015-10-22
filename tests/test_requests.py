@@ -604,9 +604,9 @@ class TestMeasurementRepresentation(unittest.TestCase):
         with mock.patch('ripe.atlas.cousteau.request.AtlasRequest.get') as request_mock:
             resp = {
                 "af": 4,
-                "dst_addr": "202.73.56.70",
-                "dst_asn": 9255,
-                "dst_name": "blaaaah",
+                "destination_address": "202.73.56.70",
+                "destination_asn": 9255,
+                "destination_name": "blaaaah",
                 "msm_id": 2310448,
                 "description": "Blaaaaaaaaaah",
                 "is_oneoff": True,
