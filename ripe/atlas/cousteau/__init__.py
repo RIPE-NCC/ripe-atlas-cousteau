@@ -111,9 +111,9 @@ class Measurement(EntityRepresentation):
             stop_time = datetime.fromtimestamp(stop_time)
 
         self.protocol = self.meta_data.get("af")
-        self.destination_address = self.meta_data.get("dst_addr")
-        self.destination_asn = self.meta_data.get("dst_asn")
-        self.destination_name = self.meta_data.get("dst_name")
+        self.destination_address = self.meta_data.get("destination_address")
+        self.destination_asn = self.meta_data.get("destination_asn")
+        self.destination_name = self.meta_data.get("destination_name")
         self.description = self.meta_data.get("description")
         self.is_oneoff = self.meta_data.get("is_oneoff")
         self.is_public = self.meta_data.get("is_public")
