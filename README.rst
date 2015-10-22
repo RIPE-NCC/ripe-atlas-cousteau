@@ -155,12 +155,13 @@ dates.
 
 .. code:: python
 
+    from datetime import datetime
     from ripe.atlas.cousteau import AtlasResultsRequest
 
     kwargs = {
         "msm_id": 2016892,
-        "start": datetime(2015, 05, 19)
-        "stop": datetime(2015, 05, 20)
+        "start": datetime(2015, 05, 19),
+        "stop": datetime(2015, 05, 20),
         "probe_ids": [1,2,3,4]
     }
 
