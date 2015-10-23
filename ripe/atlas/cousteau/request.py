@@ -192,7 +192,7 @@ class AtlasChangeRequest(AtlasRequest):
 
     def _construct_post_data(self):
         """
-        Contructs the data structure that is required from the atlas API based
+        Constructs the data structure that is required from the atlas API based
         on measurement id, and the sources.
         """
         self.post_data = [source.build_api_struct() for source in self.sources]
