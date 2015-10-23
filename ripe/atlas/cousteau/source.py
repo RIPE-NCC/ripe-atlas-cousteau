@@ -86,14 +86,14 @@ class AtlasSource(object):
         """Setter for tags attribute"""
         log = (
             'Sources fields "tags" should be a dict in the format '
-            '{ "include": [ "tag1", "tag2", "tagN" ], '
+            '{"include": [ "tag1", "tag2", "tagN" ],'
             '"exclude": [ "tag1", "tag2", "tagN" ] }'
         )
 
         if not isinstance(value, dict):
             raise MalFormattedSource(log)
 
-        if set(value.keys()) != set(["include", "exclude"]):
+        if not set(value.keys()).issubset(set(["include", "exclude"])):
             raise MalFormattedSource(log)
 
         for tag_list in value.values():
@@ -130,6 +130,7 @@ class AtlasSource(object):
         }
         if self._tags:
             r["tags"] = self._tags
+
         return r
 
 
@@ -171,11 +172,13 @@ class AtlasChangeSource(AtlasSource):
 
     def set_tags(self, value):
         """Setter for tags attribute"""
-        log = (
-            'Tag-based filtering can\'t be used when changing '
-            'participant probes for a measurement.'
-        )
-        raise MalFormattedSource(log)
+        if self.action == "remove":
+            log = (
+                "Tag-based filtering can only be used when adding "
+                "participant probes for a measurement."
+            )
+            raise MalFormattedSource(log)
+        super(AtlasChangeSource, self).set_tags(value)
 
     doc_tags = "Defines optional tags to filter probes."
     tags = property(get_tags, set_tags, doc=doc_tags)

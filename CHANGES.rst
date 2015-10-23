@@ -1,5 +1,15 @@
 Releases History
 ================
+1.0.1 (released 2015-10-23)
+---------------------------
+Changes:
+~~~~~~~~
+- Now we conform to new API feature that allows for specifying tags when adding probes to existing measurements
+
+Bug fix:
+~~~~~~~~
+- Fix bug we didn't allow user to specify single tag include/exclude.
+
 1.0 (released 2015-10-21)
 -------------------------
 New features:

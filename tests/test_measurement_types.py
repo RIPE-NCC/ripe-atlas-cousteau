@@ -2,33 +2,8 @@
 import unittest
 
 from ripe.atlas.cousteau import (
-    AtlasSource, AtlasChangeSource,
     Ping, Traceroute, Dns, Sslcert, Ntp, Http
 )
-
-
-class TestSources(unittest.TestCase):
-
-    def test_create_source(self):
-        """Unittest for sources for create request"""
-        post_body = AtlasSource(**{
-            "type": "area", "value": "WW", "requested": 38
-        }).build_api_struct()
-        expected_ouput = {'requested': 38, 'type': 'area', 'value': 'WW'}
-        self.assertEqual(post_body, expected_ouput)
-
-    def test_change_source(self):
-        """Unittest for sources for change request"""
-        post_body = AtlasChangeSource(**{
-            "value": "59", "requested": 1, "action": "remove", "type": "probes"
-        }).build_api_struct()
-        expected_output = {'action': 'remove', 'requested': 1, 'type': 'probes', 'value': '59'}
-        self.assertEqual(post_body, expected_output)
-        post_body = AtlasChangeSource(**{
-            "value": "28", "requested": 1, "action": "add", "type": "area"
-        }).build_api_struct()
-        expected_output = {'action': 'add', 'requested': 1, 'type': 'area', 'value': '28'}
-        self.assertEqual(post_body, expected_output)
 
 
 class TestMeasurementTypes(unittest.TestCase):
