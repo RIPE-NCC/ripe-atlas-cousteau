@@ -26,7 +26,7 @@ class AtlasRequest(object):
     def __init__(self, **kwargs):
         self.url = ""
         self.url_path = ""
-        self.key = kwargs.get("key", "")
+        self.key = kwargs.get("key", None)
         if "url_path" in kwargs:
             self.url_path = kwargs["url_path"]
         if "server" in kwargs:

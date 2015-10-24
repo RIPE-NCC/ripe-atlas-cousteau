@@ -208,7 +208,7 @@ class TestAtlasLatestRequest(unittest.TestCase):
             AtlasLatestRequest(
                 msm_id=1001, probe_ids=(1, 2, 3)
             ).http_method_args["params"],
-            {"key": "", "probe_ids": "1,2,3"}
+            {"key": None, "probe_ids": "1,2,3"}
         )
 
 
