@@ -56,16 +56,17 @@ class AtlasRequest(object):
         and the response as a string if not success and as python object after
         unjson if it's success.
         """
-        return_json_methods = ["GET", "POST"]
         self.build_url()
 
         try:
             response = self.get_http_method(method)
             is_success = response.ok
-            if is_success and method in return_json_methods:
+
+            try:
                 response_message = response.json()
-            else:
+            except ValueError:
                 response_message = response.text
+
         except requests.exceptions.RequestException as exc:
             is_success = False
             response_message = exc.args

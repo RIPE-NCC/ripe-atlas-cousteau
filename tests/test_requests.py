@@ -16,13 +16,18 @@ from . import post_data_create_schema, post_data_change_schema
 
 
 class FakeResponse(object):
-    def __init__(self, json_return, ok=True):
+    def __init__(self, json_return={}, ok=True):
         self.json_return = json_return
         self.ok = ok
         self.text = "testing"
 
     def json(self):
         return self.json_return
+
+
+class FakeErrorResponse(FakeResponse):
+    def json(self):
+        raise ValueError("json breaks")
 
 
 class TestAtlasRequest(unittest.TestCase):
@@ -88,11 +93,25 @@ class TestAtlasRequest(unittest.TestCase):
                 (True, {"blaaa": "b"})
             )
 
+            fake_error = FakeErrorResponse()
+            mock_get.return_value = fake_error
+            self.assertEqual(
+                self.request.http_method("GET"),
+                (True, "testing")
+            )
+
     def test_not_success_http_method(self):
         """Tests the main http method function of the request in case of fail"""
         with mock.patch('ripe.atlas.cousteau.AtlasRequest.get_http_method') as mock_get:
             fake = FakeResponse(json_return={"blaaa": "b"}, ok=False)
             mock_get.return_value = fake
+            self.assertEqual(
+                self.request.http_method("GET"),
+                (False, {"blaaa": "b"})
+            )
+
+            fake_error = FakeErrorResponse(ok=False)
+            mock_get.return_value = fake_error
             self.assertEqual(
                 self.request.http_method("GET"),
                 (False, "testing")
