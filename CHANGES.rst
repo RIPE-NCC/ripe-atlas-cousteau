@@ -1,5 +1,12 @@
 Releases History
 ================
+1.0.2 (released 2015-10-26)
+---------------------------
+Bug fix:
+~~~~~~~~
+- Fix bug where key parameter was added to the url even if it was empty.
+- Fix bug where we didn't try to unjson 4xx responses even if they could contain json structure.
+
 1.0.1 (released 2015-10-23)
 ---------------------------
 Changes:
