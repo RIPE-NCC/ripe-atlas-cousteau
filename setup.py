@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 from os.path import abspath, dirname, join
+from sys import version_info
 from setuptools import setup
 
 # import manually __version__ variable
@@ -16,6 +17,16 @@ tests_require = [
     "mock",
     "jsonschema"
 ]
+
+if version_info.major == 2:
+
+    if version_info.minor < 7:
+        raise NotImplementedError(
+            "This package requires Python 2.7 or higher")
+
+    # See: https://urllib3.readthedocs.org/en/latest/security.html#insecureplatformwarning
+    if version_info.micro < 10:
+        install_requires += ["ndg-httpsclient", "pyasn"]
 
 
 # Get proper long description for package
