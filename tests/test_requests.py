@@ -193,19 +193,18 @@ class TestAtlasChangeRequest(unittest.TestCase):
 
 
 class TestAtlasResultsRequest(unittest.TestCase):
-    def setUp(self):
-        self.request = AtlasResultsRequest(**{
+
+    def test_url_path_and_params(self):
+        request = AtlasResultsRequest(**{
             "msm_id": 1000002,
             "start": "2011-11-27",
             "stop": "2011-11-27 01",
             "probe_ids": [1, 2, 3]
         })
-
-    def test_url_path(self):
         self.assertEqual(
-            self.request.url_path, "/api/v2/measurements/1000002/results"
+            request.url_path, "/api/v2/measurements/1000002/results"
         )
-        query_filters = self.request.http_method_args["params"]
+        query_filters = request.http_method_args["params"]
         self.assertEqual(
             set(query_filters.keys()), set(["key", "stop", "start", "probe_ids"])
         )
@@ -215,19 +214,122 @@ class TestAtlasResultsRequest(unittest.TestCase):
             query_filters["probe_ids"], "1,2,3"
         )
 
+    def test_probe_ids_query_params(self):
+        """Tests probe_ids as query params for different entries"""
+        request = AtlasResultsRequest(**{
+            "msm_id": 1000002,
+            "probe_ids": [1, 2, 3]
+        })
+        query_filters = request.http_method_args["params"]
+        self.assertEqual(
+            query_filters["probe_ids"], "1,2,3"
+        )
+
+        request = AtlasResultsRequest(**{
+            "msm_id": 1000002,
+            "probe_ids": "15,  2,3"
+        })
+        query_filters = request.http_method_args["params"]
+        self.assertEqual(
+            query_filters["probe_ids"], "15,  2,3"
+        )
+
+        request = AtlasResultsRequest(**{
+            "msm_id": 1000002,
+            "probe_ids": 15
+        })
+        query_filters = request.http_method_args["params"]
+        self.assertEqual(
+            query_filters["probe_ids"], 15
+        )
+
+    def test_start_time_query_params(self):
+        """Tests start time as query params for different entries"""
+        request = AtlasResultsRequest(**{
+            "msm_id": 1000002,
+            "start": "2011-11-27",
+        })
+        query_filters = request.http_method_args["params"]
+        self.assertEqual(query_filters["start"], 1322352000)
+
+        request = AtlasResultsRequest(**{
+            "msm_id": 1000002,
+            "start": "2011-11-27 01:01",
+        })
+        query_filters = request.http_method_args["params"]
+        self.assertEqual(query_filters["start"], 1322355660)
+
+        request = AtlasResultsRequest(**{
+            "msm_id": 1000002,
+            "start": 1322352000,
+        })
+        query_filters = request.http_method_args["params"]
+        self.assertEqual(query_filters["start"], 1322352000)
+
+        request = AtlasResultsRequest(**{
+            "msm_id": 1000002,
+            "start": datetime(2011, 11, 27)
+        })
+        query_filters = request.http_method_args["params"]
+        self.assertEqual(query_filters["start"], 1322352000)
+
+    def test_stop_time_query_params(self):
+        """Tests stop time as query params for different entries"""
+        request = AtlasResultsRequest(**{
+            "msm_id": 1000002,
+            "stop": "2011-11-27",
+        })
+        query_filters = request.http_method_args["params"]
+        self.assertEqual(query_filters["stop"], 1322352000)
+
+        request = AtlasResultsRequest(**{
+            "msm_id": 1000002,
+            "stop": "2011-11-27 01:01",
+        })
+        query_filters = request.http_method_args["params"]
+        self.assertEqual(query_filters["stop"], 1322355660)
+
+        request = AtlasResultsRequest(**{
+            "msm_id": 1000002,
+            "stop": 1322352000,
+        })
+        query_filters = request.http_method_args["params"]
+        self.assertEqual(query_filters["stop"], 1322352000)
+
+        request = AtlasResultsRequest(**{
+            "msm_id": 1000002,
+            "stop": datetime(2011, 11, 27)
+        })
+        query_filters = request.http_method_args["params"]
+        self.assertEqual(query_filters["stop"], 1322352000)
+
 
 class TestAtlasLatestRequest(unittest.TestCase):
 
-    def test_url_path_permutations(self):
+    def test_url_path(self):
+        """Tests construction of path."""
         self.assertEqual(
             AtlasLatestRequest(msm_id=1001).url_path,
             "/api/v2/measurements/1001/latest"
         )
         self.assertEqual(
+            AtlasLatestRequest(msm_id=1002, probe_ids=[1, 2, 3]).url_path,
+            "/api/v2/measurements/1002/latest"
+        )
+
+    def test_query_params(self):
+        """Tests construction of query parameters."""
+        self.assertEqual(
             AtlasLatestRequest(
-                msm_id=1001, probe_ids=(1, 2, 3)
+                msm_id=1001, probe_ids=(1, 2, 3, 24)
             ).http_method_args["params"],
-            {"key": None, "probe_ids": "1,2,3"}
+            {"key": None, "probe_ids": "1,2,3,24"}
+        )
+        self.assertEqual(
+            AtlasLatestRequest(
+                msm_id=1001, probe_ids="1, 2, 3, 24"
+            ).http_method_args["params"],
+            {"key": None, "probe_ids": "1, 2, 3, 24"}
         )
 
 

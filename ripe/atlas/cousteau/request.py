@@ -232,15 +232,28 @@ class AtlasLatestRequest(AtlasRequest):
         self.url_path = "/api/v2/measurements/{0}/latest"
 
         self.msm_id = msm_id
-        self.probe_ids = probe_ids
+        self.probe_ids = None
 
         self.url_path = self.url_path.format(self.msm_id)
-        if self.probe_ids:
-            additional_params = {
-                "probe_ids": ",".join(map(str, self.probe_ids))
-            }
 
-            self.http_method_args["params"].update(additional_params)
+        if probe_ids:
+            self.add_probe_parameters(probe_ids)
+
+    def add_probe_parameters(self, probe_ids):
+        """
+        Creates string format if needed and add probe ids to HTTP
+        query parameters.
+        """
+
+        if isinstance(probe_ids, (tuple, list)):  # tuples & lists > x,y,z
+            self.probe_ids = ",".join([str(_) for _ in probe_ids])
+        else:
+            self.probe_ids = probe_ids
+
+        additional_params = {
+            "probe_ids": self.probe_ids
+        }
+        self.http_method_args["params"].update(additional_params)
 
 
 class AtlasResultsRequest(AtlasRequest):
@@ -253,12 +266,15 @@ class AtlasResultsRequest(AtlasRequest):
         self.msm_id = kwargs["msm_id"]
         start = kwargs.get("start")
         stop = kwargs.get("stop")
-        self.probe_ids = kwargs.get("probe_ids")
+        probe_ids = kwargs.get("probe_ids")
 
         self.start = None
         self.stop = None
+        self.probe_ids = None
+
         self.clean_start_time(start)
         self.clean_stop_time(stop)
+        self.clean_probes(probe_ids)
 
         self.url_path = self.url_path.format(self.msm_id)
 
@@ -286,6 +302,16 @@ class AtlasResultsRequest(AtlasRequest):
         elif isinstance(stop, str):
             self.stop = parser.parse(stop)
 
+    def clean_probes(self, probe_ids):
+        """
+        Checks format of probe ids and transform it to something API
+        understands.
+        """
+        if isinstance(probe_ids, (tuple, list)):  # tuples & lists > x,y,z
+            self.probe_ids = ",".join([str(_) for _ in probe_ids])
+        else:
+            self.probe_ids = probe_ids
+
     def update_http_method_params(self):
         """
         Update HTTP url parameters based on msm_id and query filters if
@@ -304,7 +330,7 @@ class AtlasResultsRequest(AtlasRequest):
             )
 
         if self.probe_ids:
-            url_params.update({"probe_ids": ",".join(map(str, self.probe_ids))})
+            url_params.update({"probe_ids": self.probe_ids})
 
         self.http_method_args["params"].update(url_params)
 
