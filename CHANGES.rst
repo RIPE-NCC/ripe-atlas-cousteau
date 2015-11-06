@@ -1,5 +1,11 @@
 Releases History
 ================
+1.0.3 (released 2015-11-6)
+--------------------------
+Changes:
+~~~~~~~~
+- Handle both string/dictionary as input for probe_ids filter for Result and LatestResult requests.
+
 1.0.2 (released 2015-10-26)
 ---------------------------
 Bug fix:
