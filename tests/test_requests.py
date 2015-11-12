@@ -136,19 +136,19 @@ class TestAtlasRequest(unittest.TestCase):
 
 class TestAtlasCreateRequest(unittest.TestCase):
     def setUp(self):
-        create_source = AtlasSource(
+        self.create_source = AtlasSource(
             **{"type": "area", "value": "WW", "requested": 3}
         )
-        measurement = Ping(**{
+        self.measurement = Ping(**{
             "target": "testing", "af": 6,
             "description": "testing"
         })
         self.request = AtlasCreateRequest(**{
             "start_time": datetime(2015, 10, 16),
-            "stop_time": datetime(2015, 10, 17),
+            "stop_time": 1445040000,
             "key": "path_to_key",
-            "measurements": [measurement],
-            "sources": [create_source],
+            "measurements": [self.measurement],
+            "sources": [self.create_source],
             "is_oneoff": True,
         })
 
@@ -183,6 +183,36 @@ class TestAtlasCreateRequest(unittest.TestCase):
             mock_get.return_value = True
             self.request.post()
             self.assertEqual(self.request.http_method_args, expected_args)
+
+    def test_post_method_without_times(self):
+        """Tests POST reuest method without any time specified"""
+        request = AtlasCreateRequest(**{
+            "key": "path_to_key",
+            "measurements": [self.measurement],
+            "sources": [self.create_source],
+        })
+        self.maxDiff = None
+        expected_args = {
+            "json": {
+                "definitions": [{
+                    "af": 6, "description": "testing",
+                    "target": "testing", "type": "ping"
+                }],
+                "is_oneoff": False,
+                "probes": [{"requested": 3, "type": "area", "value": "WW"}],
+            },
+            "params": {"key": "path_to_key"},
+            "headers": {
+                "User-Agent": "RIPE ATLAS Cousteau v{0}".format(__version__),
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+        }
+        with mock.patch('ripe.atlas.cousteau.request.AtlasRequest.http_method') as mock_get:
+            request._construct_post_data()
+            mock_get.return_value = True
+            request.post()
+            self.assertEqual(request.http_method_args, expected_args)
 
 
 class TestAtlasChangeRequest(unittest.TestCase):
