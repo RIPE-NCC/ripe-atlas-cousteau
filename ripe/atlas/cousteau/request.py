@@ -75,7 +75,7 @@ class AtlasRequest(object):
 
     def get_http_method(self, method):
         """Gets the http method that will be called from the requests library"""
-        return self.http_methods[method](self.url, **self.http_method_args)
+        return self.http_methods[method](self.url, verify=False, **self.http_method_args)
 
     def build_url(self):
         """
@@ -106,6 +106,17 @@ class AtlasRequest(object):
     def _construct_post_data(self):
         raise NotImplementedError
 
+    def clean_time(self, time):
+        """
+        Transform time field to datetime object if there is any.
+        """
+        if isinstance(time, int):
+            time = datetime.utcfromtimestamp(time)
+        elif isinstance(time, str):
+            time = parser.parse(time)
+
+        return time
+
 
 class AtlasCreateRequest(AtlasRequest):
     """
@@ -133,14 +144,10 @@ class AtlasCreateRequest(AtlasRequest):
 
         self.measurements = kwargs["measurements"]
         self.sources = kwargs["sources"]
-        if kwargs.get("start_time"):
-            self.start_time = kwargs["start_time"]
-        else:
-            self.start_time = ""
-        if kwargs.get("stop_time"):
-            self.stop_time = kwargs["stop_time"]
-        else:
-            self.stop_time = ""
+
+        self.start_time = self.clean_time(kwargs.get("start_time"))
+        self.stop_time = self.clean_time(kwargs.get("stop_time"))
+
         if kwargs.get("is_oneoff"):
             self.is_oneoff = kwargs["is_oneoff"]
         else:
@@ -264,43 +271,15 @@ class AtlasResultsRequest(AtlasRequest):
 
         self.url_path = '/api/v2/measurements/{0}/results'
         self.msm_id = kwargs["msm_id"]
-        start = kwargs.get("start")
-        stop = kwargs.get("stop")
-        probe_ids = kwargs.get("probe_ids")
 
-        self.start = None
-        self.stop = None
-        self.probe_ids = None
+        self.start = self.clean_time(kwargs.get("start"))
+        self.stop = self.clean_time(kwargs.get("stop"))
 
-        self.clean_start_time(start)
-        self.clean_stop_time(stop)
-        self.clean_probes(probe_ids)
+        self.probe_ids = self.clean_probes(kwargs.get("probe_ids"))
 
         self.url_path = self.url_path.format(self.msm_id)
 
         self.update_http_method_params()
-
-    def clean_start_time(self, start):
-        """
-        Transform start time filter to datetime object if there is any.
-        """
-        if isinstance(start, datetime):
-            self.start = start
-        elif isinstance(start, int):
-            self.start = datetime.utcfromtimestamp(start)
-        elif isinstance(start, str):
-            self.start = parser.parse(start)
-
-    def clean_stop_time(self, stop):
-        """
-        Transform stop time filter to datetime object if there is any.
-        """
-        if isinstance(stop, datetime):
-            self.stop = stop
-        elif isinstance(stop, int):
-            self.stop = datetime.utcfromtimestamp(stop)
-        elif isinstance(stop, str):
-            self.stop = parser.parse(stop)
 
     def clean_probes(self, probe_ids):
         """
@@ -308,9 +287,9 @@ class AtlasResultsRequest(AtlasRequest):
         understands.
         """
         if isinstance(probe_ids, (tuple, list)):  # tuples & lists > x,y,z
-            self.probe_ids = ",".join([str(_) for _ in probe_ids])
-        else:
-            self.probe_ids = probe_ids
+            probe_ids = ",".join([str(_) for _ in probe_ids])
+
+        return probe_ids
 
     def update_http_method_params(self):
         """
