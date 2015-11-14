@@ -198,8 +198,8 @@ though `streaming API`_.
     atlas_stream.start_stream(stream_type=stream_type, **stream_parameters)
 
     # Probe's connection status results
-    stream_type = "probestatus"
-    atlas_stream.bind_stream(stream_type=stream_type, on_result_response)
+    stream_type = "probe"
+    atlas_stream.bind_stream(stream_type, on_result_response)
     stream_parameters = {"enrichProbes": True}
     atlas_stream.start_stream(stream_type=stream_type, **stream_parameters)
 
