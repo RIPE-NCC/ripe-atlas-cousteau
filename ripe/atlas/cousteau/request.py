@@ -259,6 +259,10 @@ class AtlasLatestRequest(AtlasRequest):
         }
         self.http_method_args["params"].update(additional_params)
 
+    def create(self):
+        """Sends the GET request."""
+        return self.get()
+
 
 class AtlasResultsRequest(AtlasRequest):
     """Atlas request for fetching results of a measurement."""
