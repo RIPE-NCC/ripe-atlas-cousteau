@@ -72,7 +72,7 @@ class AtlasRequest(object):
 
     def get_http_method(self, method):
         """Gets the http method that will be called from the requests library"""
-        return self.http_methods[method](self.url, verify=False, **self.http_method_args)
+        return self.http_methods[method](self.url, **self.http_method_args)
 
     def build_url(self):
         """
