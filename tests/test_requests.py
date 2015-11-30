@@ -131,7 +131,7 @@ class TestAtlasRequest(unittest.TestCase):
             standard = "RIPE ATLAS Cousteau v999"
             self.assertEqual(AtlasRequest().http_agent, standard)
             self.assertEqual(AtlasRequest(user_agent=None).http_agent, standard)
-            self.assertEqual(AtlasRequest(user_agent="w00t"), "w00t")
+            self.assertEqual(AtlasRequest(user_agent="w00t").http_agent, "w00t")
 
 
 class TestAtlasCreateRequest(unittest.TestCase):
