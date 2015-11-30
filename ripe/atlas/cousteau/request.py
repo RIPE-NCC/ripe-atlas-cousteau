@@ -24,17 +24,14 @@ class AtlasRequest(object):
     }
 
     def __init__(self, **kwargs):
-        self.url = ""
-        self.url_path = ""
-        self.key = kwargs.get("key", None)
-        if "url_path" in kwargs:
-            self.url_path = kwargs["url_path"]
-        if "server" in kwargs:
-            self.server = kwargs["server"]
-        else:
-            self.server = "atlas.ripe.net"
 
-        self.http_agent = "RIPE ATLAS Cousteau v{0}".format(__version__)
+        self.url = ""
+        self.key = kwargs.get("key")
+        self.url_path = kwargs.get("url_path", "")
+        self.server = kwargs.get("server", "atlas.ripe.net")
+
+        default_user_agent = "RIPE ATLAS Cousteau v{0}".format(__version__)
+        self.http_agent = kwargs.get("user_agent") or default_user_agent
 
         self.http_method_args = {
             "params": {"key": self.key},
