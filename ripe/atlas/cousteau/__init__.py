@@ -35,7 +35,7 @@ class EntityRepresentation(object):
         self.id = kwargs.get("id")
         self.api_key = kwargs.get("key", "")
         self.meta_data = kwargs.get("meta_data")
-        self.user_agent = kwargs.get("user_agent")
+        self._user_agent = kwargs.get("user_agent")
 
         if self.meta_data is None and self.id is None:
             raise CousteauGenericError(
@@ -53,7 +53,7 @@ class EntityRepresentation(object):
         is_success, meta_data = AtlasRequest(
             url_path=self.API_META_URL.format(self.id),
             key=self.api_key,
-            user_agent=self.user_agent
+            user_agent=self._user_agent
         ).get()
 
         self.meta_data = meta_data

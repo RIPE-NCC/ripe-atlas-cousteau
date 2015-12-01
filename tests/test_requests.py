@@ -815,8 +815,8 @@ class TestMeasurementRepresentation(unittest.TestCase):
             with mock.patch(paths["fetch"]) as fetch:
                 fetch.return_value = True
                 with mock.patch(paths["populate"]):
-                    self.assertEqual(Measurement(id=1).user_agent, None)
+                    self.assertEqual(Measurement(id=1)._user_agent, None)
                     self.assertEqual(
-                        Measurement(id=1, user_agent=None).user_agent, None)
+                        Measurement(id=1, user_agent=None)._user_agent, None)
                     self.assertEqual(
-                        Measurement(id=1, user_agent="w00t").user_agent, "w00t")
+                        Measurement(id=1, user_agent="w00t")._user_agent, "w00t")
