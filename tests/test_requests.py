@@ -385,13 +385,13 @@ class TestRequestGenerator(unittest.TestCase):
         kwargs = {"limit": "100", "asn": "3333"}
         r = RequestGenerator(**kwargs)
         self.assertEqual(
-            decostruct_url_params(r.build_url()), set(["limit=100", "asn=3333"])
+            decostruct_url_params(r.build_url()), {"limit=100", "asn=3333"}
         )
         kwargs = {"limit": "100", "asn": "3333", "tags": "NAT,system-ipv4-works"}
         r = RequestGenerator(**kwargs)
         self.assertEqual(
             decostruct_url_params(r.build_url()),
-            set(["limit=100", "tags=NAT,system-ipv4-works", "asn=3333"])
+            {"limit=100", "tags=NAT,system-ipv4-works", "asn=3333"}
         )
         kwargs = {"asn": "3333"}
         r = RequestGenerator(**kwargs)
@@ -704,6 +704,10 @@ class TestRequestGenerator(unittest.TestCase):
 
         self.assertEqual(probes_list, expected_value)
         self.assertEqual(probe_generator.total_count, 6)
+
+    def test_user_agent(self):
+        self.assertEqual(RequestGenerator()._user_agent, None)
+        self.assertEqual(RequestGenerator(user_agent="x")._user_agent, "x")
 
     def tearDown(self):
         mock.patch.stopall()

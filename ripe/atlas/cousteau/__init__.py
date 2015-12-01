@@ -145,7 +145,8 @@ class RequestGenerator(object):
     id_filter = ""
     URL_LENGTH_LIMIT = 5000
 
-    def __init__(self, return_objects=False, **filters):
+    def __init__(self, return_objects=False, user_agent=None, **filters):
+        self._user_agent = user_agent
         self.api_filters = filters
         self.split_urls = []
         self.total_count_flag = False
@@ -227,7 +228,8 @@ class RequestGenerator(object):
         Querying API for the next batch of objects and store next url and
         batch of objects.
         """
-        is_success, results = AtlasRequest(**{"url_path": self.atlas_url}).get()
+        is_success, results = AtlasRequest(
+            url_path=self.atlas_url, user_agent=self._user_agent).get()
 
         if not is_success:
             raise APIResponseError(results)
