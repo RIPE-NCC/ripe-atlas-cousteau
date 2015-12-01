@@ -759,20 +759,18 @@ class TestProbeRepresentation(unittest.TestCase):
     def test_user_agent(self):
 
         paths = {
-            "version": "ripe.atlas.cousteau.request.__version__",
             "fetch": "ripe.atlas.cousteau.Probe._fetch_meta_data",
             "populate": "ripe.atlas.cousteau.Probe._populate_data",
         }
 
-        with mock.patch(paths["version"], 999):
-            with mock.patch(paths["fetch"]) as fetch:
-                fetch.return_value = True
-                with mock.patch(paths["populate"]):
-                    self.assertEqual(Probe(id=1)._user_agent, None)
-                    self.assertEqual(
-                        Probe(id=1, user_agent=None)._user_agent, None)
-                    self.assertEqual(
-                        Probe(id=1, user_agent="w00t")._user_agent, "w00t")
+        with mock.patch(paths["fetch"]) as fetch:
+            fetch.return_value = True
+            with mock.patch(paths["populate"]):
+                self.assertEqual(Probe(id=1)._user_agent, None)
+                self.assertEqual(
+                    Probe(id=1, user_agent=None)._user_agent, None)
+                self.assertEqual(
+                    Probe(id=1, user_agent="w00t")._user_agent, "w00t")
 
 
 class TestMeasurementRepresentation(unittest.TestCase):
@@ -824,17 +822,15 @@ class TestMeasurementRepresentation(unittest.TestCase):
     def test_user_agent(self):
 
         paths = {
-            "version": "ripe.atlas.cousteau.request.__version__",
             "fetch": "ripe.atlas.cousteau.Measurement._fetch_meta_data",
             "populate": "ripe.atlas.cousteau.Measurement._populate_data",
         }
 
-        with mock.patch(paths["version"], 999):
-            with mock.patch(paths["fetch"]) as fetch:
-                fetch.return_value = True
-                with mock.patch(paths["populate"]):
-                    self.assertEqual(Measurement(id=1)._user_agent, None)
-                    self.assertEqual(
-                        Measurement(id=1, user_agent=None)._user_agent, None)
-                    self.assertEqual(
-                        Measurement(id=1, user_agent="w00t")._user_agent, "w00t")
+        with mock.patch(paths["fetch"]) as fetch:
+            fetch.return_value = True
+            with mock.patch(paths["populate"]):
+                self.assertEqual(Measurement(id=1)._user_agent, None)
+                self.assertEqual(
+                    Measurement(id=1, user_agent=None)._user_agent, None)
+                self.assertEqual(
+                    Measurement(id=1, user_agent="w00t")._user_agent, "w00t")
