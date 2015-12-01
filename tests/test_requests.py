@@ -385,13 +385,13 @@ class TestRequestGenerator(unittest.TestCase):
         kwargs = {"limit": "100", "asn": "3333"}
         r = RequestGenerator(**kwargs)
         self.assertEqual(
-            decostruct_url_params(r.build_url()), {"limit=100", "asn=3333"}
+            decostruct_url_params(r.build_url()), set(["limit=100", "asn=3333"])
         )
         kwargs = {"limit": "100", "asn": "3333", "tags": "NAT,system-ipv4-works"}
         r = RequestGenerator(**kwargs)
         self.assertEqual(
             decostruct_url_params(r.build_url()),
-            {"limit=100", "tags=NAT,system-ipv4-works", "asn=3333"}
+            set(["limit=100", "tags=NAT,system-ipv4-works", "asn=3333"])
         )
         kwargs = {"asn": "3333"}
         r = RequestGenerator(**kwargs)
