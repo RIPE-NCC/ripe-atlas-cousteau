@@ -32,9 +32,10 @@ class EntityRepresentation(object):
 
     def __init__(self, **kwargs):
 
-        self.id = kwargs.get("id", None)
+        self.id = kwargs.get("id")
         self.api_key = kwargs.get("key", "")
-        self.meta_data = kwargs.get("meta_data", None)
+        self.meta_data = kwargs.get("meta_data")
+        self._user_agent = kwargs.get("user_agent")
 
         if self.meta_data is None and self.id is None:
             raise CousteauGenericError(
@@ -50,7 +51,9 @@ class EntityRepresentation(object):
     def _fetch_meta_data(self):
         """Makes an API call to fetch meta data for the given probe and stores the raw data."""
         is_success, meta_data = AtlasRequest(
-            **{"url_path": self.API_META_URL.format(self.id), "key": self.api_key}
+            url_path=self.API_META_URL.format(self.id),
+            key=self.api_key,
+            user_agent=self._user_agent
         ).get()
 
         self.meta_data = meta_data
@@ -60,7 +63,9 @@ class EntityRepresentation(object):
         return True
 
     def _populate_data(self):
-        """Assing some raw meta data from API response to instance properties"""
+        """
+        Passing some raw meta data from API response to instance properties
+        """
         raise NotImplementedError()
 
     def __str__(self):
@@ -140,7 +145,8 @@ class RequestGenerator(object):
     id_filter = ""
     URL_LENGTH_LIMIT = 5000
 
-    def __init__(self, return_objects=False, **filters):
+    def __init__(self, return_objects=False, user_agent=None, **filters):
+        self._user_agent = user_agent
         self.api_filters = filters
         self.split_urls = []
         self.total_count_flag = False
@@ -222,7 +228,8 @@ class RequestGenerator(object):
         Querying API for the next batch of objects and store next url and
         batch of objects.
         """
-        is_success, results = AtlasRequest(**{"url_path": self.atlas_url}).get()
+        is_success, results = AtlasRequest(
+            url_path=self.atlas_url, user_agent=self._user_agent).get()
 
         if not is_success:
             raise APIResponseError(results)

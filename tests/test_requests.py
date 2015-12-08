@@ -126,6 +126,13 @@ class TestAtlasRequest(unittest.TestCase):
                 (False, ("excargs",))
             )
 
+    def test_user_agent(self):
+        with mock.patch("ripe.atlas.cousteau.request.__version__", 999):
+            standard = "RIPE ATLAS Cousteau v999"
+            self.assertEqual(AtlasRequest().http_agent, standard)
+            self.assertEqual(AtlasRequest(user_agent=None).http_agent, standard)
+            self.assertEqual(AtlasRequest(user_agent="w00t").http_agent, "w00t")
+
 
 class TestAtlasCreateRequest(unittest.TestCase):
     def setUp(self):
@@ -698,6 +705,10 @@ class TestRequestGenerator(unittest.TestCase):
         self.assertEqual(probes_list, expected_value)
         self.assertEqual(probe_generator.total_count, 6)
 
+    def test_user_agent(self):
+        self.assertEqual(RequestGenerator()._user_agent, None)
+        self.assertEqual(RequestGenerator(user_agent="x")._user_agent, "x")
+
     def tearDown(self):
         mock.patch.stopall()
 
@@ -749,8 +760,25 @@ class TestProbeRepresentation(unittest.TestCase):
             request_mock.return_value = False, {}
             self.assertRaises(APIResponseError, lambda: Probe(id=1))
 
+    def test_user_agent(self):
+
+        paths = {
+            "fetch": "ripe.atlas.cousteau.Probe._fetch_meta_data",
+            "populate": "ripe.atlas.cousteau.Probe._populate_data",
+        }
+
+        with mock.patch(paths["fetch"]) as fetch:
+            fetch.return_value = True
+            with mock.patch(paths["populate"]):
+                self.assertEqual(Probe(id=1)._user_agent, None)
+                self.assertEqual(
+                    Probe(id=1, user_agent=None)._user_agent, None)
+                self.assertEqual(
+                    Probe(id=1, user_agent="w00t")._user_agent, "w00t")
+
 
 class TestMeasurementRepresentation(unittest.TestCase):
+
     def test_sane_response(self):
         with mock.patch('ripe.atlas.cousteau.request.AtlasRequest.get') as request_mock:
             resp = {
@@ -794,3 +822,19 @@ class TestMeasurementRepresentation(unittest.TestCase):
         with mock.patch('ripe.atlas.cousteau.request.AtlasRequest.get') as request_mock:
             request_mock.return_value = False, {}
             self.assertRaises(APIResponseError, lambda: Measurement(id=1))
+
+    def test_user_agent(self):
+
+        paths = {
+            "fetch": "ripe.atlas.cousteau.Measurement._fetch_meta_data",
+            "populate": "ripe.atlas.cousteau.Measurement._populate_data",
+        }
+
+        with mock.patch(paths["fetch"]) as fetch:
+            fetch.return_value = True
+            with mock.patch(paths["populate"]):
+                self.assertEqual(Measurement(id=1)._user_agent, None)
+                self.assertEqual(
+                    Measurement(id=1, user_agent=None)._user_agent, None)
+                self.assertEqual(
+                    Measurement(id=1, user_agent="w00t")._user_agent, "w00t")
