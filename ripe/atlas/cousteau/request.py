@@ -70,8 +70,6 @@ class AtlasRequest(object):
             is_success = False
             response_message = exc.args
 
-        import pdb; pdb.set_trace()
-
         return is_success, response_message
 
     def get_http_method(self, method):
