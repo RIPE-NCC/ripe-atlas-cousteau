@@ -29,13 +29,15 @@ class AtlasRequest(object):
         self.key = kwargs.get("key")
         self.url_path = kwargs.get("url_path", "")
         self.server = kwargs.get("server", "atlas.ripe.net")
+        self.verify = kwargs.get("verify", True)
 
         default_user_agent = "RIPE ATLAS Cousteau v{0}".format(__version__)
         self.http_agent = kwargs.get("user_agent") or default_user_agent
 
         self.http_method_args = {
             "params": {"key": self.key},
-            "headers": self.get_headers()
+            "headers": self.get_headers(),
+            "verify": self.verify
         }
         self.post_data = {}
 
@@ -67,6 +69,8 @@ class AtlasRequest(object):
         except requests.exceptions.RequestException as exc:
             is_success = False
             response_message = exc.args
+
+        import pdb; pdb.set_trace()
 
         return is_success, response_message
 
