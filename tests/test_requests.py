@@ -51,6 +51,7 @@ class TestAtlasRequest(unittest.TestCase):
         """Tests initial args that will be passed later to HTTP method."""
         expected_output = {
             "params": {"key": "blaaaa"},
+            "verify": True,
             "headers": {
                 "User-Agent": "RIPE ATLAS Cousteau v{0}".format(__version__),
                 "Content-Type": "application/json",
@@ -67,6 +68,7 @@ class TestAtlasRequest(unittest.TestCase):
                 "key": "blaaaa", "bull": "shit",
                 "cow": "shit", "horse": "shit"
             },
+            "verify": True,
             "headers": {
                 "User-Agent": "RIPE ATLAS Cousteau v{0}".format(__version__),
                 "Content-Type": "application/json",
@@ -172,6 +174,7 @@ class TestAtlasCreateRequest(unittest.TestCase):
                 "stop_time": 1445040000
             },
             "params": {"key": "path_to_key"},
+            "verify": True,
             "headers": {
                 "User-Agent": "RIPE ATLAS Cousteau v{0}".format(__version__),
                 "Content-Type": "application/json",
@@ -202,6 +205,7 @@ class TestAtlasCreateRequest(unittest.TestCase):
                 "probes": [{"requested": 3, "type": "area", "value": "WW"}],
             },
             "params": {"key": "path_to_key"},
+            "verify": True,
             "headers": {
                 "User-Agent": "RIPE ATLAS Cousteau v{0}".format(__version__),
                 "Content-Type": "application/json",
