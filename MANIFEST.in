@@ -3,3 +3,4 @@ include README.rst
 include MANIFEST.in
 include CHANGES.rst
 recursive-include ripe *
+recursive-include tests *
