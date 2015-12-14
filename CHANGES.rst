@@ -1,5 +1,12 @@
 Releases History
 ================
+1.0.5 (released 2015-12-14)
+---------------------------
+Changes:
+- Add tests to the package itself.
+- Make user-agent changeable by the user.
+- Various refactorings.
+
 1.0.4 (released 2015-11-6)
 --------------------------
 Changes:
