@@ -79,6 +79,7 @@ class TestRealServer(unittest.TestCase):
         stop = datetime.utcnow() + timedelta(minutes=220)
         request = AtlasCreateRequest(
             **{
+                "verify": False,
                 "stop_time": stop,
                 "key": self.create_key,
                 "server": self.server,
@@ -96,7 +97,7 @@ class TestRealServer(unittest.TestCase):
         if self.server == "":
             raise SkipTest
 
-        kwargs = {"msm_id": self.delete_msm, "key": self.delete_key, "server": self.server}
+        kwargs = {"verify": False, "msm_id": self.delete_msm, "key": self.delete_key, "server": self.server}
         request = AtlasStopRequest(**kwargs)
         result = namedtuple('Result', 'success response')
         (result.success, result.response) = request.create()
@@ -117,6 +118,7 @@ class TestRealServer(unittest.TestCase):
         request = AtlasChangeRequest(
             **{
                 "key": self.change_key,
+                "verify": False,
                 "msm_id": 1000032,
                 "server": self.server,
                 "sources": [add, remove]
@@ -136,6 +138,7 @@ class TestRealServer(unittest.TestCase):
             "msm_id": 1000032,
             "start": datetime(2011, 11, 21),
             "stop": datetime(2011, 11, 22),
+            "verify": False,
             "probe_ids": [743, 630]
         }
 
@@ -212,6 +215,7 @@ class TestRealServer(unittest.TestCase):
 
         request = AtlasRequest(
             **{
+                "verify": False,
                 "url_path": "/api/v2/anchors"
             }
         )
