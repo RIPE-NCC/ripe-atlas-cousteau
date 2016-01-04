@@ -1,5 +1,11 @@
 Releases History
 ================
+1.0.6 (released 2015-12-15)
+---------------------------
+Changes:
+~~~~~~~~
+- Add copyright text everywhere for debian packaging.
+
 1.0.5 (released 2015-12-14)
 ---------------------------
 Changes:
