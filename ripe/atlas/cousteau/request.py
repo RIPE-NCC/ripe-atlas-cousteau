@@ -43,7 +43,7 @@ class AtlasRequest(object):
         self.url = ""
         self.key = kwargs.get("key")
         self.url_path = kwargs.get("url_path", "")
-        self.server = kwargs.get("server", "atlas.ripe.net")
+        self.server = kwargs.get("server") or "atlas.ripe.net"
         self.verify = kwargs.get("verify", True)
 
         default_user_agent = "RIPE ATLAS Cousteau v{0}".format(__version__)
