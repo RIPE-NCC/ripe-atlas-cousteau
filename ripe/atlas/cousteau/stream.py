@@ -19,7 +19,7 @@ from socketIO_client import SocketIO
 class AtlasStream(object):
 
     CHANNEL_RESULT = "atlas_result"
-    CHANNEL_PROBE = "atlas_probe"
+    CHANNEL_PROBE = "atlas_probestatus"
     CHANNEL_ERROR = "atlas_error"
     CHANNELS = {
         "result": CHANNEL_RESULT,
@@ -58,7 +58,7 @@ class AtlasStream(object):
 
     def start_stream(self, stream_type, **stream_parameters):
         """Starts new stream for given type with given parameters"""
-        if stream_type in ("result", "probestatus"):
+        if stream_type in ("result", "probe"):
             self.subscribe(stream_type, **stream_parameters)
         else:
             print("Given stream type: <{0}> is not valid".format(stream_type))
