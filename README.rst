@@ -190,18 +190,18 @@ though `streaming API`_.
     atlas_stream = AtlasStream()
     atlas_stream.connect()
     # Measurement results
-    stream_type = "result"
+    channel = "result"
     # Bind function we want to run with every result message received
-    atlas_stream.bind_stream(stream_type, on_result_response)
+    atlas_stream.bind_channel(channel, on_result_response)
     # Subscribe to new stream for 1001 measurement results
     stream_parameters = {"msm": 1001}
-    atlas_stream.start_stream(stream_type=stream_type, **stream_parameters)
+    atlas_stream.start_stream(stream_type="result", **stream_parameters)
 
     # Probe's connection status results
-    stream_type = "probe"
-    atlas_stream.bind_stream(stream_type, on_result_response)
+    channel = "probe"
+    atlas_stream.bind_channel(channel, on_result_response)
     stream_parameters = {"enrichProbes": True}
-    atlas_stream.start_stream(stream_type=stream_type, **stream_parameters)
+    atlas_stream.start_stream(stream_type="probestatus", **stream_parameters)
 
     # Timeout all subscriptions after 5 secs. Leave seconds empty for no timeout.
     # Make sure you have this line after you start *all* your streams

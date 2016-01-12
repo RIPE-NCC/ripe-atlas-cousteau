@@ -201,7 +201,7 @@ class TestRealServer(unittest.TestCase):
         atlas_stream = AtlasStream()
         atlas_stream.connect()
         stream_type = "result"
-        atlas_stream.bind_stream(stream_type, on_result_response)
+        atlas_stream.bind_channel(stream_type, on_result_response)
         stream_parameters = {"msm": 1001}
         atlas_stream.start_stream(stream_type=stream_type, **stream_parameters)
         atlas_stream.timeout(seconds=5)
