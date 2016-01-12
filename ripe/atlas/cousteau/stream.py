@@ -49,12 +49,12 @@ class AtlasStream(object):
         self.socketIO.disconnect()
         self.socketIO.__exit__([])
 
-    def bind_stream(self, stream_type, callback):
-        """Bind given type stream with the given callback"""
+    def bind_channel(self, channel, callback):
+        """Bind given channel with the given callback"""
         try:
-            self.socketIO.on(self.CHANNELS[stream_type], callback)
+            self.socketIO.on(self.CHANNELS[channel], callback)
         except KeyError:
-            print("The given stream type: <{0}> is not valid".format(stream_type))
+            print("The given channel: <{0}> is not valid".format(channel))
 
     def start_stream(self, stream_type, **stream_parameters):
         """Starts new stream for given type with given parameters"""
