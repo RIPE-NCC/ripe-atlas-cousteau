@@ -10,7 +10,8 @@ install_requires = [
     "python-dateutil", "socketIO-client>=0.6.5", "requests>=2.7.0"]
 
 tests_require = [
-    "pbr<=1.6",
+    "funcsigs",
+    "setuptools",
     "nose",
     "coverage",
     "mock",
