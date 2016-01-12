@@ -58,7 +58,7 @@ class AtlasStream(object):
 
     def start_stream(self, stream_type, **stream_parameters):
         """Starts new stream for given type with given parameters"""
-        if stream_type in ("result", "probe"):
+        if stream_type in ("result", "probestatus"):
             self.subscribe(stream_type, **stream_parameters)
         else:
             print("Given stream type: <{0}> is not valid".format(stream_type))
