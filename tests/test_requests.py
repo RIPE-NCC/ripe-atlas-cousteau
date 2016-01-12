@@ -803,30 +803,32 @@ class TestProbeRepresentation(unittest.TestCase):
 
 class TestMeasurementRepresentation(unittest.TestCase):
 
+    def setUp(self):
+        self.resp = {
+            "af": 4,
+            "destination_address": "202.73.56.70",
+            "destination_asn": 9255,
+            "destination_name": "blaaaah",
+            "msm_id": 2310448,
+            "description": "Blaaaaaaaaaah",
+            "is_oneoff": True,
+            "is_public": True,
+            "interval": 1800,
+            "creation_time": 1439379910,
+            "resolve_on_probe": False,
+            "start_time": 1439379910,
+            "stop_time": 1439380502,
+            "status": {"id": 4, "name": "Stopped"},
+            "resolved_ips": ["202.73.56.70"],
+            "type": {"id": 8, "name": "http", "af": 4},
+            "result": "/api/v1/measurement/2310448/result/"
+        }
+
     def test_sane_response(self):
         with mock.patch('ripe.atlas.cousteau.request.AtlasRequest.get') as request_mock:
-            resp = {
-                "af": 4,
-                "destination_address": "202.73.56.70",
-                "destination_asn": 9255,
-                "destination_name": "blaaaah",
-                "msm_id": 2310448,
-                "description": "Blaaaaaaaaaah",
-                "is_oneoff": True,
-                "is_public": True,
-                "interval": 1800,
-                "creation_time": 1439379910,
-                "resolve_on_probe": False,
-                "start_time": 1439379910,
-                "stop_time": 1439380502,
-                "status": {"id": 4, "name": "Stopped"},
-                "resolved_ips": ["202.73.56.70"],
-                "type": {"id": 8, "name": "http", "af": 4},
-                "result": "/api/v1/measurement/2310448/result/"
-            }
-            request_mock.return_value = True, resp
+            request_mock.return_value = True, self.resp
             measurement = Measurement(id=1)
-            self.assertEqual(measurement.meta_data, resp)
+            self.assertEqual(measurement.meta_data, self.resp)
             self.assertEqual(measurement.protocol, 4)
             self.assertEqual(measurement.destination_address, "202.73.56.70")
             self.assertEqual(measurement.destination_asn, 9255)
@@ -841,6 +843,27 @@ class TestMeasurementRepresentation(unittest.TestCase):
             self.assertEqual(measurement.stop_time, datetime.fromtimestamp(1439380502))
             self.assertEqual(measurement.type, "HTTP")
             self.assertEqual(measurement.result_url, "/api/v1/measurement/2310448/result/")
+
+    def test_type1(self):
+        """Tests format of the type key in response, soon to be deprecated."""
+        with mock.patch('ripe.atlas.cousteau.request.AtlasRequest.get') as request_mock:
+            self.resp["type"] = {"id": 8, "name": "dns", "af": 4}
+            request_mock.return_value = True, self.resp
+            measurement = Measurement(id=1)
+            self.assertEqual(measurement.type, "DNS")
+
+            self.resp["type"] = {}
+            request_mock.return_value = True, self.resp
+            measurement = Measurement(id=1)
+            self.assertEqual(measurement.type, "")
+
+    def test_type2(self):
+        """Tests new format of the type key in response, soon to be enabled."""
+        with mock.patch('ripe.atlas.cousteau.request.AtlasRequest.get') as request_mock:
+            self.resp["type"] = "dns"
+            request_mock.return_value = True, self.resp
+            measurement = Measurement(id=1)
+            self.assertEqual(measurement.type, "dns")
 
     def test_error_response(self):
         with mock.patch('ripe.atlas.cousteau.request.AtlasRequest.get') as request_mock:

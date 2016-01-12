@@ -122,7 +122,7 @@ class Measurement(EntityRepresentation):
     API_META_URL = "/api/v2/measurements/{0}/"
 
     def _populate_data(self):
-        """Assing some measurement's raw meta data from API response to instance properties"""
+        """Assinging some measurement's raw meta data from API response to instance properties"""
         if self.id is None:
             self.id = self.meta_data.get("id")
 
@@ -144,8 +144,25 @@ class Measurement(EntityRepresentation):
         self.stop_time = stop_time
         self.status_id = self.meta_data.get("status", {}).get("id")
         self.status = self.meta_data.get("status", {}).get("name")
-        self.type = self.meta_data.get("type", {}).get("name").upper()
+        self.type = self.get_type()
         self.result_url = self.meta_data.get("result")
+
+    def get_type(self):
+        """
+        Getting type of measurement keeping backwards compatibility for
+        v2 API output changes.
+        """
+        mtype = None
+        if "type" not in self.meta_data:
+            return mtype
+
+        mtype = self.meta_data["type"]
+        if isinstance(mtype, dict):
+            mtype = self.meta_data.get("type", {}).get("name", "").upper()
+        elif isinstance(mtype, str):
+            mtype = mtype
+
+        return mtype
 
 
 class RequestGenerator(object):
