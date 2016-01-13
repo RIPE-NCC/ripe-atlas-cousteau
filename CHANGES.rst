@@ -1,5 +1,15 @@
 Releases History
 ================
+1.0.7 (released 2016-01-13)
+---------------------------
+Changes:
+~~~~~~~~
+- Backwards compatible change of the format we expect for measurement type to handle upcoming change in the API.
+
+Bug Fixes:
+~~~~~~~~
+- Fix bug when creating stream for probes connection channel. Updating also wrong documentation.
+
 1.0.6 (released 2015-12-15)
 ---------------------------
 Changes:
@@ -22,7 +32,7 @@ Changes:
 
 1.0.2 (released 2015-10-26)
 ---------------------------
-Bug fix:
+Bug Fixes:
 ~~~~~~~~
 - Fix bug where key parameter was added to the url even if it was empty.
 - Fix bug where we didn't try to unjson 4xx responses even if they could contain json structure.
@@ -33,7 +43,7 @@ Changes:
 ~~~~~~~~
 - Now we conform to new API feature that allows for specifying tags when adding probes to existing measurements
 
-Bug fix:
+Bug Fixes:
 ~~~~~~~~
 - Fix bug we didn't allow user to specify single tag include/exclude.
 
@@ -53,7 +63,7 @@ Changes:
 - Migrate all Atlas requests to use requests library and refactor a lot of code to have a cleaner version.
 - Create an API v2 translator to address several option name changing. A deprecation warning will be given.
 
-Bug fix:
+Bug Fixes:
 ~~~~~~~~
 - Fix bug where python representation of measurements without a stop time was exploding. 
 - Make sure start/stop timestamps in measurement create request are always in UTC.
@@ -78,7 +88,7 @@ Changes:
 ~~~~~~~~
 - Abandon v1 RIPE ATLAS API and use only v2.
 
-Bug fix:
+Bug Fixes:
 ~~~~~~~~
 - Fix bug that prevented users from specifying all possible source types when they tried to add more probes to existing measurements.
 - Cover case where a user specified really long list of probes/measurements in the ProbeRequest/MeasurementRequest that was causing 'HTTP ERROR 414: Request-URI Too Long'. Additionally, now if API returns error raise an exception instead of stopping iteration.
@@ -91,7 +101,7 @@ Changes:
 
 0.9.1 (released 2015-09-03)
 ---------------------------
-Bug fix:
+Bug Fixes:
 ~~~~~~~~
 - Fix bug related to binding result atlas stream.
 
