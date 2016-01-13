@@ -184,8 +184,8 @@ class TestRealServer(unittest.TestCase):
 
         Measurement(id=1000032)
 
-    def test_stream_request(self):
-        """Unittest for Atlas results request"""
+    def test_stream_results(self):
+        """Unittest for Atlas results request."""
         if self.server == "":
             raise SkipTest
 
@@ -200,11 +200,35 @@ class TestRealServer(unittest.TestCase):
 
         atlas_stream = AtlasStream()
         atlas_stream.connect()
-        stream_type = "result"
-        atlas_stream.bind_channel(stream_type, on_result_response)
+        channel = "result"
+        atlas_stream.bind_channel(channel, on_result_response)
         stream_parameters = {"msm": 1001}
-        atlas_stream.start_stream(stream_type=stream_type, **stream_parameters)
+        atlas_stream.start_stream(stream_type="result", **stream_parameters)
         atlas_stream.timeout(seconds=5)
+        atlas_stream.disconnect()
+        self.assertNotEqual(results, [])
+
+    def test_stream_probe(self):
+        """Unittest for Atlas probe connections request."""
+        if self.server == "":
+            raise SkipTest
+
+        results = []
+
+        def on_result_response(*args):
+            """
+            Function that will be called every time we receive a new event.
+            Args is a tuple, so you should use args[0] to access the real message.
+            """
+            results.append(args[0])
+
+        atlas_stream = AtlasStream()
+        atlas_stream.connect()
+        channel = "probe"
+        atlas_stream.bind_channel(channel, on_result_response)
+        stream_parameters = {"enrichProbes": True}
+        atlas_stream.start_stream(stream_type="probestatus", **stream_parameters)
+        atlas_stream.timeout(seconds=30)
         atlas_stream.disconnect()
         self.assertNotEqual(results, [])
 
