@@ -32,7 +32,10 @@ exec(open("../ripe/atlas/cousteau/version.py").read())
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = []
+extensions = [
+    'sphinx.ext.autodoc',
+    'sphinx.ext.viewcode',
+]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -104,14 +107,13 @@ pygments_style = 'sphinx'
 #keep_warnings = False
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
-todo_include_todos = False
+#todo_include_todos = False
 
 
 # -- Options for HTML output ----------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'alabaster'
 html_theme = 'default'
 
 # Theme options are theme-specific and customize the look and feel of a theme
@@ -206,6 +208,18 @@ html_static_path = ['_static']
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'RIPEAtlasCousteaudoc'
 
+#
+# Attempt to use the ReadTheDocs theme.  If it's not installed, fallback to
+# the default.
+#
+
+try:
+    import sphinx_rtd_theme
+    html_theme = "sphinx_rtd_theme"
+    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+except ImportError:
+    pass
+
 # -- Options for LaTeX output ---------------------------------------------
 
 latex_elements = {
@@ -286,15 +300,3 @@ texinfo_documents = [
 
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 #texinfo_no_detailmenu = False
-
-#
-# Attempt to use the ReadTheDocs theme.  If it's not installed, fallback to
-# the default.
-#
-
-try:
-    import sphinx_rtd_theme
-    html_theme = "sphinx_rtd_theme"
-    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
-except ImportError:
-    pass
