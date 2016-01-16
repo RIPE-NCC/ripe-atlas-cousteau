@@ -94,9 +94,9 @@ qthelp:
 	@echo
 	@echo "Build finished; now you can run "qcollectiongenerator" with the" \
 	      ".qhcp project file in $(BUILDDIR)/qthelp, like this:"
-	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/Cousteau.qhcp"
+	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/RIPEAtlasCousteau.qhcp"
 	@echo "To view the help file:"
-	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/Cousteau.qhc"
+	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/RIPEAtlasCousteau.qhc"
 
 .PHONY: applehelp
 applehelp:
@@ -113,8 +113,8 @@ devhelp:
 	@echo
 	@echo "Build finished."
 	@echo "To view the help file:"
-	@echo "# mkdir -p $$HOME/.local/share/devhelp/Cousteau"
-	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/Cousteau"
+	@echo "# mkdir -p $$HOME/.local/share/devhelp/RIPEAtlasCousteau"
+	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/RIPEAtlasCousteau"
 	@echo "# devhelp"
 
 .PHONY: epub
