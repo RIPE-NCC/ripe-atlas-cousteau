@@ -32,15 +32,19 @@ ahead and do the HTTP query. On the contrary, it will raise an exception
 with some info in it.
 The required fields for each of the above type are:
 
-=========== =========== ============== =========== =========== ===========
-Ping        Traceroute  Dns            Sslcert     Ntp         Http
-=========== =========== ============== =========== =========== ===========
-af          af          af             af          af          af
-description description description    description description description
-target      target      query_class    target      target      target
-            protocol    query_type
-                        query_argument
-=========== =========== ============== =========== =========== ===========
++-------------+-------------+----------------+-------------+-------------+-------------+
+|     Ping    |  Traceroute |       Dns      |   Sslcert   |     Ntp     |     Http    |
++=============+=============+================+=============+=============+=============+
+|      af     |      af     |       af       |      af     |      af     |      af     |
++-------------+-------------+----------------+-------------+-------------+-------------+
+| description | description |   description  | description | description | description |
++-------------+-------------+----------------+-------------+-------------+-------------+
+|    target   |    target   |   query_class  |    target   |    target   |    target   |
++-------------+-------------+----------------+-------------+-------------+-------------+
+|             |   protocol  |   query_type   |             |             |             |
++-------------+-------------+----------------+-------------+-------------+-------------+
+|             |             | query_argument |             |             |             |
++-------------+-------------+----------------+-------------+-------------+-------------+
 
 Examples:
 
@@ -75,8 +79,18 @@ Examples:
 
     from ripe.atlas.cousteau import AtlasSource
 
-    source = AtlasSource(type="area", value="WW", requested=5, tags={"include":["system-ipv4-works"]})
-    source1 = AtlasSource(type="country", value="NL", requested=50, tags={"exclude": ["system-anchor"]})
+    source = AtlasSource(
+        type="area",
+        value="WW",
+        requested=5,
+        tags={"include":["system-ipv4-works"]}
+    )
+    source1 = AtlasSource(
+        type="country",
+        value="NL",
+        requested=50,
+        tags={"exclude": ["system-anchor"]}
+    )
 
 Create Request
 --------------
@@ -106,8 +120,18 @@ Examples:
         protocol="ICMP",
     )
 
-    source = AtlasSource(type="area", value="WW", requested=5, tags={"include":["system-ipv4-works"]})
-    source1 = AtlasSource(type="country", value="NL", requested=50, tags={"exclude": ["system-anchor"]})
+    source = AtlasSource(
+        type="area",
+        value="WW",
+        requested=5,
+        tags={"include":["system-ipv4-works"]}
+    )
+    source1 = AtlasSource(
+        type="country",
+        value="NL",
+        requested=50,
+        tags={"exclude": ["system-anchor"]}
+    )
 
 
     atlas_request = AtlasCreateRequest(
