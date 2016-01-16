@@ -32,3 +32,6 @@ python/
 
 # vim swp files
 *.swp
+
+# Sphinx documentation
+docs/_build/
