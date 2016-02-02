@@ -421,8 +421,8 @@ Filtering
 This feature queries API for probes/measurements based on specified filters. Filters
 should be according to `filter api documentation`_. Underneath it will follow all next urls until there are no more objects. It returns a python generator that you can use in a for loop to access each object.
 
-Measurement
-^^^^^^^^^^^
+Probe
+^^^^^
 The following example will fetch all measurements with Status equals to "Specified". More info on filters for these call are on `measurement's filtering documentation`_.
 
 .. code:: python
@@ -439,8 +439,8 @@ The following example will fetch all measurements with Status equals to "Specifi
     print(probes.total_count)
 
 
-Probe
-^^^^^
+Measurement
+^^^^^^^^^^^
 The following example will fetch all probes from NL with asn\_v4 3333 and with tag NAT. More info on filters for these call are on `probe's filtering documentation`_.
 
 .. code:: python
@@ -451,7 +451,7 @@ The following example will fetch all probes from NL with asn\_v4 3333 and with t
     measurements = MeasurementRequest(**filters)
 
     for msm in measurements:
-        print(msm["msm_id"])
+        print(msm["id"])
 
     # Print total count of found measurements
     print(measurements.total_count)
