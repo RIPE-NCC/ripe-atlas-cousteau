@@ -45,7 +45,7 @@ class EntityRepresentation(object):
 
     API_META_URL = ""
 
-    def __init__(self, server=None, *kwargs):
+    def __init__(self, server=None, **kwargs):
 
         self.id = kwargs.get("id")
         self.server = server
