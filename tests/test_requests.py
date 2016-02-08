@@ -800,6 +800,18 @@ class TestProbeRepresentation(unittest.TestCase):
                 self.assertEqual(
                     Probe(id=1, user_agent="w00t")._user_agent, "w00t")
 
+    def test_fields(self):
+        with mock.patch('ripe.atlas.cousteau.request.AtlasRequest.get') as request_mock:
+            request_mock.return_value = True, {}
+            Probe(id=1, fields=["probes"])
+            self.assertEquals(request_mock.call_args[1], {"fields": "probes"})
+            Probe(id=1, fields=["probes", "data"])
+            self.assertEquals(request_mock.call_args[1], {"fields": "probes,data"})
+            Probe(id=1, fields="probes,data")
+            self.assertEquals(request_mock.call_args[1], {"fields": "probes,data"})
+            Probe(id=1, fields=1)
+            self.assertEquals(request_mock.call_args[1], {})
+
 
 class TestMeasurementRepresentation(unittest.TestCase):
 
@@ -885,3 +897,15 @@ class TestMeasurementRepresentation(unittest.TestCase):
                     Measurement(id=1, user_agent=None)._user_agent, None)
                 self.assertEqual(
                     Measurement(id=1, user_agent="w00t")._user_agent, "w00t")
+
+    def test_fields(self):
+        with mock.patch('ripe.atlas.cousteau.request.AtlasRequest.get') as request_mock:
+            request_mock.return_value = True, self.resp
+            Measurement(id=1, fields=["probes"])
+            self.assertEquals(request_mock.call_args[1], {"fields": "probes"})
+            Measurement(id=1, fields=["probes", "data"])
+            self.assertEquals(request_mock.call_args[1], {"fields": "probes,data"})
+            Measurement(id=1, fields="probes,data")
+            self.assertEquals(request_mock.call_args[1], {"fields": "probes,data"})
+            Measurement(id=1, fields=1)
+            self.assertEquals(request_mock.call_args[1], {})

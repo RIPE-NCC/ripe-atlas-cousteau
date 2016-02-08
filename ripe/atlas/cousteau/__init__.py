@@ -52,17 +52,29 @@ class EntityRepresentation(object):
         self.api_key = kwargs.get("key", "")
         self.meta_data = kwargs.get("meta_data")
         self._user_agent = kwargs.get("user_agent")
+        self._fields = kwargs.get("fields")
+        self.get_params = {}
 
         if self.meta_data is None and self.id is None:
             raise CousteauGenericError(
                 "Id or meta_data should be passed in order to create object."
             )
 
+        if self._fields:
+            self.update_get_params()
+
         if self.meta_data is None:
             if not self._fetch_meta_data():
                 raise APIResponseError(self.meta_data)
 
         self._populate_data()
+
+    def update_get_params(self):
+        """Update HTTP GET params with the given fields that user wants to fetch."""
+        if isinstance(self._fields, (tuple, list)):  # tuples & lists > x,y,z
+            self.get_params["fields"] = ",".join([str(_) for _ in self._fields])
+        elif isinstance(self._fields, str):
+            self.get_params["fields"] = self._fields
 
     def _fetch_meta_data(self):
         """Makes an API call to fetch meta data for the given probe and stores the raw data."""
@@ -71,7 +83,7 @@ class EntityRepresentation(object):
             key=self.api_key,
             server=self.server,
             user_agent=self._user_agent
-        ).get()
+        ).get(**self.get_params)
 
         self.meta_data = meta_data
         if not is_success:
