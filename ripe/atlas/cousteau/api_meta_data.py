@@ -25,10 +25,11 @@ class EntityRepresentation(object):
 
     API_META_URL = ""
 
-    def __init__(self, server=None, **kwargs):
+    def __init__(self, **kwargs):
 
         self.id = kwargs.get("id")
-        self.server = server
+        self.server = kwargs.get("server")
+        self.verify = kwargs.get("verify", True)
         self.api_key = kwargs.get("key", "")
         self.meta_data = kwargs.get("meta_data")
         self._user_agent = kwargs.get("user_agent")
@@ -62,6 +63,7 @@ class EntityRepresentation(object):
             url_path=self.API_META_URL.format(self.id),
             key=self.api_key,
             server=self.server,
+            verify=self.verify,
             user_agent=self._user_agent
         ).get(**self.get_params)
 
