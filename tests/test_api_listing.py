@@ -65,7 +65,7 @@ class TestRequestGenerator(TestCase):
             r.build_url(), ""
         )
 
-    def test_wrong_id_filter(self):
+    def test_empty_response_with_no_success(self):
         arequest = mock.patch('ripe.atlas.cousteau.request.AtlasRequest.get').start()
         arequest.return_value = False, {}
         kwargs = {"id__in": range(1, 10)}
