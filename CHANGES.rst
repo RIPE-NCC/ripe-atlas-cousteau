@@ -1,5 +1,16 @@
 Releases History
 ================
+1.1 (released 2016-02-09)
+-------------------------
+New features:
+~~~~~~~~~~~~~
+- Start supporting Anchors listing API.
+- Brand new documentation hosted on readthedocs.
+
+Changes:
+~~~~~~~~
+- Various refactorings to clean up codebase.
+
 1.0.7 (released 2016-01-13)
 ---------------------------
 Changes:
@@ -24,7 +35,7 @@ Changes:
 - Make user-agent changeable by the user.
 - Various refactorings.
 
-1.0.4 (released 2015-11-6)
+1.0.4 (released 2015-11-06)
 --------------------------
 Changes:
 ~~~~~~~~
