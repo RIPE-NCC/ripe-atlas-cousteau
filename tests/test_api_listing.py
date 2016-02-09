@@ -20,8 +20,9 @@ except ImportError:
     import mock
 from unittest import TestCase
 
+from ripe.atlas.cousteau.api_listing import RequestGenerator
 from ripe.atlas.cousteau import (
-    RequestGenerator, ProbeRequest
+    ProbeRequest, AnchorRequest, MeasurementRequest
 )
 from ripe.atlas.cousteau.exceptions import APIResponseError
 
@@ -367,3 +368,37 @@ class TestRequestGenerator(TestCase):
 
     def tearDown(self):
         mock.patch.stopall()
+
+
+class TestProbeRequestGenerator(TestCase):
+    def test_url(self):
+        gen = ProbeRequest()
+        self.assertEquals(gen.url, "/api/v2/probes/")
+
+    def test_id_filter(self):
+        gen = ProbeRequest()
+        self.assertEquals(gen.id_filter, "id__in")
+
+
+class TestMeasurementRequestGenerator(TestCase):
+    def test_url(self):
+        gen = MeasurementRequest(return_objects=True)
+        self.assertEquals(gen.url, "/api/v2/measurements/")
+
+    def test_id_filter(self):
+        gen = MeasurementRequest()
+        self.assertEquals(gen.id_filter, "id__in")
+
+
+class TestAnchorRequestGenerator(TestCase):
+    def test_return_objects(self):
+        gen = AnchorRequest(return_objects=True)
+        self.assertFalse(gen.return_objects)
+
+    def test_url(self):
+        gen = AnchorRequest(return_objects=True)
+        self.assertEquals(gen.url, "/api/v2/anchors/")
+
+    def test_id_filter(self):
+        gen = AnchorRequest()
+        self.assertEquals(gen.id_filter, "id__in")
