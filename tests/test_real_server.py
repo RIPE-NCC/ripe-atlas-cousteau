@@ -26,7 +26,7 @@ from ripe.atlas.cousteau import (
     AtlasRequest, AtlasCreateRequest, AtlasChangeRequest,
     Ping, Dns, AtlasStopRequest, AtlasResultsRequest,
     ProbeRequest, MeasurementRequest, Probe, Measurement,
-    AtlasStream, Ntp, Sslcert, Http, Traceroute
+    AtlasStream, Ntp, Sslcert, Http, Traceroute, AnchorRequest
 )
 
 
@@ -89,6 +89,7 @@ class TestRealServer(unittest.TestCase):
         )
         result = namedtuple('Result', 'success response')
         (result.success, result.response) = request.create()
+        self.assertTrue(result.success)
         print(result.response)
         self.delete_msm = result.response["measurements"][0]
         self.assertTrue(result.success)
@@ -170,6 +171,16 @@ class TestRealServer(unittest.TestCase):
         self.assertTrue(measurements_list)
         self.assertTrue(measurements.total_count)
 
+    def test_anchor_request(self):
+        """Unittest for AnchorRequest"""
+        if self.server == "":
+            raise SkipTest
+
+        anchors = AnchorRequest()
+        anchors_list = list(anchors)
+        self.assertTrue(anchors_list)
+        self.assertTrue(anchors.total_count)
+
     def test_probe_repr_request(self):
         """Unittest for Probe representation request"""
         if self.server == "":
@@ -182,7 +193,7 @@ class TestRealServer(unittest.TestCase):
         if self.server == "":
             raise SkipTest
 
-        Measurement(id=1000032)
+        Measurement(id=1000032, server=self.server, verify=False)
 
     def test_stream_results(self):
         """Unittest for Atlas results request."""
