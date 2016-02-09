@@ -204,6 +204,6 @@ class AnchorRequest(RequestGenerator):
     id_filter = "id__in"
     object_class = None
 
-    def __init__(self, args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super(AnchorRequest, self).__init__(*args, **kwargs)
         self.return_objects = None
