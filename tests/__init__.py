@@ -61,11 +61,11 @@ probes_create_schema = {
             "properties": {
                 "include": {
                     "type": "array",
-                    "items": { "type": "string" }
+                    "items": {"type": "string"}
                 },
                 "exclude": {
                     "type": "array",
-                    "items": { "type": "string" }
+                    "items": {"type": "string"}
                 }
             }
         }
