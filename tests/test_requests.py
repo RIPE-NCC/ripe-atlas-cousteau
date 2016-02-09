@@ -900,7 +900,7 @@ class TestMeasurementRepresentation(unittest.TestCase):
 
     def test_fields(self):
         with mock.patch('ripe.atlas.cousteau.request.AtlasRequest.get') as request_mock:
-            request_mock.return_value = True, self.resp
+            request_mock.return_value = True, {}
             Measurement(id=1, fields=["probes"])
             self.assertEquals(request_mock.call_args[1], {"fields": "probes"})
             Measurement(id=1, fields=["probes", "data"])
@@ -909,3 +909,14 @@ class TestMeasurementRepresentation(unittest.TestCase):
             self.assertEquals(request_mock.call_args[1], {"fields": "probes,data"})
             Measurement(id=1, fields=1)
             self.assertEquals(request_mock.call_args[1], {})
+
+    def test_populate_times(self):
+        with mock.patch('ripe.atlas.cousteau.request.AtlasRequest.get') as request_mock:
+            del self.resp["stop_time"]
+            del self.resp["creation_time"]
+            del self.resp["start_time"]
+            request_mock.return_value = True, self.resp
+            measurement = Measurement(id=1)
+            self.assertEqual(measurement.stop_time, None)
+            self.assertEqual(measurement.start_time, None)
+            self.assertEqual(measurement.creation_time, None)
