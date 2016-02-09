@@ -36,7 +36,7 @@ Changes:
 - Various refactorings.
 
 1.0.4 (released 2015-11-06)
---------------------------
+---------------------------
 Changes:
 ~~~~~~~~
 - Handle both string/dictionary as input for probe_ids filter for Result and LatestResult requests.
