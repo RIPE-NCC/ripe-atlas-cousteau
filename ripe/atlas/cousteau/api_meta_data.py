@@ -127,9 +127,9 @@ class Measurement(EntityRepresentation):
         self.start_time = None
         self.populate_times()
         self.protocol = self.meta_data.get("af")
-        self.destination_address = self.meta_data.get("destination_address")
-        self.destination_asn = self.meta_data.get("destination_asn")
-        self.destination_name = self.meta_data.get("destination_name")
+        self.target_ip = self.meta_data.get("target_ip")
+        self.target_asn = self.meta_data.get("target_asn")
+        self.target = self.meta_data.get("target")
         self.description = self.meta_data.get("description")
         self.is_oneoff = self.meta_data.get("is_oneoff")
         self.is_public = self.meta_data.get("is_public")

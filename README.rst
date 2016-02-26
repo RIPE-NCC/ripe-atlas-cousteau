@@ -276,8 +276,8 @@ Every time you create a new instance it will fetch meta data from API and return
     print(measurement.description)
     print(measurement.is_oneoff)
     print(measurement.is_public)
-    print(measurement.destination_address)
-    print(measurement.destination_asn)
+    print(measurement.target_ip)
+    print(measurement.target_asn)
     print(measurement.type)
     print(measurement.interval)
     print(dir(measurement)) # Full list of properties
