@@ -1,5 +1,15 @@
 Releases History
 ================
+1.2 (released 2016-02-26)
+-------------------------
+Changes:
+~~~~~~~~
+- Backwards incompatible field changes on the Measurement object:
+
+ - destination_address -> target_ip
+ - destination_asn -> target_asn
+ - destination_name -> target
+
 1.1 (released 2016-02-09)
 -------------------------
 New features:

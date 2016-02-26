@@ -106,9 +106,9 @@ class TestMeasurementRepresentation(TestCase):
     def setUp(self):
         self.resp = {
             "af": 4,
-            "destination_address": "202.73.56.70",
-            "destination_asn": 9255,
-            "destination_name": "blaaaah",
+            "target_ip": "202.73.56.70",
+            "target_asn": 9255,
+            "target": "blaaaah",
             "msm_id": 2310448,
             "description": "Blaaaaaaaaaah",
             "is_oneoff": True,
@@ -130,9 +130,9 @@ class TestMeasurementRepresentation(TestCase):
             measurement = Measurement(id=1)
             self.assertEqual(measurement.meta_data, self.resp)
             self.assertEqual(measurement.protocol, 4)
-            self.assertEqual(measurement.destination_address, "202.73.56.70")
-            self.assertEqual(measurement.destination_asn, 9255)
-            self.assertEqual(measurement.destination_name, "blaaaah")
+            self.assertEqual(measurement.target_ip, "202.73.56.70")
+            self.assertEqual(measurement.target_asn, 9255)
+            self.assertEqual(measurement.target, "blaaaah")
             self.assertEqual(measurement.description, "Blaaaaaaaaaah")
             self.assertEqual(measurement.is_oneoff, True)
             self.assertEqual(measurement.is_public, True)
