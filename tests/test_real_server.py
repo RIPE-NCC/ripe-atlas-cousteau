@@ -89,8 +89,8 @@ class TestRealServer(unittest.TestCase):
         )
         result = namedtuple('Result', 'success response')
         (result.success, result.response) = request.create()
-        self.assertTrue(result.success)
         print(result.response)
+        self.assertTrue(result.success)
         self.delete_msm = result.response["measurements"][0]
         self.assertTrue(result.success)
 
