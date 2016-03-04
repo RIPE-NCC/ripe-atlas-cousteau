@@ -79,12 +79,6 @@ class EntityRepresentation(object):
         """
         raise NotImplementedError()
 
-    def __str__(self):
-        return "Probe #{0}".format(self.id)
-
-    def __repr__(self):
-        return str(self)
-
 
 class Probe(EntityRepresentation):
     """
@@ -109,6 +103,12 @@ class Probe(EntityRepresentation):
         self.geometry = self.meta_data.get("geometry")
         self.tags = self.meta_data.get("tags")
         self.status = self.meta_data.get("status", {}).get("name")
+
+    def __str__(self):
+        return "Probe #{0}".format(self.id)
+
+    def __repr__(self):
+        return str(self)
 
 
 class Measurement(EntityRepresentation):
@@ -173,3 +173,9 @@ class Measurement(EntityRepresentation):
         start_time = self.meta_data.get("start_time")
         if start_time:
             self.start_time = datetime.fromtimestamp(start_time)
+
+    def __str__(self):
+        return "Measurement #{0}".format(self.id)
+
+    def __repr__(self):
+        return str(self)
