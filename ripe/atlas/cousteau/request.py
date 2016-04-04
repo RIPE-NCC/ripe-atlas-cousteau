@@ -179,6 +179,10 @@ class AtlasCreateRequest(AtlasRequest):
             "probes": probes,
             "is_oneoff": self.is_oneoff
         }
+
+        if self.is_oneoff:
+            self.post_data.update({"is_oneoff": self.is_oneoff})
+
         if self.start_time:
             self.post_data.update(
                 {"start_time": int(calendar.timegm(self.start_time.timetuple()))}
