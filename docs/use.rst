@@ -260,6 +260,7 @@ Example:
     from ripe.atlas.cousteau import AtlasLatestRequest
 
     kwargs = {
+        "msm_id": 2016892,   
         "probe_ids": [1,2,3,4]
     }
 
