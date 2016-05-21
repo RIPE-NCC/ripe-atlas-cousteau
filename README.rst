@@ -164,8 +164,8 @@ dates.
 
     kwargs = {
         "msm_id": 2016892,
-        "start": datetime(2015, 05, 19),
-        "stop": datetime(2015, 05, 20),
+        "start": datetime(2015, 5, 19),
+        "stop": datetime(2015, 5, 20),
         "probe_ids": [1,2,3,4]
     }
 
