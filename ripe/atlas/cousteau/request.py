@@ -45,6 +45,8 @@ class AtlasRequest(object):
         self.url_path = kwargs.get("url_path", "")
         self.server = kwargs.get("server") or "atlas.ripe.net"
         self.verify = kwargs.get("verify", True)
+        self.proxies = kwargs.get("proxies", {})
+        self.headers = kwargs.get("headers", None)
 
         default_user_agent = "RIPE ATLAS Cousteau v{0}".format(__version__)
         self.http_agent = kwargs.get("user_agent") or default_user_agent
@@ -52,17 +54,23 @@ class AtlasRequest(object):
         self.http_method_args = {
             "params": {"key": self.key},
             "headers": self.get_headers(),
-            "verify": self.verify
+            "verify": self.verify,
+            "proxies": self.proxies
         }
+
         self.post_data = {}
 
     def get_headers(self):
         """Return header for the HTTP request."""
-        return {
+        headers = {
             "User-Agent": self.http_agent,
             "Content-Type": "application/json",
             "Accept": "application/json"
         }
+        if self.headers:
+            headers.update(self.headers)
+
+        return headers
 
     def http_method(self, method):
         """

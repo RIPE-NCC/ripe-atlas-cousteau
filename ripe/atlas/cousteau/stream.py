@@ -27,11 +27,14 @@ class AtlasStream(object):
         "error": CHANNEL_ERROR,
     }
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         """Initialize stream"""
 
         self.iosocket_server = "atlas-stream.ripe.net"
         self.iosocket_resource = "/stream/socket.io"
+
+        self.proxies = kwargs.get("proxies", {})
+        self.headers = kwargs.get("headers", {})
 
         self.socketIO = None
 
@@ -41,7 +44,9 @@ class AtlasStream(object):
             host=self.iosocket_server,
             port=80,
             resource=self.iosocket_resource,
-            transports=["websocket"]
+            transports=["websocket"],
+            proxies=self.proxies,
+            headers=self.headers
         )
 
     def disconnect(self):
