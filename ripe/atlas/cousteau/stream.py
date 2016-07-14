@@ -21,7 +21,10 @@ class AtlasStream(object):
 
     CHANNEL_RESULT = "atlas_result"
     CHANNEL_PROBE = "atlas_probestatus"
+    CHANNEL_SUBSCRIBE = "atlas_subscribe"
     CHANNEL_ERROR = "atlas_error"
+
+    #We should deprecate the list of event names and use the native one
     CHANNELS = {
         "result": CHANNEL_RESULT,
         "probe": CHANNEL_PROBE,
@@ -77,14 +80,19 @@ class AtlasStream(object):
 
     def bind_channel(self, channel, callback):
         """Bind given channel with the given callback"""
-        try:
-            if channel == "result":
-                self.socketIO.on(self.CHANNELS[channel], partial(self.unpack_results, callback))
-            else:
-                self.socketIO.on(self.CHANNELS[channel], callback)
 
-        except KeyError:
-            print("The given channel: <{0}> is not valid".format(channel))
+        if channel in self.CHANNELS:
+            print("The event name " + channel + " will soon be deprecated. Use the real event name: atlas_"
+                  + channel + " instead.")
+            channel_name = self.CHANNELS[channel]
+        else:
+            channel_name = channel
+
+        if channel == "result":
+            self.socketIO.on(channel_name, partial(self.unpack_results, callback))
+        else:
+            self.socketIO.on(channel_name, callback)
+
 
     def start_stream(self, stream_type, **stream_parameters):
         """Starts new stream for given type with given parameters"""
@@ -100,7 +108,7 @@ class AtlasStream(object):
         if stream_type == "result" and "buffering" not in parameters:
             parameters["buffering"] = True
 
-        self.socketIO.emit('atlas_subscribe', parameters)
+        self.socketIO.emit(self.CHANNEL_SUBSCRIBE, parameters)
 
     def timeout(self, seconds=None):
         """
