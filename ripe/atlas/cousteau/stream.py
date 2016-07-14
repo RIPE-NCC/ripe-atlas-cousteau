@@ -28,15 +28,19 @@ class AtlasStream(object):
         "error": CHANNEL_ERROR,
     }
 
-    def __init__(self, log_errors=True):
+    def __init__(self, log_errors=True, debug=False, server=False):
         """Initialize stream"""
 
         self.iosocket_server = "atlas-stream.ripe.net"
         self.iosocket_resource = "/stream/socket.io"
-
         self.socketIO = None
         self.log_errors = log_errors
         self.error_callback = None
+        self.debug = debug
+
+        if self.debug and server:
+            self.iosocket_server = server
+
 
     def report_errors(self, error):
         if self.error_callback:
