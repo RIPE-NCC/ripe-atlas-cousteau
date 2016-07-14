@@ -14,6 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from socketIO_client import SocketIO
+from functools import partial
 
 
 class AtlasStream(object):
@@ -63,10 +64,21 @@ class AtlasStream(object):
         self.socketIO.disconnect()
         self.socketIO.__exit__([])
 
+    def unpack_results(self, callback, data):
+        if isinstance(data, list):
+            for result in data:
+                callback(result)
+        else:
+            callback(data)
+
     def bind_channel(self, channel, callback):
         """Bind given channel with the given callback"""
         try:
-            self.socketIO.on(self.CHANNELS[channel], callback)
+            if channel == "result":
+                self.socketIO.on(self.CHANNELS[channel], partial(self.unpack_results, callback))
+            else:
+                self.socketIO.on(self.CHANNELS[channel], callback)
+
         except KeyError:
             print("The given channel: <{0}> is not valid".format(channel))
 
@@ -80,6 +92,10 @@ class AtlasStream(object):
     def subscribe(self, stream_type, **parameters):
         """Subscribe to stream with give parameters."""
         parameters["stream_type"] = stream_type
+
+        if stream_type == "result" and "buffering" not in parameters:
+            parameters["buffering"] = True
+
         self.socketIO.emit('atlas_subscribe', parameters)
 
     def timeout(self, seconds=None):
