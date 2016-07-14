@@ -27,13 +27,21 @@ class AtlasStream(object):
         "error": CHANNEL_ERROR,
     }
 
-    def __init__(self):
+    def __init__(self, log_errors=True):
         """Initialize stream"""
 
         self.iosocket_server = "atlas-stream.ripe.net"
         self.iosocket_resource = "/stream/socket.io"
 
         self.socketIO = None
+        self.log_errors = log_errors
+        self.error_callback = None
+
+    def report_errors(self, error):
+        if self.error_callback:
+            self.error_callback(error)
+        elif self.log_errors:
+            print error
 
     def connect(self):
         """Initiate the channel we want to start streams from."""
@@ -43,6 +51,12 @@ class AtlasStream(object):
             resource=self.iosocket_resource,
             transports=["websocket"]
         )
+
+        self.bind_channel("error", self.report_errors)
+
+    def on_error(self, callback):
+        """Explicit error handling expressed by the user."""
+        self.error_callback = callback
 
     def disconnect(self):
         """Exits the channel k shuts down connection."""
@@ -58,14 +72,16 @@ class AtlasStream(object):
 
     def start_stream(self, stream_type, **stream_parameters):
         """Starts new stream for given type with given parameters"""
-        if stream_type in ("result", "probestatus"):
+        # if stream_type in ("result", "probestatus"):
+        if stream_type:
             self.subscribe(stream_type, **stream_parameters)
         else:
-            print("Given stream type: <{0}> is not valid".format(stream_type))
+            print("You need to set a stream type")
+            # print("Given stream type: <{0}> is not valid".format(stream_type))
 
     def subscribe(self, stream_type, **parameters):
         """Subscribe to stream with give parameters."""
-        parameters.update({"stream_type": stream_type})
+        parameters["stream_type"] = stream_type
         self.socketIO.emit('atlas_subscribe', parameters)
 
     def timeout(self, seconds=None):
