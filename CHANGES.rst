@@ -10,7 +10,7 @@ Changes:
  - Introduced debug mode
  - Update features set. See all here https://atlas.ripe.net/docs/result-streaming/
  - Deprecated short events name and local event name checking. See the event names here https://atlas.ripe.net/docs/result-streaming/
-- Introduce support for proxies
+- Introduced support for proxies and additional headers
  
 1.2 (released 2016-03-02)
 -------------------------
