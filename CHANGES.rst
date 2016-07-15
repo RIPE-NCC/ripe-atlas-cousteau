@@ -1,5 +1,17 @@
 Releases History
 ================
+1.3 (coming soon)
+-------------------------
+Changes:
+~~~~~~~~
+- Improved streaming support:
+ - Introduce error handling
+ - Channels errors binded by default
+ - Introduced debug mode
+ - Update features set. See all here https://atlas.ripe.net/docs/result-streaming/
+ - Deprecated short events name and local event name checking. See the event names here https://atlas.ripe.net/docs/result-streaming/
+- Introduce support for proxies
+ 
 1.2 (released 2016-03-02)
 -------------------------
 Changes:
