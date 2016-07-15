@@ -75,7 +75,8 @@ class TestAtlasRequest(TestCase):
                 "User-Agent": "RIPE ATLAS Cousteau v{0}".format(__version__),
                 "Content-Type": "application/json",
                 "Accept": "application/json"
-            }
+            },
+            "proxies": {},
         }
         self.assertEqual(expected_output, self.request.http_method_args)
 
@@ -92,9 +93,10 @@ class TestAtlasRequest(TestCase):
                 "User-Agent": "RIPE ATLAS Cousteau v{0}".format(__version__),
                 "Content-Type": "application/json",
                 "Accept": "application/json"
-            }
+            },
+            "proxies": {},
         }
-        with mock.patch('ripe.atlas.cousteau.request.AtlasRequest.http_method') as mock_get:
+        with mock.patch("ripe.atlas.cousteau.request.AtlasRequest.http_method") as mock_get:
             mock_get.return_value = True
             self.request.get(**extra_params)
             self.assertEqual(self.request.http_method_args, expected_args)
@@ -106,7 +108,7 @@ class TestAtlasRequest(TestCase):
 
     def test_success_http_method(self):
         """Tests the main http method function of the request in case of success"""
-        with mock.patch('ripe.atlas.cousteau.AtlasRequest.get_http_method') as mock_get:
+        with mock.patch("ripe.atlas.cousteau.AtlasRequest.get_http_method") as mock_get:
             fake = FakeResponse(json_return={"blaaa": "b"})
             mock_get.return_value = fake
             self.assertEqual(
@@ -123,7 +125,7 @@ class TestAtlasRequest(TestCase):
 
     def test_not_success_http_method(self):
         """Tests the main http method function of the request in case of fail"""
-        with mock.patch('ripe.atlas.cousteau.AtlasRequest.get_http_method') as mock_get:
+        with mock.patch("ripe.atlas.cousteau.AtlasRequest.get_http_method") as mock_get:
             fake = FakeResponse(json_return={"blaaa": "b"}, ok=False)
             mock_get.return_value = fake
             self.assertEqual(
@@ -140,7 +142,7 @@ class TestAtlasRequest(TestCase):
 
     def test_exception_http_method(self):
         """Tests the main http method function of the request in case of fail"""
-        with mock.patch('ripe.atlas.cousteau.AtlasRequest.get_http_method') as mock_get:
+        with mock.patch("ripe.atlas.cousteau.AtlasRequest.get_http_method") as mock_get:
             mock_get.side_effect = requests.exceptions.RequestException("excargs")
             self.assertEqual(
                 self.request.http_method("GET"),
@@ -199,8 +201,9 @@ class TestAtlasCreateRequest(TestCase):
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             },
+            "proxies": {},
         }
-        with mock.patch('ripe.atlas.cousteau.request.AtlasRequest.http_method') as mock_get:
+        with mock.patch("ripe.atlas.cousteau.request.AtlasRequest.http_method") as mock_get:
             self.request._construct_post_data()
             mock_get.return_value = True
             self.request.post()
@@ -230,8 +233,9 @@ class TestAtlasCreateRequest(TestCase):
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             },
+            "proxies": {},
         }
-        with mock.patch('ripe.atlas.cousteau.request.AtlasRequest.http_method') as mock_get:
+        with mock.patch("ripe.atlas.cousteau.request.AtlasRequest.http_method") as mock_get:
             request._construct_post_data()
             mock_get.return_value = True
             request.post()
@@ -391,3 +395,31 @@ class TestAtlasLatestRequest(TestCase):
             ).http_method_args["params"],
             {"key": None, "probe_ids": "1, 2, 3, 24"}
         )
+
+class TestAtlasRequestCustomHeaders(TestCase):
+    def setUp(self):
+        self.create_source = AtlasSource(
+            **{"type": "area", "value": "WW", "requested": 3}
+        )
+        self.measurement = Ping(**{
+            "target": "testing", "af": 6,
+            "description": "testing"
+        })
+        self.request = AtlasCreateRequest(**{
+            "start_time": datetime(2015, 10, 16),
+            "stop_time": 1445040000,
+            "key": "path_to_key",
+            "measurements": [self.measurement],
+            "sources": [self.create_source],
+            "is_oneoff": True,
+            "headers": {"hello": "world"},
+        })
+
+    def test_custom_headers(self):
+        expected_headers = {
+            "Content-Type": "application/json",
+            "hello": "world",
+            "Accept": "application/json",
+            "User-Agent": "RIPE ATLAS Cousteau v1.2"
+        }
+        self.assertEqual(self.request.get_headers(), expected_headers)
