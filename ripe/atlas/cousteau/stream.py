@@ -31,13 +31,16 @@ class AtlasStream(object):
     }
     # -------------------------------------------------------
 
-    def __init__(self, debug=False, server=False):
+    def __init__(self, debug=False, server=False, proxies=None, headers=None):
         """Initialize stream"""
         self.iosocket_server = "atlas-stream.ripe.net"
         self.iosocket_resource = "/stream/socket.io"
         self.socketIO = None
         self.debug = debug
         self.error_callback = None
+        self.proxies = proxies or {}
+        self.headers = headers or {}
+
         if self.debug and server:
             self.iosocket_server = server
 
@@ -53,6 +56,8 @@ class AtlasStream(object):
             host=self.iosocket_server,
             port=80,
             resource=self.iosocket_resource,
+            proxies=self.proxies,
+            headers=self.headers,
             transports=["websocket"]
         )
 
