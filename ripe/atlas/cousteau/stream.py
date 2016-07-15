@@ -19,36 +19,32 @@ from functools import partial
 
 class AtlasStream(object):
 
-    CHANNEL_RESULT = "atlas_result"
-    CHANNEL_PROBE = "atlas_probestatus"
-    CHANNEL_SUBSCRIBE = "atlas_subscribe"
-    CHANNEL_ERROR = "atlas_error"
+    EVENT_NAME_RESULTS = "atlas_result"
+    EVENT_NAME_SUBSCRIBE = "atlas_subscribe"
+    EVENT_NAME_ERROR = "atlas_error"
 
-    #We should deprecate the list of event names and use the native one
+    # Remove the following list when deprecation time expires
     CHANNELS = {
-        "result": CHANNEL_RESULT,
-        "probe": CHANNEL_PROBE,
-        "error": CHANNEL_ERROR,
+        "result": "atlas_result",
+        "probe": "atlas_probestatus",
+        "error": "atlas_error",
     }
+    # -------------------------------------------------------
 
-    def __init__(self, log_errors=True, debug=False, server=False):
+    def __init__(self, debug=False, server=False):
         """Initialize stream"""
-
         self.iosocket_server = "atlas-stream.ripe.net"
         self.iosocket_resource = "/stream/socket.io"
         self.socketIO = None
-        self.log_errors = log_errors
-        self.error_callback = None
         self.debug = debug
-
+        self.error_callback = None
         if self.debug and server:
             self.iosocket_server = server
 
-
-    def report_errors(self, error):
-        if self.error_callback:
+    def handle_error(self, error):
+        if self.error_callback is not None:
             self.error_callback(error)
-        elif self.log_errors:
+        else:
             print(error)
 
     def connect(self):
@@ -60,11 +56,7 @@ class AtlasStream(object):
             transports=["websocket"]
         )
 
-        self.bind_channel("error", self.report_errors)
-
-    def on_error(self, callback):
-        """Explicit error handling expressed by the user."""
-        self.error_callback = callback
+        self.socketIO.on(self.EVENT_NAME_ERROR, self.handle_error)
 
     def disconnect(self):
         """Exits the channel k shuts down connection."""
@@ -81,34 +73,39 @@ class AtlasStream(object):
     def bind_channel(self, channel, callback):
         """Bind given channel with the given callback"""
 
+        # Remove the following list when deprecation time expires
         if channel in self.CHANNELS:
-            print("The event name " + channel + " will soon be deprecated. Use the real event name: atlas_"
-                  + channel + " instead.")
-            channel_name = self.CHANNELS[channel]
-        else:
-            channel_name = channel
+            warning = (
+                "The event name '{}' will soon be deprecated. Use "
+                "the real event name '{}' instead."
+            ).format(channel, self.CHANNELS[channel])
 
-        if channel == "result":
-            self.socketIO.on(channel_name, partial(self.unpack_results, callback))
-        else:
-            self.socketIO.on(channel_name, callback)
+            self.handle_error(warning)
+            channel = self.CHANNELS[channel]
+        # -------------------------------------------------------
 
+        if channel == self.EVENT_NAME_ERROR:
+            self.error_callback = callback
+        elif channel == self.EVENT_NAME_RESULTS:
+            self.socketIO.on(channel, partial(self.unpack_results, callback))
+        else:
+            self.socketIO.on(channel, callback)
 
     def start_stream(self, stream_type, **stream_parameters):
         """Starts new stream for given type with given parameters"""
         if stream_type:
             self.subscribe(stream_type, **stream_parameters)
         else:
-            print("You need to set a stream type")
+            self.handle_error("You need to set a stream type")
 
     def subscribe(self, stream_type, **parameters):
         """Subscribe to stream with give parameters."""
         parameters["stream_type"] = stream_type
 
-        if stream_type == "result" and "buffering" not in parameters:
+        if (stream_type == "result") and ("buffering" not in parameters):
             parameters["buffering"] = True
 
-        self.socketIO.emit(self.CHANNEL_SUBSCRIBE, parameters)
+        self.socketIO.emit(self.EVENT_NAME_SUBSCRIBE, parameters)
 
     def timeout(self, seconds=None):
         """
