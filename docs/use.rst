@@ -424,7 +424,7 @@ should be according to `filter api documentation`_. Underneath it will follow al
 
 Probe
 ^^^^^
-The following example will fetch all measurements with Status equals to "Specified". More info on filters for these call are on `measurement's filtering documentation`_.
+The following example will fetch all measurements with Status equals to "Specified". More info on filters for these call are on `probe's filtering documentation`_.
 
 .. code:: python
 
@@ -442,7 +442,7 @@ The following example will fetch all measurements with Status equals to "Specifi
 
 Measurement
 ^^^^^^^^^^^
-The following example will fetch all probes from NL with asn\_v4 3333 and with tag NAT. More info on filters for these call are on `probe's filtering documentation`_.
+The following example will fetch all probes from NL with asn\_v4 3333 and with tag NAT. More info on filters for these call are on `measurement's filtering documentation`_.
 
 .. code:: python
 
