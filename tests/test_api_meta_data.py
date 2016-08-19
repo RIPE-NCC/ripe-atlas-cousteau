@@ -20,6 +20,7 @@ except ImportError:
     import mock
 from unittest import TestCase
 from datetime import datetime
+from dateutil.tz import tzutc
 
 from ripe.atlas.cousteau import Probe, Measurement
 from ripe.atlas.cousteau.exceptions import APIResponseError
@@ -138,9 +139,9 @@ class TestMeasurementRepresentation(TestCase):
             self.assertEqual(measurement.is_public, True)
             self.assertEqual(measurement.interval, 1800)
             self.assertEqual(measurement.status, "Stopped")
-            self.assertEqual(measurement.creation_time, datetime.fromtimestamp(1439379910))
-            self.assertEqual(measurement.start_time, datetime.fromtimestamp(1439379910))
-            self.assertEqual(measurement.stop_time, datetime.fromtimestamp(1439380502))
+            self.assertEqual(measurement.creation_time, datetime.utcfromtimestamp(1439379910).replace(tzinfo=tzutc()))
+            self.assertEqual(measurement.start_time, datetime.utcfromtimestamp(1439379910).replace(tzinfo=tzutc()))
+            self.assertEqual(measurement.stop_time, datetime.utcfromtimestamp(1439380502).replace(tzinfo=tzutc()))
             self.assertEqual(measurement.type, "HTTP")
             self.assertEqual(measurement.result_url, "/api/v1/measurement/2310448/result/")
 
