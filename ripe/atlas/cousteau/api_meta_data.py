@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from datetime import datetime
+from dateutil.tz import tzutc
 
 from .request import AtlasRequest
 from .exceptions import CousteauGenericError, APIResponseError
@@ -164,15 +165,18 @@ class Measurement(EntityRepresentation):
         """
         stop_time = self.meta_data.get("stop_time")
         if stop_time:
-            self.stop_time = datetime.fromtimestamp(stop_time)
+            stop_naive = datetime.utcfromtimestamp(stop_time)
+            self.stop_time = stop_naive.replace(tzinfo=tzutc())
 
         creation_time = self.meta_data.get("creation_time")
         if creation_time:
-            self.creation_time = datetime.fromtimestamp(creation_time)
+            creation_naive = datetime.utcfromtimestamp(creation_time)
+            self.creation_time = creation_naive.replace(tzinfo=tzutc())
 
         start_time = self.meta_data.get("start_time")
         if start_time:
-            self.start_time = datetime.fromtimestamp(start_time)
+            start_naive = datetime.utcfromtimestamp(start_time)
+            self.start_time = start_naive.replace(tzinfo=tzutc())
 
     def __str__(self):
         return "Measurement #{0}".format(self.id)
