@@ -185,7 +185,8 @@ class AtlasCreateRequest(AtlasRequest):
         self.post_data = {
             "definitions": definitions,
             "probes": probes,
-            "is_oneoff": self.is_oneoff
+            "is_oneoff": self.is_oneoff,
+            "packets": self.packets
         }
 
         if self.is_oneoff:
@@ -199,6 +200,8 @@ class AtlasCreateRequest(AtlasRequest):
             self.post_data.update(
                 {"stop_time": int(calendar.timegm(self.stop_time.timetuple()))}
             )
+        if self.packets:
+            self.post_data.update({"packets": self.packets})
 
     def create(self):
         """Sends the POST request"""
