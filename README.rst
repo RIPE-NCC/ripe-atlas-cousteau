@@ -75,7 +75,7 @@ ahead and do the HTTP query. On the contrary, it will raise an exception
 with some info in it.
 The available measurements types are Ping, Traceroute, Dns, Sslcert, Ntp, Http.
 
-.. _documentation pages: https://atlas.ripe.net/docs/measurement-creation-api/
+.. _documentation pages: https://atlas.ripe.net/docs/api/v2/manual/measurements/types/
 
 Changing Measurement Sources
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -109,7 +109,7 @@ change "action" key to "remove" and specify probes you want to remove.
 Keep in mind remove action supports only a list of probes and not the rest of the source types.
 For more info check the appropriate `docs`_.
 
-.. _docs: https://atlas.ripe.net/docs/rest/#participation-request
+.. _docs: https://atlas.ripe.net/docs/api/v2/reference/#!/participation-requests/Participant_Request_Detail_GET
 
 Stopping Measurement
 ~~~~~~~~~~~~~~~~~~~~
@@ -257,7 +257,7 @@ Fetches all specified measurements.
     # Print total count of found measurements
     print(measurements.total_count)
 
-.. _filter_api: https://atlas.ripe.net/docs/rest/
+.. _filter_api: https://atlas.ripe.net/docs/api/v2/manual/
 
 Represent Probes/Measurements Meta data in python
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
