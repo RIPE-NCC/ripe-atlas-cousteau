@@ -1,6 +1,6 @@
 Releases History
 ================
-1.3 (coming soon)
+1.3 (released 2016-10-21)
 -------------------------
 Changes:
 ~~~~~~~~
@@ -11,6 +11,7 @@ Changes:
  - Update features set. See all here https://atlas.ripe.net/docs/result-streaming/
  - Deprecated short events name and local event name checking. See the event names here https://atlas.ripe.net/docs/result-streaming/
 - Introduced support for proxies and additional headers
+- Timezone aware objects for measurement meta data
  
 1.2 (released 2016-03-02)
 -------------------------
