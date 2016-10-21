@@ -5,11 +5,13 @@ Releases History
 Changes:
 ~~~~~~~~
 - Improved streaming support:
+
  - Introduce error handling
  - Channels errors binded by default
  - Introduced debug mode
  - Update features set. See all here https://atlas.ripe.net/docs/result-streaming/
  - Deprecated short events name and local event name checking. See the event names here https://atlas.ripe.net/docs/result-streaming/
+
 - Introduced support for proxies and additional headers
 - Timezone aware objects for measurement meta data
  
