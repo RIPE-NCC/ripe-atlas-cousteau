@@ -235,7 +235,7 @@ class TestRealServer(unittest.TestCase):
 
         atlas_stream = AtlasStream()
         atlas_stream.connect()
-        channel = "probe"
+        channel = "atlas_probestatus"
         atlas_stream.bind_channel(channel, on_result_response)
         stream_parameters = {"enrichProbes": True}
         atlas_stream.start_stream(stream_type="probestatus", **stream_parameters)
