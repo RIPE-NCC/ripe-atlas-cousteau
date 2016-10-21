@@ -396,6 +396,7 @@ class TestAtlasLatestRequest(TestCase):
             {"key": None, "probe_ids": "1, 2, 3, 24"}
         )
 
+
 class TestAtlasRequestCustomHeaders(TestCase):
     def setUp(self):
         self.create_source = AtlasSource(
@@ -420,6 +421,6 @@ class TestAtlasRequestCustomHeaders(TestCase):
             "Content-Type": "application/json",
             "hello": "world",
             "Accept": "application/json",
-            "User-Agent": "RIPE ATLAS Cousteau v1.2"
+            "User-Agent": "RIPE ATLAS Cousteau v{0}".format(__version__)
         }
         self.assertEqual(self.request.get_headers(), expected_headers)
