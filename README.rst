@@ -194,7 +194,7 @@ though `streaming API`_.
     atlas_stream = AtlasStream()
     atlas_stream.connect()
     # Measurement results
-    channel = "result"
+    channel = "atlas_result"
     # Bind function we want to run with every result message received
     atlas_stream.bind_channel(channel, on_result_response)
     # Subscribe to new stream for 1001 measurement results
@@ -202,7 +202,7 @@ though `streaming API`_.
     atlas_stream.start_stream(stream_type="result", **stream_parameters)
 
     # Probe's connection status results
-    channel = "probe"
+    channel = "atlas_probestatus"
     atlas_stream.bind_channel(channel, on_result_response)
     stream_parameters = {"enrichProbes": True}
     atlas_stream.start_stream(stream_type="probestatus", **stream_parameters)
