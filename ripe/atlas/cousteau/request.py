@@ -170,6 +170,8 @@ class AtlasCreateRequest(AtlasRequest):
         self.start_time = self.clean_time(kwargs.get("start_time"))
         self.stop_time = self.clean_time(kwargs.get("stop_time"))
 
+        self.bill_to = kwargs.get("bill_to")
+
         if kwargs.get("is_oneoff"):
             self.is_oneoff = kwargs["is_oneoff"]
         else:
@@ -199,6 +201,9 @@ class AtlasCreateRequest(AtlasRequest):
             self.post_data.update(
                 {"stop_time": int(calendar.timegm(self.stop_time.timetuple()))}
             )
+
+        if self.bill_to:
+            self.post_data.update({"bill_to": self.bill_to})
 
     def create(self):
         """Sends the POST request"""

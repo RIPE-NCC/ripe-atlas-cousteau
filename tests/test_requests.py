@@ -210,7 +210,7 @@ class TestAtlasCreateRequest(TestCase):
             self.assertEqual(self.request.http_method_args, expected_args)
 
     def test_post_method_without_times(self):
-        """Tests POST reuest method without any time specified"""
+        """Tests POST reuest method with a bill to address specified"""
         request = AtlasCreateRequest(**{
             "key": "path_to_key",
             "measurements": [self.measurement],
@@ -225,6 +225,40 @@ class TestAtlasCreateRequest(TestCase):
                 }],
                 "is_oneoff": False,
                 "probes": [{"requested": 3, "type": "area", "value": "WW"}],
+            },
+            "params": {"key": "path_to_key"},
+            "verify": True,
+            "headers": {
+                "User-Agent": "RIPE ATLAS Cousteau v{0}".format(__version__),
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            "proxies": {},
+        }
+        with mock.patch("ripe.atlas.cousteau.request.AtlasRequest.http_method") as mock_get:
+            request._construct_post_data()
+            mock_get.return_value = True
+            request.post()
+            self.assertEqual(request.http_method_args, expected_args)
+
+    def test_post_method_with_bill_to(self):
+        """Tests POST reuest method without any time specified"""
+        request = AtlasCreateRequest(**{
+            "key": "path_to_key",
+            "measurements": [self.measurement],
+            "sources": [self.create_source],
+            "bill_to": "billing@address"
+        })
+        self.maxDiff = None
+        expected_args = {
+            "json": {
+                "definitions": [{
+                    "af": 6, "description": "testing",
+                    "target": "testing", "type": "ping"
+                }],
+                "is_oneoff": False,
+                "probes": [{"requested": 3, "type": "area", "value": "WW"}],
+                "bill_to": "billing@address",
             },
             "params": {"key": "path_to_key"},
             "verify": True,
