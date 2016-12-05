@@ -12,10 +12,11 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-from socketIO_client import SocketIO
+import logging
+import hashlib
 from functools import partial
 
+from socketIO_client import SocketIO, BaseNamespace
 
 class AtlasStream(object):
 
