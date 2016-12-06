@@ -18,6 +18,8 @@ from functools import partial
 
 from socketIO_client import SocketIO, BaseNamespace
 
+from .version import __version__
+
 
 try:
     from logging import NullHandler
@@ -85,6 +87,10 @@ class AtlasStream(object):
         self.error_callback = None
         self.proxies = proxies or {}
         self.headers = headers or {}
+
+        if not self.headers or not self.headers.get("User-Agent", None):
+            user_agent = "RIPE ATLAS Cousteau v{0}".format(__version__)
+            self.headers["User-Agent"] = user_agent
 
         if self.debug and server:
             self.iosocket_server = server
