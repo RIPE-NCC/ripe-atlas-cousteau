@@ -56,7 +56,7 @@ class AtlasNamespace(BaseNamespace):
 
     def on_atlas_subscribed(self, *args):
         LOG.debug("Subscribed to subscription: {}".format(args[0]))
-        hash_object = hashlib.sha1(str(args[0]))
+        hash_object = hashlib.sha1(str(args[0]).encode('utf-8'))
         hex_dig = hash_object.hexdigest()
         self.SUBSCRIPTIONS[hex_dig] = args[0]
 
