@@ -12,9 +12,56 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-from socketIO_client import SocketIO
+import logging
+import hashlib
 from functools import partial
+
+from socketIO_client import SocketIO, BaseNamespace
+
+from .version import __version__
+
+
+try:
+    from logging import NullHandler
+except ImportError:  # Python 2.6
+    from logging import Handler
+
+    class NullHandler(Handler):
+
+        def emit(self, record):
+            pass
+
+LOG = logging.getLogger('atlas-stream')
+LOG.addHandler(NullHandler())
+
+
+class AtlasNamespace(BaseNamespace):
+    SUBSCRIPTIONS = {}
+
+    def on_connect(self, *args):
+        LOG.debug("Connected to RIPE Atlas Stream")
+
+    def on_disconnect(self, *args):
+        LOG.debug("Disconnected from RIPE Atlas Stream")
+
+    def on_reconnect(self, *args):
+        LOG.debug("Reconnected to RIPE Atlas Stream")
+        LOG.debug("Trying to attach to existed subscriptions")
+        for subscription in self.SUBSCRIPTIONS.values():
+            LOG.debug("Subscribing to {}".format(subscription))
+            self.emit("atlas_subscribe", subscription)
+
+    def on_atlas_result(self, *args):
+        LOG.info(args[0])
+
+    def on_atlas_subscribed(self, *args):
+        LOG.debug("Subscribed to subscription: {}".format(args[0]))
+        hash_object = hashlib.sha1(str(args[0]).encode('utf-8'))
+        hex_dig = hash_object.hexdigest()
+        self.SUBSCRIPTIONS[hex_dig] = args[0]
+
+    def on_atlas_error(self, *args):
+        LOG.error("Got an error from stream server: {}".format(args[0]))
 
 
 class AtlasStream(object):
@@ -41,6 +88,10 @@ class AtlasStream(object):
         self.proxies = proxies or {}
         self.headers = headers or {}
 
+        if not self.headers or not self.headers.get("User-Agent", None):
+            user_agent = "RIPE ATLAS Cousteau v{0}".format(__version__)
+            self.headers["User-Agent"] = user_agent
+
         if self.debug and server:
             self.iosocket_server = server
 
@@ -58,7 +109,8 @@ class AtlasStream(object):
             resource=self.iosocket_resource,
             proxies=self.proxies,
             headers=self.headers,
-            transports=["websocket"]
+            transports=["websocket"],
+            Namespace=AtlasNamespace,
         )
 
         self.socketIO.on(self.EVENT_NAME_ERROR, self.handle_error)

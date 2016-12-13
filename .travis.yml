@@ -5,7 +5,7 @@ env:
   - TOXENV=py26
   - TOXENV=py27
   - TOXENV=py34
-  - TOXENV=pypy3
+  - TOXENV=pypy-5.3.1
   - TOXENV=py27-pyflakes
   - TOXENV=py27-pep8
   - TOXENV=py27-coverage
