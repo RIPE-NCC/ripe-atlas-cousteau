@@ -140,6 +140,7 @@ class Measurement(EntityRepresentation):
         self.status = self.meta_data.get("status", {}).get("name")
         self.type = self.get_type()
         self.result_url = self.meta_data.get("result")
+        self.packets = self.meta_data.get("packets")
 
     def get_type(self):
         """

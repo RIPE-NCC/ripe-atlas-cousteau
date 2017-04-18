@@ -163,7 +163,7 @@ class Traceroute(AtlasMeasurement):
     def __init__(self, **kwargs):
         super(Traceroute, self).__init__(**kwargs)
         self.measurement_type = "traceroute"
-        self.required_options.extend(["target", "protocol"])
+        self.required_options.extend(["target", "protocol", "packets"])
         self._init(**kwargs)
 
 
