@@ -1,5 +1,21 @@
 Releases History
 ================
+1.4 (released 2017-04-21)
+-------------------------
+New features:
+~~~~~~~~~~~~~
+- Expose `bill_to` option for measurement creation
+- Enable User-Agent for stream connections
+
+Changes:
+~~~~~~~~
+ - Update stream channel names to new naming scene in the background
+
+Bug Fixes:
+~~~~~~~~~~
+- Fix bug where stream was not reconnected after a disconnect
+- Fix unicode cases on the stream spotted by @JonasGroeger
+
 1.3 (released 2016-10-21)
 -------------------------
 Changes:
