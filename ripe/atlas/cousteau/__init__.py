@@ -25,6 +25,7 @@ from .request import (
 from .stream import AtlasStream
 from .api_listing import ProbeRequest, MeasurementRequest, AnchorRequest
 from .api_meta_data import Probe, Measurement
+from .exceptions import CousteauGenericError, APIResponseError
 
 
 __all__ = [
@@ -47,5 +48,7 @@ __all__ = [
     "MeasurementRequest",
     "AnchorRequest",
     "Probe",
-    "Measurement"
+    "Measurement",
+    "CousteauGenericError",
+    "APIResponseError"
 ]
