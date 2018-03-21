@@ -48,5 +48,6 @@ __all__ = [
     "MeasurementRequest",
     "AnchorRequest",
     "Probe",
-    "Measurement"
+    "Measurement",
+    "MeasurementTagger",
 ]
