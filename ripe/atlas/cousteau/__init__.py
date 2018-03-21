@@ -25,6 +25,7 @@ from .request import (
 from .stream import AtlasStream
 from .api_listing import ProbeRequest, MeasurementRequest, AnchorRequest
 from .api_meta_data import Probe, Measurement
+from .measurement_tagging import MeasurementTagger
 
 
 __all__ = [
