@@ -36,7 +36,6 @@ class MeasurementTagAddRequest(AtlasRequest):
 
 
 class MeasurementTagger(object):
-    remove_url_path = "/api/v2/measurements/{msm_id}/tags/{tag}/"
 
     def __init__(self, **kwargs):
         self.defaults = kwargs
