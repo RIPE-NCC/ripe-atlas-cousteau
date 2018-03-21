@@ -143,7 +143,7 @@ You can add or remove tags on measurements with:
     ATLAS_STOP_API_KEY = ""
     MSM_ID = 2000001
 
-    tagger = AtlasStopRequest(key=ATLAS_STOP_API_KEY)
+    tagger = MeasurementTagger(key=ATLAS_STOP_API_KEY)
 
     (is_success, response) = tagger.add_tag(msm_id=MSM_ID, tag="my-tag")
     (is_success, response) = tagger.remove_Tag(msm_id=MSM_ID, tag="my-tag")
