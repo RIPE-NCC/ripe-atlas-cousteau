@@ -1,5 +1,17 @@
 Releases History
 ================
+1.4.2 (released 2018-03-22)
+---------------------------
+New features:
+~~~~~~~~~~~~~
+- Add support for tagging and untagging measurements
+
+1.4.1 (released 2018-01-08)
+---------------------------
+Changes:
+~~~~~~~~
+- Minor fixes
+
 1.4 (released 2017-04-21)
 -------------------------
 New features:
