@@ -4,7 +4,7 @@ cache: pip
 env:
   - TOXENV=py27
   - TOXENV=py34
-  - TOXENV=pypy-5.3.1
+  - TOXENV=pypy2.7
   - TOXENV=py27-pyflakes
   - TOXENV=py27-pep8
   - TOXENV=py27-coverage
