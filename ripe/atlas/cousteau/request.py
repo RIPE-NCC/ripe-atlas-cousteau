@@ -19,6 +19,7 @@ request according to the ATLAS API.
 """
 
 import calendar
+import grequests 
 import requests
 from dateutil import parser
 from datetime import datetime
@@ -36,6 +37,12 @@ class AtlasRequest(object):
         "GET": requests.get,
         "POST": requests.post,
         "DELETE": requests.delete
+    }
+
+    http_methods_async = {
+        "GET": grequests.get,
+        "POST": grequests.post,
+        "DELETE": grequests.delete
     }
 
     def __init__(self, **kwargs):
@@ -72,6 +79,10 @@ class AtlasRequest(object):
 
         return headers
 
+    def exception_handler(self, request, exc):
+        """Exception handler for asynchronous results fetching."""
+        return exc.args
+
     def http_method(self, method):
         """
         Execute the given HTTP method and returns if it's success or not
@@ -82,12 +93,27 @@ class AtlasRequest(object):
 
         try:
             response = self.get_http_method(method)
-            is_success = response.ok
+            if isinstance(response, list):
+                is_success = []
+                response_message = []
 
-            try:
-                response_message = response.json()
-            except ValueError:
-                response_message = response.text
+                for resp in response:
+                    if isinstance(resp, requests.Response):
+                        is_success.append(resp.ok)
+                        try:
+                            response_message.append(resp.json())
+                        except ValueError:
+                            response_message.append(resp.text)
+                    else:
+                        # An exception occured
+                        is_success.append(False)
+                        response_message.append(resp)
+            else:
+                is_success = response.ok
+                try:
+                    response_message = response.json()
+                except ValueError:
+                    response_message = response.text
 
         except requests.exceptions.RequestException as exc:
             is_success = False
@@ -97,14 +123,23 @@ class AtlasRequest(object):
 
     def get_http_method(self, method):
         """Gets the http method that will be called from the requests library"""
-        return self.http_methods[method](self.url, **self.http_method_args)
+        if isinstance(self.url, list):
+            rs = [self.http_methods_async[method](url, **self.http_method_args) 
+                    for url in self.url]
+            return grequests.map(rs, exception_handler=self.exception_handler)
+        else:
+            return self.http_methods[method](self.url, **self.http_method_args)
 
     def build_url(self):
         """
         Builds the request's url combining server and url_path
         classes attributes.
         """
-        self.url = "https://{0}{1}".format(self.server, self.url_path)
+        if isinstance(self.url_path, list):
+            self.url = ["https://{0}{1}".format(self.server, url) 
+                    for url in self.url_path]
+        else:
+            self.url = "https://{0}{1}".format(self.server, self.url_path)
 
     def get(self, **url_params):
         """
@@ -312,7 +347,10 @@ class AtlasResultsRequest(AtlasRequest):
 
         self.probe_ids = self.clean_probes(kwargs.get("probe_ids"))
 
-        self.url_path = self.url_path.format(self.msm_id)
+        if isinstance(self.msm_id, list):
+            self.url_path = [self.url_path.format(mid) for mid in self.msm_id]
+        else:
+            self.url_path = self.url_path.format(self.msm_id)
 
         self.update_http_method_params()
 
