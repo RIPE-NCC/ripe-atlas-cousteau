@@ -135,7 +135,6 @@ Examples:
 
 
     atlas_request = AtlasCreateRequest(
-        start_time=datetime.utcnow(),
         key=ATLAS_API_KEY,
         measurements=[ping, traceroute],
         sources=[source, source1],
