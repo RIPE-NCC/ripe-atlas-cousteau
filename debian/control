@@ -22,7 +22,7 @@ Vcs-Git: https://github.com/dreibh/ripe-atlas-cousteau.git
 Vcs-Browser: https://github.com/dreibh/ripe-atlas-cousteau
 
 Package: ripe.atlas.cousteau
-Architecture: any
+Architecture: all
 Depends: python3-coverage,
          python3-dateutil,
          python3-funcsigs,
