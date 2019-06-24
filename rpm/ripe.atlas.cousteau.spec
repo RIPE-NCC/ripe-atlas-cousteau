@@ -1,5 +1,5 @@
-%define version 1.4.2_td1.0
-%define unmangled_version 1.4.2-td1.0
+%define version 1.4.2_td1.1
+%define unmangled_version 1.4.2-td1.1
 
 Name: ripe.atlas.cousteau
 Version: %{version}
