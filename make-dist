@@ -1,6 +1,5 @@
 #!/bin/sh
 
-rm -f *.bz2
 mkdir -p dist/
 rm -f dist/*
 python setup.py sdist --formats=bztar
