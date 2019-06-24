@@ -1,7 +1,7 @@
 Name: TSCTP
-Homepage: https://www.uni-due.de/~be0001/tsctp/
-Repository: https://github.com/dreibh/tsctp.git
-Repository-Browse: https://github.com/dreibh/tsctp
-Bug-Submit: https://github.com/dreibh/tsctp/issues
-Contact: Michael Tüxen <tuexen@fh-muenster.de>
-Security-Contact: Thomas Dreibholz <dreibh@iem.uni-due.de>
+Homepage: https://github.com/RIPE-NCC/ripe-atlas-cousteau
+Repository: https://github.com/RIPE-NCC/ripe-atlas-cousteau.git
+Repository-Browse: https://github.com/RIPE-NCC/ripe-atlas-cousteau
+Bug-Submit: https://github.com/RIPE-NCC/ripe-atlas-cousteau/issues
+Contact: The RIPE Atlas Team <atlas@ripe.net>
+Security-Contact: The RIPE Atlas Team <atlas@ripe.net>
