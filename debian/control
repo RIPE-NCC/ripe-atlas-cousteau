@@ -1,0 +1,39 @@
+Source: ripe.atlas.cousteau
+Section: net
+Priority: optional
+Maintainer: Thomas Dreibholz <dreibh@iem.uni-due.de>
+Homepage: https://github.com/dreibh/ripe-atlas-cousteau
+Build-Depends: debhelper (>= 9),
+               dh-python,
+               libfile-fcntllock-perl,
+               python3,
+               python3-coverage,
+               python3-dateutil,
+               python3-funcsigs,
+               python3-jsonschema,
+               python3-mock,
+               python3-nose,
+               python3-requests,
+               python3-setuptools,
+               python3-socketio-client,
+               python3-websocket
+Standards-Version: 4.3.0
+Vcs-Git: https://github.com/dreibh/ripe-atlas-cousteau.git
+Vcs-Browser: https://github.com/dreibh/ripe-atlas-cousteau
+
+Package: ripe.atlas.cousteau
+Architecture: any
+Depends: python3-coverage,
+         python3-dateutil,
+         python3-funcsigs,
+         python3-jsonschema,
+         python3-mock,
+         python3-nose,
+         python3-requests,
+         python3-socketio-client,
+         python3-websocket,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: RIPE Atlas Cousteau
+ A python wrapper around RIPE ATLAS API.
+ See https://ripe-atlas-cousteau.readthedocs.io/en/latest/ for details!
