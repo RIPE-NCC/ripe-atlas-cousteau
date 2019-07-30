@@ -17,7 +17,7 @@ Build-Depends: debhelper (>= 9),
                python3-setuptools,
                python3-socketio-client,
                python3-websocket
-Standards-Version: 4.3.0
+Standards-Version: 4.4.0.1
 Vcs-Git: https://github.com/dreibh/ripe-atlas-cousteau.git
 Vcs-Browser: https://github.com/dreibh/ripe-atlas-cousteau
 
