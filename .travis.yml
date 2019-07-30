@@ -15,3 +15,143 @@ script:
   tox
 after_success:
   coveralls --verbose
+
+
+
+language: c
+
+matrix:
+  include:
+
+   # ###### Tox #############################################################
+   - name: "Tox with Python 2.7"
+     env: TOXENV=py27
+   - name: "Tox with Python 3.6"
+     env: TOXENV=py36
+   - name: "Tox with PyPy 2.7"
+     env: TOXENV=pypy2.7
+   - name: "Tox with Python 2.7 and PyFlakes"
+     env: TOXENV=py27-pyflakes
+   - name: "Tox with Python 2.7 and PEP 8"
+     env: TOXENV=py27-pep8
+   - name: "Tox with Python 2.7"
+     env: TOXENV=py27-coverage
+   - name: "Tox with Python 2.7 and Coverage"
+     env: TOXENV=py27
+
+
+   # ###### Ubuntu Linux ####################################################
+
+   # ====== Ubuntu 19.04 (Disco Dingo) ======================================
+   - name: "Ubuntu 19.04 (Disco Dingo) packaging with pbuilder"
+     dist: xenial
+     group: travis_latest
+     env: DOCKER="ubuntu:disco" VARIANT="ubuntu" TOOL="pbuilder"
+
+   # ====== Ubuntu 18.10 (Cosmic Cuttlefish) ================================
+   - name: "Ubuntu 18.10 (Cosmic Cuttlefish) packaging with pbuilder"
+     dist: xenial
+     group: travis_latest
+     env: DOCKER="ubuntu:cosmic" VARIANT="ubuntu" TOOL="pbuilder"
+
+   # ====== Ubuntu 18.04 (Bionic Beaver) ====================================
+   - name: "Ubuntu 18.04 (Bionic Beaver) packaging with pbuilder"
+     os: linux
+     dist: xenial
+     group: travis_latest
+     env: DOCKER="ubuntu:bionic" VARIANT="ubuntu" TOOL="pbuilder"
+
+   # ====== Ubuntu 16.04 (Xenial Xerus) =====================================
+   - name: "Ubuntu 16.04 (Xenial Xerus) packaging with pbuilder"
+     os: linux
+     dist: xenial
+     group: travis_latest
+     env: DOCKER="ubuntu:xenial" VARIANT="ubuntu" TOOL="pbuilder"
+
+
+    # ###### Debian Linux ###################################################
+
+    # ====== Debian Testing =================================================
+   - name: "Debian Testing packaging with pbuilder"
+     os: linux
+     dist: xenial
+     group: travis_latest
+     env: DOCKER="debian:testing" VARIANT="debian" TOOL="pbuilder"
+
+   # ====== Debian Sid ======================================================
+   - name: "Debian Sid packaging with pbuilder"
+     os: linux
+     dist: xenial
+     group: travis_latest
+     env: DOCKER="debian:sid" VARIANT="debian" TOOL="pbuilder"
+
+   # ====== Debian Buster ===================================================
+   - name: "Debian Buster packaging with pbuilder"
+     os: linux
+     dist: xenial
+     group: travis_latest
+     env: DOCKER="debian:buster" VARIANT="debian" TOOL="pbuilder"
+
+   # ====== Debian Stretch ==================================================
+   - name: "Debian Stretch packaging with pbuilder"
+     os: linux
+     dist: xenial
+     group: travis_latest
+     env: DOCKER="debian:stretch" VARIANT="debian" TOOL="pbuilder"
+
+
+   # ###### Fedora Linux ###################################################
+
+   # ====== Fedora 30 =======================================================
+   - name: "Fedora 30 packaging with mock"
+     os: linux
+     dist: xenial
+     group: travis_latest
+     env: DOCKER="fedora:30" VARIANT="fedora" TOOL="mock"
+
+   # ====== Fedora 29 =======================================================
+   - name: "Fedora 29 packaging with mock"
+     os: linux
+     dist: xenial
+     group: travis_latest
+     env: DOCKER="fedora:29" VARIANT="fedora" TOOL="mock"
+
+   # ====== Fedora 28 =======================================================
+   - name: "Fedora 28 packaging with mock"
+     os: linux
+     dist: xenial
+     group: travis_latest
+     env: DOCKER="fedora:28" VARIANT="fedora" TOOL="mock"
+
+   # ====== Fedora Rawhide ==================================================
+   # - name: "Fedora Rawhide packaging with mock"
+   #   os: linux
+   #   dist: xenial
+   #   group: travis_latest
+   #   env: DOCKER="fedora:rawhide" VARIANT="fedora" TOOL="mock"
+
+
+before_install:
+  - if [ "${TOXENV}" == "" ] ; then
+       travis_wait 60 ci/before-install
+    fi
+
+install:
+  - if [ "${TOXENV}" == "" ] ; then
+       travis_wait 60 ci/install
+    else
+       pip install tox
+       pip install coveralls
+    fi
+
+script:
+  - if [ "${TOXENV}" == "" ] ; then
+       travis_wait 60 ci/build && travis_wait 60 ci/test
+    else
+       tox
+    fi
+
+after_success:
+  - if [ "${TOXENV}" != "" ] ; then
+       coveralls --verbose
+    fi
