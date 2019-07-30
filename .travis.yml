@@ -3,7 +3,7 @@ sudo: false
 cache: pip
 env:
   - TOXENV=py27
-  - TOXENV=py34
+  - TOXENV=py36
   - TOXENV=pypy2.7
   - TOXENV=py27-pyflakes
   - TOXENV=py27-pep8
