@@ -1,5 +1,5 @@
 Name: ripe.atlas.cousteau
-Version: 1.4.2.td1.1
+Version: 1.4.2.td2
 Release: 1
 Summary: RIPE Atlas Cousteau
 Group: Applications/Internet
