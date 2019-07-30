@@ -1,14 +1,11 @@
-%define version 1.4.2.td1.1
-%define unmangled_version 1.4.2.td1.1
-
 Name: ripe.atlas.cousteau
-Version: %{version}
+Version: 1.4.2.td1.1
 Release: 1
 Summary: RIPE Atlas Cousteau
 Group: Applications/Internet
 License: GPLv3
 URL: https://github.com/dreibh/ripe-atlas-cousteau
-Source: https://packages.nntb.no/software/ripe.atlas.cousteau/%{name}-%{unmangled_version}.tar.bz2
+Source: https://packages.nntb.no/software/ripe.atlas.cousteau/%{name}-%{version}.tar.bz2
 
 AutoReqProv: on
 BuildRequires: gcc
