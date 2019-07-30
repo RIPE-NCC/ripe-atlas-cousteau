@@ -1,5 +1,5 @@
-%define version 1.4.2_td1.1
-%define unmangled_version 1.4.2-td1.1
+%define version 1.4.2.td1.1
+%define unmangled_version 1.4.2.td1.1
 
 Name: ripe.atlas.cousteau
 Version: %{version}
@@ -26,6 +26,13 @@ BuildRequires: python3-websocket-client
 BuildRoot: %{_tmppath}/%{name}-%{version}-build
 
 
+# This package does not generate debug information (no executables):
+%global debug_package %{nil}
+
+# TEST ONLY:
+# define _unpackaged_files_terminate_build 0
+
+
 %description
 A python wrapper around RIPE ATLAS API.
 See https://ripe-atlas-cousteau.readthedocs.io/en/latest/ for details!
@@ -34,10 +41,10 @@ See https://ripe-atlas-cousteau.readthedocs.io/en/latest/ for details!
 %setup -n %{name}-%{version} -n %{name}-%{version}
 
 %build
-python setup.py build
+python3 setup.py build
 
 %install
-python setup.py install --single-version-externally-managed -O1 --root=$RPM_BUILD_ROOT --record=INSTALLED_FILES
+python3 setup.py install --single-version-externally-managed -O1 --root=$RPM_BUILD_ROOT --record=INSTALLED_FILES
 
 %clean
 rm -rf $RPM_BUILD_ROOT
