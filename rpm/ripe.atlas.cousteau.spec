@@ -1,5 +1,5 @@
 Name: ripe.atlas.cousteau
-Version: 1.4.2.td2
+Version: 1.4.2.td3
 Release: 1
 Summary: RIPE Atlas Cousteau
 Group: Applications/Internet
@@ -31,7 +31,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-build
 
 
 %description
-A python wrapper around RIPE ATLAS API.
+A python wrapper around the RIPE ATLAS API.
 See https://ripe-atlas-cousteau.readthedocs.io/en/latest/ for details!
 
 %prep
