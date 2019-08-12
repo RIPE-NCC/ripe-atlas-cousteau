@@ -115,13 +115,13 @@ matrix:
 before_install:
   - |
     if [ "${TOXENV}" == "" ] ; then
-       travis_wait 60 ci/before-install
+       travis_wait 60 travis_retry ci/before-install
     fi
 
 install:
   - |
     if [ "${TOXENV}" == "" ] ; then
-       travis_wait 60 ci/install
+       travis_wait 60 travis_retry ci/install
     else
        pip install tox
        pip install coveralls
@@ -130,7 +130,7 @@ install:
 script:
   - |
     if [ "${TOXENV}" == "" ] ; then
-       travis_wait 60 ci/build && travis_wait 60 ci/test
+       travis_wait 60 travis_retry ci/build && travis_wait 60 travis_retry ci/test
     else
        tox
     fi
