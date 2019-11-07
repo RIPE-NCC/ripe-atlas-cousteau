@@ -12,7 +12,7 @@ install_requires = [
 ]
 
 tests_require = [
-    "funcsigs",
+    'funcsigs;python_version<"3.3"',
     "setuptools",
     "nose",
     "coverage",
