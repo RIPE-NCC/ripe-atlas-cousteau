@@ -93,13 +93,13 @@ class TestProbeRepresentation(TestCase):
         with mock.patch('ripe.atlas.cousteau.request.AtlasRequest.get') as request_mock:
             request_mock.return_value = True, {}
             Probe(id=1, fields=["probes"])
-            self.assertEquals(request_mock.call_args[1], {"fields": "probes"})
+            self.assertEqual(request_mock.call_args[1], {"fields": "probes"})
             Probe(id=1, fields=["probes", "data"])
-            self.assertEquals(request_mock.call_args[1], {"fields": "probes,data"})
+            self.assertEqual(request_mock.call_args[1], {"fields": "probes,data"})
             Probe(id=1, fields="probes,data")
-            self.assertEquals(request_mock.call_args[1], {"fields": "probes,data"})
+            self.assertEqual(request_mock.call_args[1], {"fields": "probes,data"})
             Probe(id=1, fields=1)
-            self.assertEquals(request_mock.call_args[1], {})
+            self.assertEqual(request_mock.call_args[1], {})
 
 
 class TestMeasurementRepresentation(TestCase):
@@ -191,13 +191,13 @@ class TestMeasurementRepresentation(TestCase):
         with mock.patch('ripe.atlas.cousteau.request.AtlasRequest.get') as request_mock:
             request_mock.return_value = True, {}
             Measurement(id=1, fields=["probes"])
-            self.assertEquals(request_mock.call_args[1], {"fields": "probes"})
+            self.assertEqual(request_mock.call_args[1], {"fields": "probes"})
             Measurement(id=1, fields=["probes", "data"])
-            self.assertEquals(request_mock.call_args[1], {"fields": "probes,data"})
+            self.assertEqual(request_mock.call_args[1], {"fields": "probes,data"})
             Measurement(id=1, fields="probes,data")
-            self.assertEquals(request_mock.call_args[1], {"fields": "probes,data"})
+            self.assertEqual(request_mock.call_args[1], {"fields": "probes,data"})
             Measurement(id=1, fields=1)
-            self.assertEquals(request_mock.call_args[1], {})
+            self.assertEqual(request_mock.call_args[1], {})
 
     def test_populate_times(self):
         with mock.patch('ripe.atlas.cousteau.request.AtlasRequest.get') as request_mock:
