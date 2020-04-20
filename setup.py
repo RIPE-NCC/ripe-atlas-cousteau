@@ -5,7 +5,7 @@ from setuptools import setup
 # import manually __version__ variable
 __version__ = None
 exec(open('ripe/atlas/cousteau/version.py').read())
-__version_extra = '.td1.1'
+__version_extra = '.td8'
 __version__ = __version__ + __version_extra
 
 install_requires = [
