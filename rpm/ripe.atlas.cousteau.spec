@@ -19,10 +19,11 @@ BuildRequires: python3-funcsigs
 BuildRequires: python3-jsonschema
 BuildRequires: python3-mock
 BuildRequires: python3-nose
+BuildRequires: python3-pip
 BuildRequires: python3-requests
 BuildRequires: python3-setuptools
-BuildRequires: python3-socketIO-client
-BuildRequires: python3-websocket-client
+# BuildRequires: python3-socketIO-client
+# BuildRequires: python3-websocket-client
 BuildRoot: %{_tmppath}/%{name}-%{version}-build
 
 
