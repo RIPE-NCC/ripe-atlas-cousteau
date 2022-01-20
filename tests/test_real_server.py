@@ -18,7 +18,7 @@ import unittest
 from datetime import datetime, timedelta
 from collections import namedtuple
 
-from nose.exc import SkipTest
+import pytest
 
 
 from ripe.atlas.cousteau import (
@@ -41,7 +41,7 @@ class TestRealServer(unittest.TestCase):
     def test_create_delete_request(self):
         """Unittest for Atlas create and delete request"""
         if self.server == "":
-            raise SkipTest
+            pytest.skip("No ATLAS_SERVER defined")
         source = AtlasSource(**{"type": "area", "value": "WW", "requested": 38})
         ping = Ping(**{
             "target": "www.ripe.net",
@@ -94,10 +94,6 @@ class TestRealServer(unittest.TestCase):
         self.delete_msm = result.response["measurements"][0]
         self.assertTrue(result.success)
 
-        # Unittest for Atlas delete request
-        if self.server == "":
-            raise SkipTest
-
         kwargs = {"verify": False, "msm_id": self.delete_msm, "key": self.delete_key, "server": self.server}
         request = AtlasStopRequest(**kwargs)
         result = namedtuple('Result', 'success response')
@@ -108,7 +104,7 @@ class TestRealServer(unittest.TestCase):
     def test_change_request(self):
         """Unittest for Atlas change request"""
         if self.server == "":
-            raise SkipTest
+            pytest.skip("No ATLAS_SERVER defined")
 
         remove = AtlasChangeSource(**{
             "value": "6001", "requested": 1, "action": "remove", "type": "probes"
@@ -133,7 +129,7 @@ class TestRealServer(unittest.TestCase):
     def test_result_request(self):
         """Unittest for Atlas results request"""
         if self.server == "":
-            raise SkipTest
+            pytest.skip("No ATLAS_SERVER defined")
 
         kwargs = {
             "msm_id": 1000032,
@@ -152,7 +148,7 @@ class TestRealServer(unittest.TestCase):
     def test_probe_request(self):
         """Unittest for ProbeRequest"""
         if self.server == "":
-            raise SkipTest
+            pytest.skip("No ATLAS_SERVER defined")
 
         filters = {"tags": "NAT", "country_code": "NL", "asn_v4": "3333"}
         probes = ProbeRequest(**filters)
@@ -163,7 +159,7 @@ class TestRealServer(unittest.TestCase):
     def test_measurement_request(self):
         """Unittest for MeasurementRequest"""
         if self.server == "":
-            raise SkipTest
+            pytest.skip("No ATLAS_SERVER defined")
 
         filters = {"id__lt": 1000010, "id__gt": 1000002}
         measurements = MeasurementRequest(**filters)
@@ -174,7 +170,7 @@ class TestRealServer(unittest.TestCase):
     def test_anchor_request(self):
         """Unittest for AnchorRequest"""
         if self.server == "":
-            raise SkipTest
+            pytest.skip("No ATLAS_SERVER defined")
 
         anchors = AnchorRequest()
         anchors_list = list(anchors)
@@ -184,21 +180,21 @@ class TestRealServer(unittest.TestCase):
     def test_probe_repr_request(self):
         """Unittest for Probe representation request"""
         if self.server == "":
-            raise SkipTest
+            pytest.skip("No ATLAS_SERVER defined")
 
         Probe(id=6001)
 
     def test_measurement_repr_request(self):
         """Unittest for Measurement representation request"""
         if self.server == "":
-            raise SkipTest
+            pytest.skip("No ATLAS_SERVER defined")
 
         Measurement(id=1000032, server=self.server, verify=False)
 
     def test_stream_results(self):
         """Unittest for Atlas results request."""
         if self.server == "":
-            raise SkipTest
+            pytest.skip("No ATLAS_SERVER defined")
 
         results = []
 
@@ -222,7 +218,7 @@ class TestRealServer(unittest.TestCase):
     def test_stream_probe(self):
         """Unittest for Atlas probe connections request."""
         if self.server == "":
-            raise SkipTest
+            pytest.skip("No ATLAS_SERVER defined")
 
         results = []
 
@@ -246,7 +242,7 @@ class TestRealServer(unittest.TestCase):
     def test_get_request(self):
         """Unittest for Atlas get request"""
         if self.server == "":
-            raise SkipTest
+            pytest.skip("No ATLAS_SERVER defined")
 
         request = AtlasRequest(
             **{

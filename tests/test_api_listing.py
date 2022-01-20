@@ -373,21 +373,21 @@ class TestRequestGenerator(TestCase):
 class TestProbeRequestGenerator(TestCase):
     def test_url(self):
         gen = ProbeRequest()
-        self.assertEquals(gen.url, "/api/v2/probes/")
+        self.assertEqual(gen.url, "/api/v2/probes/")
 
     def test_id_filter(self):
         gen = ProbeRequest()
-        self.assertEquals(gen.id_filter, "id__in")
+        self.assertEqual(gen.id_filter, "id__in")
 
 
 class TestMeasurementRequestGenerator(TestCase):
     def test_url(self):
         gen = MeasurementRequest(return_objects=True)
-        self.assertEquals(gen.url, "/api/v2/measurements/")
+        self.assertEqual(gen.url, "/api/v2/measurements/")
 
     def test_id_filter(self):
         gen = MeasurementRequest()
-        self.assertEquals(gen.id_filter, "id__in")
+        self.assertEqual(gen.id_filter, "id__in")
 
 
 class TestAnchorRequestGenerator(TestCase):
@@ -397,8 +397,8 @@ class TestAnchorRequestGenerator(TestCase):
 
     def test_url(self):
         gen = AnchorRequest(return_objects=True)
-        self.assertEquals(gen.url, "/api/v2/anchors/")
+        self.assertEqual(gen.url, "/api/v2/anchors/")
 
     def test_id_filter(self):
         gen = AnchorRequest()
-        self.assertEquals(gen.id_filter, "id__in")
+        self.assertEqual(gen.id_filter, "id__in")
