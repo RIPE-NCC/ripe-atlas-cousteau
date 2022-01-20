@@ -11,16 +11,6 @@ install_requires = [
     "requests>=2.7.0", "websocket-client<0.99"
 ]
 
-tests_require = [
-    "funcsigs",
-    "setuptools",
-    "nose",
-    "coverage",
-    "mock",
-    "jsonschema"
-]
-
-
 # Get proper long description for package
 current_dir = dirname(abspath(__file__))
 description = open(join(current_dir, "README.rst")).read()
@@ -42,19 +32,15 @@ setup(
     maintainer="The RIPE Atlas Team",
     maintainer_email="atlas@ripe.net",
     install_requires=install_requires,
-    tests_require=tests_require,
-    test_suite="nose.collector",
     keywords=['RIPE', 'RIPE NCC', 'RIPE Atlas'],
     classifiers=[
         "Operating System :: POSIX",
         "Operating System :: Unix",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 2.7",
-        "Programming Language :: Python :: 3.4",
-        "Programming Language :: Python :: 3.5",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: Implementation :: CPython",
-        "Programming Language :: Python :: Implementation :: PyPy",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
         "Topic :: Internet :: WWW/HTTP",
         "Topic :: Software Development :: Libraries :: Python Modules"
     ]
