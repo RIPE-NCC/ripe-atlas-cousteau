@@ -21,15 +21,7 @@ from socketIO_client import SocketIO, BaseNamespace
 from .version import __version__
 
 
-try:
-    from logging import NullHandler
-except ImportError:  # Python 2.6
-    from logging import Handler
-
-    class NullHandler(Handler):
-
-        def emit(self, record):
-            pass
+from logging import NullHandler
 
 LOG = logging.getLogger('atlas-stream')
 LOG.addHandler(NullHandler())

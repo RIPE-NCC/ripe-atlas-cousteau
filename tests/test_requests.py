@@ -13,12 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Python 3.4+ comes with mock in unittest
-try:
-    from unittest import mock
-except ImportError:
-    import mock
-
+from unittest import mock
 from unittest import TestCase
 import requests
 from datetime import datetime
