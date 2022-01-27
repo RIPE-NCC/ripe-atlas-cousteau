@@ -4,18 +4,19 @@ from setuptools import setup
 
 # import manually __version__ variable
 __version__ = None
-exec(open('ripe/atlas/cousteau/version.py').read())
+exec(open("ripe/atlas/cousteau/version.py").read())
 
 install_requires = [
-    "python-dateutil", "socketIO-client>=0.6.5",
-    "requests>=2.7.0", "websocket-client<0.99"
+    "python-dateutil",
+    "requests>=2.7.0",
+    "python-socketio[client]<5",
 ]
 
 # Get proper long description for package
 current_dir = dirname(abspath(__file__))
 description = open(join(current_dir, "README.rst")).read()
 changes = open(join(current_dir, "CHANGES.rst")).read()
-long_description = '\n\n'.join([description, changes])
+long_description = "\n\n".join([description, changes])
 
 setup(
     name="ripe.atlas.cousteau",
@@ -32,7 +33,7 @@ setup(
     maintainer="The RIPE Atlas Team",
     maintainer_email="atlas@ripe.net",
     install_requires=install_requires,
-    keywords=['RIPE', 'RIPE NCC', 'RIPE Atlas'],
+    keywords=["RIPE", "RIPE NCC", "RIPE Atlas"],
     classifiers=[
         "Operating System :: POSIX",
         "Operating System :: Unix",
@@ -42,6 +43,6 @@ setup(
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Topic :: Internet :: WWW/HTTP",
-        "Topic :: Software Development :: Libraries :: Python Modules"
-    ]
+        "Topic :: Software Development :: Libraries :: Python Modules",
+    ],
 )
