@@ -1,6 +1,6 @@
 Releases History
 ================
-1.5.0a1 (released TBD)
+1.5.0a2 (released TBD)
 ----------------------
 Changes:
 ~~~~~~~~
