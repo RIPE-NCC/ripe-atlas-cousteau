@@ -21,32 +21,19 @@ Make sure the tests pass beforehand:
 
     $ tox
 
-or
+Then:
 
-.. code:: bash
-
-    $ nosetests tests/
-
-Make your changes. Include tests for your change. Make the tests pass:
-
-.. code:: bash
-
-    $ tox
-
-or
-
-.. code:: bash
-
-    $ nosetests tests/
-
-Push to your fork and `submit a pull request`_.
+* Make your changes.
+* Include new tests/modify existing tests for your change.
+* Make sure the tests still pass:
+* Push to your fork and `submit a pull request`_.
 
 Here are a few guidelines that will increase the chances of a quick merge of
 your pull request:
 
 - *Always* try to add tests and docs for your code. If a feature is tested and
   documented, it's easier for us to merge it.
-- Follow `PEP 8`_.
+- Follow `flake8`_ and `Black`_ style/linting.
 - Write `good commit messages`_.
 - If you change something that is noteworthy, don't forget to add an entry to
   the `changes`_.
@@ -66,7 +53,8 @@ questions or concerns, feel free to reach out the RIPE Atlas team via the
 `mailing list`_, `GitHub Issue Queue`_, or `messenger pigeon`_ -- if you must.
 
 .. _submit a pull request:  https://github.com/RIPE-NCC/ripe-atlas-cousteau/compare/
-.. _PEP 8: https://www.python.org/dev/peps/pep-0008/
+.. _flake8: https://flake8.pycqa.org
+.. _Black: https://github.com/psf/black
 .. _good commit messages: http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
 .. _Code of Conduct: https://www.python.org/psf/codeofconduct/
 .. _changes: https://github.com/RIPE-NCC/ripe-atlas-cousteau/blob/master/CHANGES.rst

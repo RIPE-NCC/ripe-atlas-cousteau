@@ -5,8 +5,8 @@
 
 RIPE Atlas Cousteau
 ===================
-Welcome to the official python wrapper around RIPE Atlas API.
-This package can used by anyone to communicate with the RIPE Atlas API using python. You will need to have an API key in most of the cases in order your requests to be successful.
+Welcome to the official Python wrapper around the `RIPE Atlas API`_.
+This package can used by anyone to communicate with the RIPE Atlas API using Python. You will need to create an API key for many use cases.
 
 This package is maintained by RIPE Atlas developers.
 
@@ -22,3 +22,4 @@ Contents:
    contributing
    changelog
 
+.. _RIPE Atlas API: https://atlas.ripe.net/docs/
