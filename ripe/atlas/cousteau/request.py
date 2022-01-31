@@ -52,7 +52,7 @@ class AtlasRequest(object):
         self.http_agent = kwargs.get("user_agent") or default_user_agent
 
         self.http_method_args = {
-            "params": {"key": self.key},
+            "params": {},
             "headers": self.get_headers(),
             "verify": self.verify,
             "proxies": self.proxies
@@ -67,6 +67,8 @@ class AtlasRequest(object):
             "Content-Type": "application/json",
             "Accept": "application/json"
         }
+        if self.key:
+            headers["Authorization"] = f"Key {self.key}"
         if self.headers:
             headers.update(self.headers)
 
