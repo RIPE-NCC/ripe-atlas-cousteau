@@ -1,5 +1,5 @@
 Name: ripe.atlas.cousteau
-Version: 1.4.2.td8
+Version: 1.5.0a2.td1
 Release: 1
 Summary: RIPE Atlas Cousteau
 Group: Applications/Internet
@@ -19,8 +19,8 @@ BuildRequires: python3-nose
 BuildRequires: python3-pip
 BuildRequires: python3-requests
 BuildRequires: python3-setuptools
-# BuildRequires: python3-socketIO-client
-# BuildRequires: python3-websocket-client
+BuildRequires: python3-socketio+client
+BuildRequires: python3-websocket-client
 BuildRoot: %{_tmppath}/%{name}-%{version}-build
 
 
