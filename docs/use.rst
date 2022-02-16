@@ -3,15 +3,15 @@
 Use & Examples
 **************
 
-This wrapper is using RIPE Atlas v2 API. It covers majority of API calls but not all of them. For some of these calls you will need to have a specific API key tyhat you can get from here.
+RIPE Atlas Cousteau wraps the majority of the RIPE Atlas v2 API calls, but not all of them. For some of these calls you will need to have a specific API key that you can create with the `API key manager`_.
 
 Creating Measurements
 =====================
 
 .. important::
-   An `API key`_ is needed with "create a new measurement" permission.
+   An `API key`_ is needed for this function.
 
-You can create multiple measurements with one API request that will share though same start/end time and allocated probes. This means that if you create a ping and a traceroute with one call they will start and finish at the same time and will use same probes.
+You can create multiple measurements with one API request that will share the same start/end times and allocated probes. This means that if you create a ping and a traceroute with one call they will start and finish at the same time and will use same probes.
 
 Measurement Types
 -----------------
@@ -25,7 +25,7 @@ The first step is to create the measurement specification object. Currently you 
 - Ntp
 - Http
 
-You can initialise any of these objects by passing any of arguments stated in the `documentation pages`_. Keep in mind that this library is trying to comply with what is stated
+You can initialise any of these objects by passing any of arguments stated in the `API docs`_. Keep in mind that this library is trying to comply with what is stated
 in these docs. This means that if you try to create a
 measurement that is missing a field stated as required in these docs, the library won't go
 ahead and do the HTTP query. On the contrary, it will raise an exception
@@ -71,7 +71,7 @@ Examples:
 Measurement Sources
 -------------------
 The second step is to create the measurements source(s). In order to do that you have to create an AtlasSource object using the arguments type, value, requested, and optionally tags.
-Type as described in the `documentation pages`_ should be one of the "area", "country", "prefix", "asn", "probes", "msm". Value is the actual value of the type and requested is the number of probes that will be selected from this source.
+Type as described in the `API docs`_ should be one of the "area", "country", "prefix", "asn", "probes", "msm". Value is the actual value of the type and requested is the number of probes that will be selected from this source.
 Optionally you can use tags argument, which has to be a dictionary like {"include": [], "exclude": []}.
 Examples:
 
@@ -135,7 +135,6 @@ Examples:
 
 
     atlas_request = AtlasCreateRequest(
-        start_time=datetime.utcnow(),
         key=ATLAS_API_KEY,
         measurements=[ping, traceroute],
         sources=[source, source1],
@@ -149,12 +148,12 @@ Changing Measurement Sources
 ============================
 
 .. important::
-   An `API key`_ is needed with "change parameters of a measurement" permission.
+   An `API key`_ is needed for this function.
 
 If you want to add or remove probes from an existing measurement you have to use the AtlasChangeRequest.
 First step is to create an AtlasChangeSource objects which is similar to AtlasSource object for the creation of measurements.
 The difference is that here you have to specify an additional action argument. This parameter takes only two values "add" or "remove".
-In case of "remove" the type of the source can only be "probes". For more info check the appropriate `docs`_.
+In case of "remove" the type of the source can only be "probes". For more info check the `API docs`_.
 
 Example:
 
@@ -196,11 +195,11 @@ Example:
     (is_success, response) = atlas_request.create()
 
 
-Stopping Measurement
-====================
+Stopping Measurements
+=====================
 
 .. important::
-  An `API key`_ is needed with "stop a measurement" permission.
+  An `API key`_ is needed for this function.
 
 You can stop a measurement by creating a AtlasStopRequest and specifying measurement ID as shown below:
 
@@ -272,7 +271,7 @@ Example:
 
 Streaming API
 -------------
-Atlas supports getting results and other events through a stream to get them close to real time. The stream is implemented using websockets and `socket.io`_ protocol.
+Atlas supports getting results and other events through a stream to get them close to real time. The stream is implemented using WebSockets and the `Socket.IO`_ protocol.
 
 Measurement Results
 ^^^^^^^^^^^^^^^^^^^
@@ -290,14 +289,13 @@ Example:
         Function that will be called every time we receive a new result.
         Args is a tuple, so you should use args[0] to access the real message.
         """
-        print args[0]
+        print(args[0])
 
     atlas_stream = AtlasStream()
     atlas_stream.connect()
 
-    channel = "result"
     # Bind function we want to run with every result message received
-    atlas_stream.bind_channel(channel, on_result_response)
+    atlas_stream.bind_channel("atlas_result", on_result_response)
 
     # Subscribe to new stream for 1001 measurement results
     stream_parameters = {"msm": 1001}
@@ -327,14 +325,13 @@ Example:
         Function that will be called every time we receive a new event.
         Args is a tuple, so you should use args[0] to access the real event.
         """
-        print args[0]
+        print(args[0])
 
     atlas_stream = AtlasStream()
     atlas_stream.connect()
 
     # Probe's connection status results
-    channel = "probe"
-    atlas_stream.bind_channel(channel, on_result_response)
+    atlas_stream.bind_channel("atlas_probe", on_result_response)
     stream_parameters = {"enrichProbes": True}
     atlas_stream.start_stream(stream_type="probestatus", **stream_parameters)
 
@@ -419,12 +416,12 @@ Using the Probe object will allow you to have a python object with attributes po
 
 Filtering
 ---------
-This feature queries API for probes/measurements based on specified filters. Filters
-should be according to `filter api documentation`_. Underneath it will follow all next urls until there are no more objects. It returns a python generator that you can use in a for loop to access each object.
+This feature queries API for probes/measurements based on specified filters. Available filters can be found in the
+`API docs`_. Underneath it will follow all next urls until there are no more objects. It returns a python generator that you can use in a for loop to access each object.
 
 Probe
 ^^^^^
-The following example will fetch all measurements with Status equals to "Specified". More info on filters for these call are on `probe's filtering documentation`_.
+The following example will fetch all measurements with Status equals to "Specified". More info on filters for this call can be found in the `API docs`_.
 
 .. code:: python
 
@@ -442,7 +439,7 @@ The following example will fetch all measurements with Status equals to "Specifi
 
 Measurement
 ^^^^^^^^^^^
-The following example will fetch all probes from NL with asn\_v4 3333 and with tag NAT. More info on filters for these call are on `measurement's filtering documentation`_.
+The following example will fetch all probes from NL with asn\_v4 3333 and with tag NAT. More info on filters for this call can be found in the `API docs`_.
 
 .. code:: python
 
@@ -481,6 +478,6 @@ Example:
     return result.response["participant_count"]
 
 
-.. _documentation pages: https://atlas.ripe.net/docs/measurement-creation-api/
-.. _docs: https://atlas.ripe.net/docs/rest/#participation-request
+.. _API docs: https://atlas.ripe.net/docs/
 .. _API key: https://atlas.ripe.net/docs/keys/
+.. _API key manager: https://atlas.ripe.net/keys/

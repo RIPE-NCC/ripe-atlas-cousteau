@@ -15,12 +15,7 @@
 import calendar
 from datetime import datetime
 
-try:
-    # Python 3
-    from urllib.parse import urlparse
-except ImportError:
-    # Python 2
-    from urlparse import urlparse
+from urllib.parse import urlparse
 
 from .api_meta_data import Probe, Measurement
 from .request import AtlasRequest
@@ -102,7 +97,6 @@ class RequestGenerator(object):
     def __iter__(self):
         return self
 
-    # Python 3 compatibility
     def __next__(self):
         return self.next()
 

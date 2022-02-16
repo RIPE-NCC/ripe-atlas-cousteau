@@ -13,11 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Python 3.4+ comes with mock in unittest
-try:
-    from unittest import mock
-except ImportError:
-    import mock
+from unittest import mock
 from unittest import TestCase
 
 from ripe.atlas.cousteau.api_listing import RequestGenerator
@@ -373,21 +369,21 @@ class TestRequestGenerator(TestCase):
 class TestProbeRequestGenerator(TestCase):
     def test_url(self):
         gen = ProbeRequest()
-        self.assertEquals(gen.url, "/api/v2/probes/")
+        self.assertEqual(gen.url, "/api/v2/probes/")
 
     def test_id_filter(self):
         gen = ProbeRequest()
-        self.assertEquals(gen.id_filter, "id__in")
+        self.assertEqual(gen.id_filter, "id__in")
 
 
 class TestMeasurementRequestGenerator(TestCase):
     def test_url(self):
         gen = MeasurementRequest(return_objects=True)
-        self.assertEquals(gen.url, "/api/v2/measurements/")
+        self.assertEqual(gen.url, "/api/v2/measurements/")
 
     def test_id_filter(self):
         gen = MeasurementRequest()
-        self.assertEquals(gen.id_filter, "id__in")
+        self.assertEqual(gen.id_filter, "id__in")
 
 
 class TestAnchorRequestGenerator(TestCase):
@@ -397,8 +393,8 @@ class TestAnchorRequestGenerator(TestCase):
 
     def test_url(self):
         gen = AnchorRequest(return_objects=True)
-        self.assertEquals(gen.url, "/api/v2/anchors/")
+        self.assertEqual(gen.url, "/api/v2/anchors/")
 
     def test_id_filter(self):
         gen = AnchorRequest()
-        self.assertEquals(gen.id_filter, "id__in")
+        self.assertEqual(gen.id_filter, "id__in")

@@ -5,29 +5,20 @@ from setuptools import setup
 # import manually __version__ variable
 __version__ = None
 exec(open('ripe/atlas/cousteau/version.py').read())
-__version_extra = '.td8'
+__version_extra = '.td1'
 __version__ = __version__ + __version_extra
 
 install_requires = [
-    "python-dateutil", "socketIO-client>=0.6.5",
-    "requests>=2.7.0", "websocket-client<0.99"
+    "python-dateutil",
+    "requests>=2.7.0",
+    "python-socketio[client]<5",
 ]
-
-tests_require = [
-    "funcsigs",
-    "setuptools",
-    "nose",
-    "coverage",
-    "mock",
-    "jsonschema"
-]
-
 
 # Get proper long description for package
 current_dir = dirname(abspath(__file__))
 description = open(join(current_dir, "README.rst")).read()
 changes = open(join(current_dir, "CHANGES.rst")).read()
-long_description = '\n\n'.join([description, changes])
+long_description = "\n\n".join([description, changes])
 
 setup(
     name="ripe.atlas.cousteau",
@@ -44,20 +35,16 @@ setup(
     maintainer="The RIPE Atlas Team",
     maintainer_email="atlas@ripe.net",
     install_requires=install_requires,
-    tests_require=tests_require,
-    test_suite="nose.collector",
-    keywords=['RIPE', 'RIPE NCC', 'RIPE Atlas'],
+    keywords=["RIPE", "RIPE NCC", "RIPE Atlas"],
     classifiers=[
         "Operating System :: POSIX",
         "Operating System :: Unix",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 2.7",
-        "Programming Language :: Python :: 3.4",
-        "Programming Language :: Python :: 3.5",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: Implementation :: CPython",
-        "Programming Language :: Python :: Implementation :: PyPy",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
         "Topic :: Internet :: WWW/HTTP",
-        "Topic :: Software Development :: Libraries :: Python Modules"
-    ]
+        "Topic :: Software Development :: Libraries :: Python Modules",
+    ],
 )
