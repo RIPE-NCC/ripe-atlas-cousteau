@@ -13,11 +13,14 @@ Build-Depends: debhelper (>= 9),
                python3-jsonschema,
                python3-mock,
                python3-nose,
+               python3-pytest,
                python3-requests,
                python3-setuptools,
+               python3-socketio,
                python3-socketio-client,
                python3-websocket
-Standards-Version: 4.4.0.1
+Standards-Version: 4.6.0.1
+Rules-Requires-Root: no
 Vcs-Git: https://github.com/dreibh/ripe-atlas-cousteau.git
 Vcs-Browser: https://github.com/dreibh/ripe-atlas-cousteau
 
@@ -30,6 +33,7 @@ Depends: python3-coverage,
          python3-mock,
          python3-nose,
          python3-requests,
+         python3-socketio,
          python3-socketio-client,
          python3-websocket,
          ${misc:Depends},
