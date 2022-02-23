@@ -1,10 +1,10 @@
 Releases History
 ================
-1.5.0a2 (released TBD)
-----------------------
+1.5.0 (released 2022-02-23)
+---------------------------
 Changes:
 ~~~~~~~~
-- Drop support for old Python versions (>= 3.7 supported)
+- Drop support for old Python versions (>= 3.6 supported)
 - Documentation fixes
 - Use python-socketio instead of socketIO-client for streaming
 - Include an 'unsubscribe' method on AtlasStream, as well as constants for currently available event names
