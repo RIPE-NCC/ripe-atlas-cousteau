@@ -266,7 +266,7 @@ class AtlasStopRequest(AtlasRequest):
 
 class AtlasLatestRequest(AtlasRequest):
 
-    def __init__(self, msm_id=None, probe_ids=(), **kwargs):
+    def __init__(self, msm_id, probe_ids=(), **kwargs):
         super(AtlasLatestRequest, self).__init__(**kwargs)
 
         self.url_path = "/api/v2/measurements/{0}/latest"
