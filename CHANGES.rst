@@ -1,5 +1,12 @@
 Releases History
 ================
+
+1.5.1 (release 2022-05-23)
+--------------------------
+Bug Fixes:
+~~~~~~~~~~~~~
+- Make it possible to instantiate AtlasMeasurement directly by passing in a "type" value in the spec
+
 1.5.0 (released 2022-02-23)
 ---------------------------
 Changes:
