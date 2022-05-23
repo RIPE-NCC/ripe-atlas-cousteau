@@ -25,11 +25,16 @@ class AtlasMeasurement(object):
     needed options for ATLAS API. The different kind of measurements are
     specified as child classes. These objects can be passed as measurement
     arguments later on when we call AtlasRequest.
+
+    To use this class directly a "type" must be provided:
+
     Usage:
-        from ripe.atlas.cousteau import Ping
-        ping = Ping(**{
-            "target": "www.google.gr", "af": 4,
-            "description": "testing new wrapper"
+        from ripe.atlas.cousteau import AtlasMeasurement
+        msm = AtlasMeasurement(**{
+            "type": "ping",
+            "target": "www.google.gr",
+            "af": 4,
+            "description": "testing AtlasMeasurement",
         })
     """
 
@@ -38,7 +43,8 @@ class AtlasMeasurement(object):
         self.used_options = set()
         # required options for definitions part
         self.required_options = ["description", "af"]
-        self.measurement_type = ""
+        self.measurement_type = kwargs.get("type", "")
+        self._init(**kwargs)
 
     def _init(self, **kwargs):
         """
@@ -148,7 +154,15 @@ class AtlasMeasurement(object):
 
 
 class Ping(AtlasMeasurement):
-    """Class for creating a ping measurement"""
+    """Class for creating a ping measurement
+
+    Usage:
+        from ripe.atlas.cousteau import Ping
+        ping = Ping(**{
+            "target": "www.google.gr", "af": 4,
+            "description": "testing new wrapper"
+        })
+    """
 
     def __init__(self, **kwargs):
         super(Ping, self).__init__(**kwargs)
