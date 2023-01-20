@@ -1,6 +1,20 @@
 Releases History
 ================
 
+2.0.0 (release 2023-01-20)
+--------------------------
+Changes:
+~~~~~~~~
+- The AtlasStream class has been updated to use the new WebSocket interface
+- AtlasStream objects can now be iterated as an alternative to using callbacks
+- There used to be both start_stream() and subscribe() methods which did the same thing,
+  except that start_stream() had extra validation. This extra validation has been
+  added to subscribe(), and start_stream() is now an alias to it.
+- bind_channel() was renamed to bind(), although it is maintained as an alias, and
+  there is a corresponding unbind() to remove a callback
+- Deprecated event aliases were dropped, you have to use full event names like
+  "atlas_result" and "atlas_metadata" when binding
+
 1.5.1 (release 2022-05-23)
 --------------------------
 Bug Fixes:

@@ -271,14 +271,14 @@ Example:
 
 Streaming API
 -------------
-Atlas supports getting results and other events through a stream to get them close to real time. The stream is implemented using WebSockets and the `Socket.IO`_ protocol.
+Atlas supports getting results and other events through a WebSocket stream to get them close to real time. The AtlasStream class provides an interface to this stream, and supports
+both callback-based and an iterator-based access.
 
-Measurement Results
+Measurement results
 ^^^^^^^^^^^^^^^^^^^
-Besides fetching results from main API it is possible to get results though streaming API. You have to use AtlasStream object and bind to "result" channel. You can start the a result stream by specifying at least the measurement ID in the stream parameters.
-More details on the available parameters of the stream can be found on the `streaming documentation`_.
+ You have to create an AtlasStream object and subscribe to the "result" stream type. More details on the available parameters of the stream can be found on the `streaming documentation`_.
 
-Example:
+Example using the callback-interface:
 
 .. code:: python
 
@@ -295,13 +295,13 @@ Example:
     atlas_stream.connect()
 
     # Bind function we want to run with every result message received
-    atlas_stream.bind_channel("atlas_result", on_result_response)
+    atlas_stream.bind("atlas_result", on_result_response)
 
     # Subscribe to new stream for 1001 measurement results
     stream_parameters = {"msm": 1001}
-    atlas_stream.start_stream(stream_type="result", **stream_parameters)
+    atlas_stream.subscribe(stream_type="result", **stream_parameters)
 
-    # Timeout all subscriptions after 5 secs. Leave seconds empty for no timeout.
+    # Process incoming events for 5 seconds, calling the callback defined above.
     # Make sure you have this line after you start *all* your streams
     atlas_stream.timeout(seconds=5)
 
@@ -311,33 +311,27 @@ Example:
 
 Connection Events
 ^^^^^^^^^^^^^^^^^
-Besides results, streaming API supports also probe's connect/disconnect events. Again you have to use AtlasStream object but this time you have to bind to "probe" channel.
-More info about additional parameters can be found on the `streaming documentation`_.
+Besides results, the streaming API also supports probe connect/disconnect events.
+Again you have to create an AtlasStream object, but this time you subscribe to the
+"probestatus" stream type.  More info about additional parameters can be found on
+the `streaming documentation`_.
 
-Example:
+Example using the iterator-interface:
 
 .. code:: python
 
     from ripe.atlas.cousteau import AtlasStream
 
-    def on_result_response(*args):
-        """
-        Function that will be called every time we receive a new event.
-        Args is a tuple, so you should use args[0] to access the real event.
-        """
-        print(args[0])
-
     atlas_stream = AtlasStream()
     atlas_stream.connect()
 
-    # Probe's connection status results
-    atlas_stream.bind_channel("atlas_probe", on_result_response)
     stream_parameters = {"enrichProbes": True}
-    atlas_stream.start_stream(stream_type="probestatus", **stream_parameters)
+    atlas_stream.subscribe(stream_type="probestatus", **stream_parameters)
 
-    # Timeout all subscriptions after 5 secs. Leave seconds empty for no timeout.
-    # Make sure you have this line after you start *all* your streams
-    atlas_stream.timeout(seconds=5)
+    # Iterate over the incoming results for 5 seconds
+    for event_name, payload in atlas_stream.iter(seconds=5):
+        print(event_name, payload)
+
     # Shut down everything
     atlas_stream.disconnect()
 
@@ -346,8 +340,8 @@ Example:
 .. _streaming documentation: https://atlas.ripe.net/docs/result-streaming/
 
 
-Using Sagan Library
--------------------
+Using the Sagan Library
+-----------------------
 In case you need to do further processing with any of the results you can use our official RIPE Atlas results parsing library called `Sagan`_.
 An example of how to combine two libraries is the below:
 

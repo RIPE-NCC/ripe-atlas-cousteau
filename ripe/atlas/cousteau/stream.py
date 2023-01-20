@@ -1,4 +1,4 @@
-# Copyright (c) 2016 RIPE NCC
+# Copyright (c) 2023 RIPE NCC
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,77 +12,29 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import warnings
+
+from urllib.parse import urlparse
 import os
+from typing import Dict, Callable, List, Tuple, Any, Optional, Iterator
+from typing_extensions import TypeAlias
+import json
 import logging
-from functools import partial
+import re
+import socket
+import time
+import warnings
+import select
 
 import requests
-import socketio
+import websocket
 
 from .version import __version__
 
-
-from logging import NullHandler
-
 LOG = logging.getLogger("atlas-stream")
-LOG.addHandler(NullHandler())
-
-client = socketio.Client()
+LOG.addHandler(logging.NullHandler())
 
 
-class AtlasNamespace:
-    """
-    socket.io event handlers for handling automatic resubscription and populating
-    the atlas-stream debug log.
-
-    These are overidden by whatever the user supplies to AtlasStream.bind_channel().
-    """
-
-    SUBSCRIPTIONS = {}
-
-    def on_connect(self, *args):
-        LOG.debug("Connected to RIPE Atlas Stream")
-        for subscription in self.SUBSCRIPTIONS.values():
-            LOG.debug("(Re)subscribing to {}".format(subscription))
-            self.emit("atlas_subscribe", subscription)
-
-    def on_disconnect(self, *args):
-        LOG.debug("Disconnected from RIPE Atlas Stream")
-
-    def trigger_event(self, event, *args):
-        handler_name = "on_" + event
-        if hasattr(self, handler_name):
-            return getattr(self, handler_name)(*args)
-        else:
-            return self.on_unbound_event(event, *args)
-
-    def on_unbound_event(self, event, *args):
-        LOG.debug(f"Received '{event}' event but no handler is set")
-
-    def on_atlas_subscribed(self, params):
-        """
-        Keep track of subscriptions so that they can be resumed on reconnect.
-        """
-        LOG.debug("Subscribed to params: {}".format(params))
-        self.SUBSCRIPTIONS[str(params)] = params
-
-    def on_atlas_unsubscribed(self, params):
-        """
-        Remove this subscription from the state so we don't try to resubscribe.
-        """
-        LOG.debug("Unsubscribed from params: {}".format(params))
-        del self.SUBSCRIPTIONS[str(params)]
-
-    def on_atlas_error(self, *args):
-        LOG.error("Got an error from stream server: {}".format(args[0]))
-
-
-class AtlasClientNamespace(AtlasNamespace, socketio.ClientNamespace):
-    pass
-
-
-class AtlasStream(object):
+class AtlasStream:
     # For the current list of events see:
     # https://atlas.ripe.net/docs/result-streaming/
 
@@ -93,7 +45,15 @@ class AtlasStream(object):
     EVENT_NAME_PROBESTATUS = "atlas_probestatus"
     EVENT_NAME_SUBSCRIBED = "atlas_subscribed"
     EVENT_NAME_UNSUBSCRIBED = "atlas_unsubscribed"
-    EVENT_NAME_REPLAY_FINISHED = "atlas_replay_finished"
+
+    VALID_EVENTS = (
+        EVENT_NAME_ERROR,
+        EVENT_NAME_RESULTS,
+        EVENT_NAME_METADATA,
+        EVENT_NAME_PROBESTATUS,
+        EVENT_NAME_SUBSCRIBED,
+        EVENT_NAME_UNSUBSCRIBED,
+    )
 
     # Events that you can emit
     EVENT_NAME_SUBSCRIBE = "atlas_subscribe"
@@ -101,119 +61,179 @@ class AtlasStream(object):
 
     # atlas_subscribe stream types
     STREAM_TYPE_RESULT = "result"
-    STREAM_TYPE_PROBE = "probe"
+    STREAM_TYPE_PROBESTATUS = "probestatus"
     STREAM_TYPE_METADATA = "metadata"
 
-    # These were deprecated long ago but were still documented before 1.5.0.
-    # There isn't much overhead to having them so we can keep them for a while longer.
-    DEPRECATED_CHANNELS = {
-        "result": EVENT_NAME_RESULTS,
-        "probe": EVENT_NAME_PROBESTATUS,
-        "error": EVENT_NAME_ERROR,
-    }
+    VALID_STREAM_TYPES = (
+        STREAM_TYPE_RESULT,
+        STREAM_TYPE_PROBESTATUS,
+        STREAM_TYPE_METADATA,
+    )
 
-    Client = socketio.Client
-    Namespace = AtlasClientNamespace
+    StreamParams: TypeAlias = Dict[str, Any]
 
     def __init__(
         self,
-        base_url="https://atlas-stream.ripe.net",
-        path="/stream/socket.io/",
-        proxies=None,
-        headers=None,
-        transport="websocket",
-    ):
+        base_url: str = "https://atlas-stream.ripe.net",
+        path: str = "/stream/",
+        headers: Optional[Dict[str, str]] = None,
+        proxies: Optional[Dict[str, str]] = None,
+        transport: str = "websocket",
+    ) -> None:
         """Initialize stream"""
-        self.base_url = base_url
-        self.path = path
+        base_url = re.sub("^http", "ws", base_url)
+        path = re.sub("socket.io/?$", "", path)
+        self.url = base_url.rstrip("/") + "/" + path.lstrip("/")
         self.session = requests.Session()
-        self.socketIO = self.Client(http_session=self.session)
 
-        self.namespace = self.Namespace()
-        self.socketIO.register_namespace(self.namespace)
-        self.transport = transport
+        if transport != "websocket":
+            warnings.warn(
+                "Ignoring AtlasStream transport other than 'websocket'",
+                DeprecationWarning,
+            )
 
-        proxies = proxies or {}
         headers = headers or {}
-
-        if not headers or not headers.get("User-Agent", None):
+        if not headers.get("User-Agent", None):
             user_agent = "RIPE ATLAS Cousteau v{0}".format(__version__)
             headers["User-Agent"] = user_agent
 
-        # Force polling if http_proxy or https_proxy point to a SOCKS URL
-        for scheme in "http", "https":
-            proxy = proxies.get(scheme)
-            if not proxy:
-                proxy = os.environ.get(f"{scheme}_proxy")
-            if proxy and proxy.startswith("socks"):
-                warnings.warn(
-                    "SOCKS proxies do not currently work with the websocket transport, forcing polling"
+        self.headers = headers
+        self.proxies = proxies or {}
+
+        self.callbacks: Dict[str, Callable] = {}
+        self.subscriptions: List[Dict] = []
+
+        self.ws: Optional[websocket.WebSocket] = None
+
+    def _get_proxy_options(self):
+        """
+        Get websocket-client proxy options from requests-style self.proxies dict or
+        http(x)_proxy env variables if present.
+        """
+        scheme = "https" if self.url.startswith("wss:") else "http"
+
+        proxy_url = self.proxies.get(scheme)
+        if not proxy_url:
+            for key, value in os.environ.items():
+                if key.lower() == f"{scheme}_proxy":
+                    proxy_url = value
+                    break
+
+        if not proxy_url:
+            return {}
+
+        parsed = urlparse(proxy_url)
+        return {
+            "proxy_type": parsed.scheme,
+            "http_proxy_host": parsed.hostname,
+            "http_proxy_port": parsed.port,
+        }
+
+    def connect(self) -> None:
+        while self.ws is None:
+            try:
+                self.ws = websocket.create_connection(
+                    self.url, header=self.headers, **self._get_proxy_options()
                 )
-                self.transport = "polling"
-                break
+            except socket.error as exc:
+                LOG.debug(f"{exc} while connecting to RIPE Atlas Stream")
+                time.sleep(1)
+                continue
+            msg = "Connected to RIPE Atlas Stream"
+            LOG.debug(msg)
+            for subscription in self.subscriptions:
+                self.send(self.ws, self.EVENT_NAME_SUBSCRIBE, subscription)
 
-        self.session.headers.update(headers)
-        self.session.proxies.update(proxies)
-
-    def connect(self):
-        """Initiate the channel we want to start streams from."""
-
-        return self.socketIO.connect(
-            self.base_url, socketio_path=self.path, transports=[self.transport]
-        )
-
-    def disconnect(self):
+    def disconnect(self) -> None:
         """Removes the channel bindings and shuts down the connection."""
-        self.socketIO.disconnect()
+        if self.ws is not None:
+            self.ws.close()
+            self.ws = None
+        self.callbacks = {}
 
-    def unpack_results(self, callback, data):
-        if isinstance(data, list):
-            for result in data:
-                callback(result)
-        else:
-            callback(data)
-
-    def bind_channel(self, channel, callback):
+    def bind(self, channel: str, callback: Callable) -> None:
         """Bind given channel with the given callback"""
-        channel = self.DEPRECATED_CHANNELS.get(channel, channel)
+        if channel not in self.VALID_EVENTS:
+            raise ValueError("Invalid event channel")
+        self.callbacks[channel] = callback
 
-        if channel == self.EVENT_NAME_RESULTS:
-            self.socketIO.on(channel, partial(self.unpack_results, callback))
-        else:
-            self.socketIO.on(channel, callback)
+    bind_channel = bind
 
-    def start_stream(self, stream_type, **stream_parameters):
-        """Starts new stream for given type with given parameters"""
-        if stream_type:
-            self.subscribe(stream_type, **stream_parameters)
-        else:
-            self.handle_error("You need to set a stream type")
+    def unbind(self, channel: str):
+        self.callbacks.pop(channel, None)
 
-    def _get_stream_params(self, stream_type, parameters):
-        parameters["stream_type"] = stream_type
-        if stream_type == self.STREAM_TYPE_RESULT and "buffering" not in parameters:
-            parameters["buffering"] = True
-        return parameters
+    def subscribe(self, stream_type: str, **parameters: Any) -> None:
+        """Requests new stream for given type and parameters"""
+        if stream_type not in self.VALID_STREAM_TYPES:
+            raise ValueError("You need to set a valid stream type")
+        parameters = dict(parameters, stream_type=stream_type)
+        self.subscriptions.append(parameters)
+        if self.ws:
+            self.send(self.ws, self.EVENT_NAME_SUBSCRIBE, parameters)
 
-    def subscribe(self, stream_type, **parameters):
-        """Subscribe to stream with give parameters."""
-        self.socketIO.emit(
-            self.EVENT_NAME_SUBSCRIBE, self._get_stream_params(stream_type, parameters)
-        )
+    start_stream = subscribe
 
-    def unsubscribe(self, stream_type, **parameters):
+    def unsubscribe(self, stream_type: str, **parameters: Any) -> None:
         """Unsubscribe from a previous subscription"""
-        self.socketIO.emit(
-            self.EVENT_NAME_UNSUBSCRIBE,
-            self._get_stream_params(stream_type, parameters),
-        )
+        parameters = dict(parameters, stream_type=stream_type)
+        if parameters not in self.subscriptions:
+            return
+        if self.ws:
+            self.send(self.ws, self.EVENT_NAME_UNSUBSCRIBE, parameters)
+        self.subscriptions.remove(parameters)
 
-    def timeout(self, seconds=None):
+    def send(self, ws: websocket.WebSocket, msg_type: str, payload: Any) -> None:
         """
-        Times out all streams after n seconds or wait forever if seconds is
-        None
+        Send a message to the server.
         """
-        if seconds is None:
-            self.socketIO.wait()
-        else:
-            self.socketIO.sleep(seconds)
+        ws.send(json.dumps([msg_type, payload]))
+
+    def recv(self, ws: websocket.WebSocket) -> Tuple[str, Any]:
+        """
+        Receive a single message from the server.
+        """
+        msg = ws.recv()
+        event_name, payload = json.loads(msg)
+        return event_name, payload
+
+    def iter(self, seconds: Optional[float] = None) -> Iterator[Tuple[str, Any]]:
+        """
+        Yield incoming events for `seconds` if specified, or else forever.
+        """
+        t0 = time.perf_counter()
+        while True:
+            if seconds is not None:
+                elapsed = time.perf_counter() - t0
+                remaining = seconds - elapsed
+                if remaining < 0:
+                    break
+                rlist, _, _ = select.select([self.ws], [], [], remaining)
+                if not rlist:
+                    break
+            try:
+                yield self.recv(self.ws)
+            except Exception as exc:
+                LOG.error(f"{exc} while reading from RIPE Atlas stream")
+                if isinstance(exc, websocket.WebSocketException):
+                    self.connect()
+                    continue
+                else:
+                    break
+
+    def timeout(self, seconds: Optional[float] = None) -> None:
+        """
+        Process events for `seconds` if specified, or else forever, calling
+        a bound callback for each event if one is defined.
+        """
+        for event_name, payload in self.iter(seconds=seconds):
+            callback = self.callbacks.get(event_name)
+            if callback:
+                callback(payload)
+
+    def __iter__(self):
+        """
+        Yield incoming events.
+
+        To stop iterating after a given timeout, see the `iter()` method.
+        """
+        return self.iter()

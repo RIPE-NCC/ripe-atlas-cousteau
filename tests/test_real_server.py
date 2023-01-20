@@ -1,4 +1,4 @@
-# Copyright (c) 2015 RIPE NCC
+# Copyright (c) 2023 RIPE NCC
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,60 +22,90 @@ import pytest
 
 
 from ripe.atlas.cousteau import (
-    AtlasSource, AtlasChangeSource,
-    AtlasRequest, AtlasCreateRequest, AtlasChangeRequest,
-    Ping, Dns, AtlasStopRequest, AtlasResultsRequest,
-    ProbeRequest, MeasurementRequest, Probe, Measurement,
-    AtlasStream, Ntp, Sslcert, Http, Traceroute, AnchorRequest
+    AtlasSource,
+    AtlasChangeSource,
+    AtlasRequest,
+    AtlasCreateRequest,
+    AtlasChangeRequest,
+    Ping,
+    Dns,
+    AtlasStopRequest,
+    AtlasResultsRequest,
+    ProbeRequest,
+    MeasurementRequest,
+    Probe,
+    Measurement,
+    AtlasStream,
+    Ntp,
+    Sslcert,
+    Http,
+    Traceroute,
+    AnchorRequest,
 )
 
 
 class TestRealServer(unittest.TestCase):
     def setUp(self):
-        self.server = os.environ.get('ATLAS_SERVER', "")
-        self.create_key = os.environ.get('CREATE_KEY', "")
-        self.change_key = os.environ.get('CHANGE_KEY', "")
-        self.delete_key = os.environ.get('DELETE_KEY', "")
+        self.server = os.environ.get("ATLAS_SERVER", "")
+        self.create_key = os.environ.get("CREATE_KEY", "")
+        self.change_key = os.environ.get("CHANGE_KEY", "")
+        self.delete_key = os.environ.get("DELETE_KEY", "")
         self.delete_msm = None
 
     def test_create_delete_request(self):
         """Unittest for Atlas create and delete request"""
-        if self.server == "":
+        if not self.server or not self.create_key or not self.delete_key:
             pytest.skip("No ATLAS_SERVER defined")
         source = AtlasSource(**{"type": "area", "value": "WW", "requested": 38})
-        ping = Ping(**{
-            "target": "www.ripe.net",
-            "af": 4,
-            "description": "Cousteau testing",
-            "prefer_anchors": True
-        })
-        traceroute = Traceroute(**{
-            "target": "www.google.fr",
-            "af": 4, "protocol": "UDP",
-            "description": "Cousteau testing",
-            "dont_fragment": True
-        })
-        dns = Dns(**{
-            "target": "k.root-servers.net", "af": 4,
-            "description": "Cousteau testing", "query_type": "SOA",
-            "query_class": "IN", "query_argument": "nl", "retry": 6
-        })
-        ntp = Ntp(**{
-            "target": "www.ripe.net",
-            "af": 4,
-            "description": "Cousteau testing",
-            "timeout": 1000
-        })
-        ssl = Sslcert(**{
-            "target": "www.ripe.net",
-            "af": 4,
-            "description": "Cousteau testing",
-        })
-        http = Http(**{
-            "target": "www.ripe.net",
-            "af": 4,
-            "description": "Cousteau testing",
-        })
+        ping = Ping(
+            **{
+                "target": "www.ripe.net",
+                "af": 4,
+                "description": "Cousteau testing",
+                "prefer_anchors": True,
+            }
+        )
+        traceroute = Traceroute(
+            **{
+                "target": "www.google.fr",
+                "af": 4,
+                "protocol": "UDP",
+                "description": "Cousteau testing",
+                "dont_fragment": True,
+            }
+        )
+        dns = Dns(
+            **{
+                "target": "k.root-servers.net",
+                "af": 4,
+                "description": "Cousteau testing",
+                "query_type": "SOA",
+                "query_class": "IN",
+                "query_argument": "nl",
+                "retry": 6,
+            }
+        )
+        ntp = Ntp(
+            **{
+                "target": "www.ripe.net",
+                "af": 4, "description": "Cousteau testing",
+                "timeout": 1000,
+            }
+        )
+        ssl = Sslcert(
+            **{
+                "target": "www.ripe.net",
+                "af": 4,
+                "description": "Cousteau testing",
+            }
+        )
+        http = Http(
+            **{
+                "target": "www.ripe.net",
+                "af": 4,
+                "description": "Cousteau testing",
+            }
+        )
         stop = datetime.utcnow() + timedelta(minutes=220)
         request = AtlasCreateRequest(
             **{
@@ -84,44 +114,49 @@ class TestRealServer(unittest.TestCase):
                 "key": self.create_key,
                 "server": self.server,
                 "measurements": [ping, traceroute, dns, ntp, ssl, http],
-                "sources": [source]
+                "sources": [source],
             }
         )
-        result = namedtuple('Result', 'success response')
+        result = namedtuple("Result", "success response")
         (result.success, result.response) = request.create()
         print(result.response)
         self.assertTrue(result.success)
         self.delete_msm = result.response["measurements"][0]
         self.assertTrue(result.success)
 
-        kwargs = {"verify": False, "msm_id": self.delete_msm, "key": self.delete_key, "server": self.server}
+        kwargs = {
+            "verify": False,
+            "msm_id": self.delete_msm,
+            "key": self.delete_key,
+            "server": self.server,
+        }
         request = AtlasStopRequest(**kwargs)
-        result = namedtuple('Result', 'success response')
+        result = namedtuple("Result", "success response")
         (result.success, result.response) = request.create()
         print(result.response)
         self.assertTrue(result.success)
 
     def test_change_request(self):
         """Unittest for Atlas change request"""
-        if self.server == "":
+        if not self.server or not self.change_key:
             pytest.skip("No ATLAS_SERVER defined")
 
-        remove = AtlasChangeSource(**{
-            "value": "6001", "requested": 1, "action": "remove", "type": "probes"
-        })
-        add = AtlasChangeSource(**{
-            "value": "6002", "requested": 1, "action": "add", "type": "probes"
-        })
+        remove = AtlasChangeSource(
+            **{"value": "6001", "requested": 1, "action": "remove", "type": "probes"}
+        )
+        add = AtlasChangeSource(
+            **{"value": "6002", "requested": 1, "action": "add", "type": "probes"}
+        )
         request = AtlasChangeRequest(
             **{
                 "key": self.change_key,
                 "verify": False,
                 "msm_id": 1000032,
                 "server": self.server,
-                "sources": [add, remove]
+                "sources": [add, remove],
             }
         )
-        result = namedtuple('Result', 'success response')
+        result = namedtuple("Result", "success response")
         (result.success, result.response) = request.create()
         print(result.response)
         self.assertTrue(result.success)
@@ -136,10 +171,10 @@ class TestRealServer(unittest.TestCase):
             "start": datetime(2011, 11, 21),
             "stop": datetime(2011, 11, 22),
             "verify": False,
-            "probe_ids": [743, 630]
+            "probe_ids": [743, 630],
         }
 
-        result = namedtuple('Result', 'success response')
+        result = namedtuple("Result", "success response")
         (result.success, result.response) = AtlasResultsRequest(**kwargs).create()
         print(result.success, result.response)
         self.assertTrue(result.response)
@@ -192,7 +227,10 @@ class TestRealServer(unittest.TestCase):
         Measurement(id=1000032, server=self.server, verify=False)
 
     def test_stream_results(self):
-        """Unittest for Atlas results request."""
+        """
+        Test receiving at least one MSM 1001 result in 5 seconds, using the callback
+        interface.
+        """
         if self.server == "":
             pytest.skip("No ATLAS_SERVER defined")
 
@@ -207,50 +245,45 @@ class TestRealServer(unittest.TestCase):
 
         atlas_stream = AtlasStream()
         atlas_stream.connect()
-        channel = "result"
+        channel = "atlas_result"
         atlas_stream.bind_channel(channel, on_result_response)
         stream_parameters = {"msm": 1001}
-        atlas_stream.start_stream(stream_type="result", **stream_parameters)
+        atlas_stream.start_stream("result", **stream_parameters)
+        # Wait for 5 seconds of results (should always be something there for #1001)
         atlas_stream.timeout(seconds=5)
         atlas_stream.disconnect()
         self.assertNotEqual(results, [])
 
     def test_stream_probe(self):
-        """Unittest for Atlas probe connections request."""
+        """
+        Test receiving at least one probestatus event in 30 seconds, using
+        the iterator interface.
+        """
         if self.server == "":
             pytest.skip("No ATLAS_SERVER defined")
-
-        results = []
-
-        def on_result_response(*args):
-            """
-            Function that will be called every time we receive a new event.
-            Args is a tuple, so you should use args[0] to access the real message.
-            """
-            results.append(args[0])
 
         atlas_stream = AtlasStream()
         atlas_stream.connect()
         channel = "atlas_probestatus"
-        atlas_stream.bind_channel(channel, on_result_response)
         stream_parameters = {"enrichProbes": True}
-        atlas_stream.start_stream(stream_type="probestatus", **stream_parameters)
-        atlas_stream.timeout(seconds=30)
+        atlas_stream.start_stream("probestatus", **stream_parameters)
+        # Wait for 2 messages (atlas_subscribed + atlas_probestatus)
+        found = False
+        for event_name, payload in atlas_stream.iter(30):
+            if event_name == channel:
+                found = True
+                break
+        if not found:
+            self.fail("No events")
         atlas_stream.disconnect()
-        self.assertNotEqual(results, [])
 
     def test_get_request(self):
         """Unittest for Atlas get request"""
         if self.server == "":
             pytest.skip("No ATLAS_SERVER defined")
 
-        request = AtlasRequest(
-            **{
-                "verify": False,
-                "url_path": "/api/v2/anchors"
-            }
-        )
-        result = namedtuple('Result', 'success response')
+        request = AtlasRequest(**{"verify": False, "url_path": "/api/v2/anchors"})
+        result = namedtuple("Result", "success response")
         (result.success, result.response) = request.get()
         print(result.success, result.response)
         self.assertTrue(result.response["results"])

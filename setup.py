@@ -9,7 +9,8 @@ exec(open("ripe/atlas/cousteau/version.py").read())
 install_requires = [
     "python-dateutil",
     "requests>=2.7.0",
-    "python-socketio[client]<5",
+    "websocket-client~=1.3.1",
+    "typing-extensions",
 ]
 
 # Get proper long description for package
