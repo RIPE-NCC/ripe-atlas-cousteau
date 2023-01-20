@@ -272,9 +272,9 @@ Example:
 Streaming API
 -------------
 Atlas supports getting results and other events through a WebSocket stream to get them close to real time. The AtlasStream class provides an interface to this stream, and supports
-both callback-based and an iterator-based access.
+both callback-based and iterator-based access.
 
-Measurement results
+Measurement Results
 ^^^^^^^^^^^^^^^^^^^
  You have to create an AtlasStream object and subscribe to the "result" stream type. More details on the available parameters of the stream can be found on the `streaming documentation`_.
 
