@@ -123,11 +123,14 @@ class AtlasStream:
             return {}
 
         parsed = urlparse(proxy_url)
-        return {
+        res = {
             "proxy_type": parsed.scheme,
             "http_proxy_host": parsed.hostname,
             "http_proxy_port": parsed.port,
         }
+        if parsed.username is not None:
+            res.update({ "http_proxy_auth" : (parsed.username, parsed.password) })
+        return res
 
     def connect(self) -> None:
         while self.ws is None:
