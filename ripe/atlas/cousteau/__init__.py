@@ -12,7 +12,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from .measurement import Ping, Traceroute, Dns, Sslcert, Ntp, Http
+from .measurement import AtlasMeasurement, Ping, Traceroute, Dns, Sslcert, Ntp, Http
 from .source import AtlasSource, AtlasChangeSource
 from .request import (
     AtlasRequest,
@@ -44,6 +44,7 @@ __all__ = [
     "AtlasSource",
     "AtlasChangeSource",
     "AtlasStream",
+    "AtlasMeasurement",
     "ProbeRequest",
     "MeasurementRequest",
     "AnchorRequest",
