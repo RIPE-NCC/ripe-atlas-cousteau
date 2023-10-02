@@ -35,6 +35,7 @@ class EntityRepresentation(object):
         self.meta_data = kwargs.get("meta_data")
         self._user_agent = kwargs.get("user_agent")
         self._fields = kwargs.get("fields")
+        self._optional_fields = kwargs.get("optional_fields")
         self.get_params = {}
 
         if self.meta_data is None and self.id is None:
@@ -42,7 +43,7 @@ class EntityRepresentation(object):
                 "Id or meta_data should be passed in order to create object."
             )
 
-        if self._fields:
+        if self._fields or self._optional_fields:
             self.update_get_params()
 
         if self.meta_data is None:
@@ -57,6 +58,11 @@ class EntityRepresentation(object):
             self.get_params["fields"] = ",".join([str(_) for _ in self._fields])
         elif isinstance(self._fields, str):
             self.get_params["fields"] = self._fields
+
+        if isinstance(self._optional_fields, (tuple, list)):  # tuples & lists > x,y,z
+            self.get_params["optional_fields"] = ",".join([str(_) for _ in self._optional_fields])
+        elif isinstance(self._optional_fields, str):
+            self.get_params["optional_fields"] = self._optional_fields
 
     def _fetch_meta_data(self):
         """Makes an API call to fetch meta data for the given probe and stores the raw data."""
