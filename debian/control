@@ -5,7 +5,6 @@ Maintainer: Thomas Dreibholz <dreibh@iem.uni-due.de>
 Homepage: https://github.com/dreibh/ripe-atlas-cousteau
 Build-Depends: debhelper (>= 12),
                dh-python,
-               libfile-fcntllock-perl,
                python3-all,
                python3-coverage,
                python3-dateutil,
