@@ -279,6 +279,11 @@ class AtlasLatestRequest(AtlasRequest):
         if probe_ids:
             self.add_probe_parameters(probe_ids)
 
+        if 'lookback_days' in kwargs:
+            self.http_method_args["params"].update({
+                'lookback_days': kwargs.get('lookback_days')
+            })
+
     def add_probe_parameters(self, probe_ids):
         """
         Creates string format if needed and add probe ids to HTTP
