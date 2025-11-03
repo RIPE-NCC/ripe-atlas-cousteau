@@ -1,6 +1,18 @@
 Releases History
 ================
 
+2.1.0 (release 2025-11-03)
+--------------------------
+New features:
+~~~~~~~~~~~~~
+- Add support for lookback_days in latest results
+
+Changes:
+~~~~~~~~
+- Drop support for old Python versions (>= 3.10 supported)
+- Fixed documentation links
+
+
 2.0.0 (release 2023-01-20)
 --------------------------
 Changes:
