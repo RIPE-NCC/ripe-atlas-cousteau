@@ -337,7 +337,7 @@ Example using the iterator-interface:
 
 
 .. _socket.io: http://socket.io/
-.. _streaming documentation: https://atlas.ripe.net/docs/result-streaming/
+.. _streaming documentation: https://atlas.ripe.net/docs/apis/streaming-api/
 
 
 Using the Sagan Library
@@ -449,9 +449,9 @@ The following example will fetch all probes from NL with asn\_v4 3333 and with t
     print(measurements.total_count)
 
 
-.. _filter api documentation: https://atlas.ripe.net/docs/rest/
-.. _measurement's filtering documentation: https://atlas.ripe.net/docs/rest/#measurement
-.. _probe's filtering documentation: https://atlas.ripe.net/docs/rest/#probe
+.. _filter api documentation: https://atlas.ripe.net/docs/apis/rest-api-reference/
+.. _measurement's filtering documentation: https://atlas.ripe.net/docs/apis/rest-api-reference/measurements/
+.. _probe's filtering documentation: https://atlas.ripe.net/docs/apis/rest-api-reference/probes
 
 
 General GET API Requests
