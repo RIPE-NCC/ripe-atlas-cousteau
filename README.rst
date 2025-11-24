@@ -1,7 +1,7 @@
 RIPE Atlas Cousteau
 ===================
 
-|Documentation| |Build Status| |Code Health| |PYPI Version| |Python Versions| |Python Implementations| |Python Format|
+|Documentation| |PYPI Version| |Python Versions| |Python Implementations| |Python Format|
 
 A Python wrapper around the RIPE ATLAS API.
 
