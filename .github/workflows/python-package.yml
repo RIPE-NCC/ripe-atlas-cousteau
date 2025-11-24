@@ -1,13 +1,13 @@
-# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+# This workflow runs whenever a new test tag is pushed.
+# It will install Python dependencies, run tests and lint with a variety of Python versions
+# If tests pass, it will build the package and publish it on test.pypi.org
 
 name: Python package
 
 on:
   push:
-    branches: [ master, 'release-*', 'pypi_integration' ]
-  pull_request:
-    branches: [ $default-branch ]
+    tags:
+      - 'v*/test'
 
 jobs:
   test:
