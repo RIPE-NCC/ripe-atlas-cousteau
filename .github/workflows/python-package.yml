@@ -7,7 +7,7 @@ name: Python package
 on:
   push:
     tags:
-      - 'v*/test'
+      - 'test/v*'
 
 jobs:
   test:
