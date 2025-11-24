@@ -23,6 +23,7 @@ modules after explorers, and this is not an exception :)
 
 .. _Cousteau: http://en.wikipedia.org/wiki/Jacques_Cousteau
 .. |PYPI Version| image:: https://img.shields.io/pypi/v/ripe.atlas.cousteau.svg
+   :target: https://pypi.org/project/ripe.atlas.cousteau/
 .. |Python Versions| image:: https://img.shields.io/pypi/pyversions/ripe.atlas.cousteau.svg
 .. |Python Implementations| image:: https://img.shields.io/pypi/implementation/ripe.atlas.cousteau.svg
 .. |Python Format| image:: https://img.shields.io/pypi/format/ripe.atlas.cousteau.svg
