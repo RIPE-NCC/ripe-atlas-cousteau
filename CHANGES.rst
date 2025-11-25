@@ -1,6 +1,13 @@
 Releases History
 ================
 
+2.1.1 (release 2025-11-25)
+--------------------------
+Changes:
+~~~~~~~~
+- Add support for optional_fields in query parameters. See documentation at https://atlas.ripe.net/docs/apis/rest-api-manual/fields#optional-fields
+- Add support for proxy authentication in Streaming API
+
 2.1.0 (release 2025-11-03)
 --------------------------
 New features:
@@ -11,7 +18,6 @@ Changes:
 ~~~~~~~~
 - Drop support for old Python versions (>= 3.10 supported)
 - Fixed documentation links
-
 
 2.0.0 (release 2023-01-20)
 --------------------------
