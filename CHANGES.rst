@@ -1,6 +1,12 @@
 Releases History
 ================
 
+2.2.0 (release 2025-12-08)
+--------------------------
+Changes:
+~~~~~~~~
+- Upgrade dependencies to requests~=2.32.0 and websocket-client~=1.9.0
+
 2.1.1 (release 2025-11-25)
 --------------------------
 Changes:
