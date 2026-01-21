@@ -1,0 +1,6 @@
+#!/bin/sh
+
+mkdir -p dist/
+rm -f dist/*
+python3 setup.py sdist --formats=bztar
+mv dist/*.bz2 .
