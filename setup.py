@@ -4,7 +4,7 @@ from os.path import abspath, dirname, join
 from setuptools import setup
 
 with open("ripe/atlas/cousteau/version.py") as _f:
-    __version__ = re.search(r'^__version__\s*=\s*"([^"]+)"', _f.read()).group(1)
+    __version__ = re.search(r'^__version__\s*=\s*["\']([^"\']+)["\']', _f.read(), re.M).group(1)
 
 install_requires = [
     "python-dateutil",
