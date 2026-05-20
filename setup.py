@@ -1,14 +1,14 @@
 #!/usr/bin/env python
+import re
 from os.path import abspath, dirname, join
 from setuptools import setup
 
-# import manually __version__ variable
-__version__ = None
-exec(open("ripe/atlas/cousteau/version.py").read())
+with open("ripe/atlas/cousteau/version.py") as _f:
+    __version__ = re.search(r'^__version__\s*=\s*"([^"]+)"', _f.read()).group(1)
 
 install_requires = [
     "python-dateutil",
-    "requests~=2.32.0",
+    "requests~=2.34.2",
     "websocket-client~=1.9.0",
     "typing-extensions",
 ]

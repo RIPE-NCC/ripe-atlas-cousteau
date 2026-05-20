@@ -71,7 +71,7 @@ Examples:
 Measurement Sources
 -------------------
 The second step is to create the measurements source(s). In order to do that you have to create an AtlasSource object using the arguments type, value, requested, and optionally tags.
-Type as described in the `API docs`_ should be one of the "area", "country", "prefix", "asn", "probes", "msm". Value is the actual value of the type and requested is the number of probes that will be selected from this source.
+Type as described in the `API docs`_ should be one of the "area", "country", "prefix", "asn", "probes", "msm", "region", "countries". Value is the actual value of the type and requested is the number of probes that will be selected from this source.
 Optionally you can use tags argument, which has to be a dictionary like {"include": [], "exclude": []}.
 Examples:
 

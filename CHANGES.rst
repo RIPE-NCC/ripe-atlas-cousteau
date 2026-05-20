@@ -1,6 +1,18 @@
 Releases History
 ================
 
+2.3.0 (release 2026-05-20)
+--------------------------
+New features:
+~~~~~~~~~~~~~
+- Add support for ``region`` and ``countries`` probe source types
+
+Changes:
+~~~~~~~~
+- Pin GitHub Actions to full-length commit SHAs in CI workflows
+- Replace ``exec()``-based version loading with regex parsing
+- Upgrade requests to ~=2.34.2
+
 2.2.0 (release 2025-12-08)
 --------------------------
 Changes:

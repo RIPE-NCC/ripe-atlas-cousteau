@@ -218,7 +218,7 @@ class AtlasChangeRequest(AtlasRequest):
         "action": "add|remove",
         "requested": probe_number,
         # when action=remove only probes is supported
-        "type": "area|country|asn|prefix|msm|probes",
+        "type": "area|country|asn|prefix|msm|probes|region|countries",
         "value": probe_values
     }]
     """
