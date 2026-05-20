@@ -49,7 +49,7 @@ probes_create_schema = {
         "type": {
             "type": "string",
             "enum": [
-                "area", "country", "prefix", "asn", "probes", "msm"
+                "area", "country", "prefix", "asn", "probes", "msm", "region", "countries"
             ]
         },
         "value": {
@@ -98,7 +98,7 @@ probes_change_schema = {
         },
         "type": {
             "type": "string",
-            "enum": ["area", "country", "prefix", "asn", "probes", "msm"]
+            "enum": ["area", "country", "prefix", "asn", "probes", "msm", "region", "countries"]
         },
         "value": {
             "type": "string",

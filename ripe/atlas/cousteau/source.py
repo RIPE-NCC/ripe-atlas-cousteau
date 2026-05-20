@@ -31,7 +31,7 @@ class AtlasSource(object):
     """
 
     # available types
-    types_available = ["area", "country", "prefix", "asn", "probes", "msm"]
+    types_available = ["area", "country", "prefix", "asn", "probes", "msm", "region", "countries"]
 
     def __init__(self, **kwargs):
         if "requested" in kwargs:

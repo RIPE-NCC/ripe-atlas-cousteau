@@ -125,14 +125,14 @@ class TestAtlasChangeSource(unittest.TestCase):
             "requested": 5, "value": "test", "action": "add"
         }
         source = AtlasChangeSource(**kwargs)
-        for source_type in ["area", "country", "prefix", "asn", "msm", "probes"]:
+        for source_type in ["area", "country", "prefix", "asn", "msm", "probes", "region", "countries"]:
             self.assertEqual(setattr(source, "type", source_type), None)
 
         kwargs = {
             "requested": 5, "value": "test", "action": "remove"
         }
         source = AtlasChangeSource(**kwargs)
-        for source_type in ["area", "country", "prefix", "asn", "msm"]:
+        for source_type in ["area", "country", "prefix", "asn", "msm", "region", "countries"]:
             self.assertRaises(
                 MalFormattedSource,
                 lambda: setattr(source, "type", source_type)
