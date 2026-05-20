@@ -10,7 +10,7 @@ New features:
 Changes:
 ~~~~~~~~
 - Pin GitHub Actions to full-length commit SHAs in CI workflows
-- Replace ``exec()``-based version loading with regex parsing
+- Replace ``exec()``-based version loading with multiline regex parsing in ``setup.py`` and ``docs/conf.py``
 - Upgrade requests to ~=2.34.2
 
 2.2.0 (release 2025-12-08)
