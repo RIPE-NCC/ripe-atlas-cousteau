@@ -18,7 +18,7 @@ import os
 
 import re
 with open("../ripe/atlas/cousteau/version.py") as _f:
-    __version__ = re.search(r'^__version__\s*=\s*"([^"]+)"', _f.read()).group(1)
+    __version__ = re.search(r'^__version__\s*=\s*["\']([^"\']+)["\']', _f.read(), re.M).group(1)
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
