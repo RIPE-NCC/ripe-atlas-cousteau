@@ -11,6 +11,7 @@ install_requires = [
     "requests~=2.34.2",
     "websocket-client~=1.9.0",
     "typing-extensions",
+    "certifi>=2026.10.19",
 ]
 
 # Get proper long description for package

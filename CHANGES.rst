@@ -1,6 +1,12 @@
 Releases History
 ================
 
+2.3.1 (release 2026-10-22)
+--------------------------
+Security:
+~~~~~~~~~
+- Add explicit ``certifi>=2026.10.19``
+
 2.3.0 (release 2026-05-20)
 --------------------------
 New features:
